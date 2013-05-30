@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>scrollable life</title>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #source {
+            display: none;
+        }
+
+        #coords{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;             
+        }
+        #coords p{
+            background: #fff;
+        }
+
+    </style>
+
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="./assets/js/gol-canvas.js" type="text/javascript"></script>
+		<script src="./assets/js/gol-client.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        var $window; 
+        var img;
+        var $source; var source; var sourceContext;
+        var $target; var target; var targetContext;
+        var scroll = {
+            x : 0,
+            y : 0
+        };
+        var scrollMax;
+
+
+        function init() {
+            // Get DOM elements
+            $window = $(window);
+            $source = $('canvas#source');
+            source = $source[0];
+            sourceContext = source.getContext("2d");
+            $target = $('canvas#target');
+            target = $target[0];
+            targetContext = target.getContext("2d");
+
+            // Draw something in source canvas
+            sourceContext.rect(0, 0, source.width, source.height);
+            // var grd = sourceContext.createLinearGradient(0, 0, source.width, source.height);
+            // grd.addColorStop(0, '#800080');
+            // grd.addColorStop(0.125, '#4B0082');
+            // grd.addColorStop(0.25, '#0000FF');
+            // grd.addColorStop(0.325, '#008000');
+            // grd.addColorStop(0.5, '#FFFF00');
+            // grd.addColorStop(0.625, '#FFA500');
+            // grd.addColorStop(0.75, '#FF0000');
+            // grd.addColorStop(0.825, '#800080');                
+            // 
+            // sourceContext.fillStyle = grd;
+            // sourceContext.fill();
+
+            /*
+             * Setup drag listening for target canvas to scroll over source canvas
+             */                 
+            function onDragging(event){
+                var delta = {
+                    left : (event.clientX - event.data.lastCoord.left),
+                    top : (event.clientY - event.data.lastCoord.top)
+                };
+
+                var dx = scroll.x - delta.left;
+                if (dx < 0) {
+                    scroll.x = 0;
+                } else if (dx > scrollMax.x) {
+                    scroll.x = scrollMax.x;
+                } else {
+                    scroll.x = dx;
+                }
+
+                var dy = scroll.y - delta.top;
+                if (dy < 0) {
+                    scroll.y = 0;
+                } else if (dy > scrollMax.y) {
+                    scroll.y = scrollMax.y;
+                } else {
+                    scroll.y = dy;
+                }
+
+                event.data.lastCoord = {
+                    left : event.clientX,
+                    top : event.clientY
+                }
+
+                draw();
+            }
+
+            function onDragEnd(){
+                $(document).unbind("mousemove", onDragging);
+                $(document).unbind("mouseup", onDragEnd);
+            }
+
+            function onDragStart(event){
+                event.data = {
+                    lastCoord:{
+                        left : event.clientX,
+                        top : event.clientY
+                    }
+                };
+                $(document).bind("mouseup", event.data, onDragEnd);
+                $(document).bind("mousemove", event.data, onDragging);
+            }               
+            $target.bind('mousedown', onDragStart);
+
+            /*
+             * Draw initial view of source canvas onto target canvas
+             */ 
+            $window.resize(draw);
+            $window.trigger("resize");
+        }
+
+        function draw() {
+            target.width = $window.width();
+            target.height = $window.height();
+
+            if(!scrollMax){
+                scrollMax = {
+                    x: source.width - target.width,
+                    y: source.height - target.height
+                }
+            }
+
+            targetContext.drawImage(source, scroll.x, scroll.y, target.width, target.height, 0, 0, target.width, target.height);
+            $('#x').html(scroll.x);
+            $('#y').html(scroll.y);
+        }
+
+
+        $(document).ready(init);
+    </script>
+
+</head>
+<body>
+    <div id="coords">
+        <p>Drag the gradient with the mouse</p>
+        <p>x: <span id="x"></span></p>
+        <p>y: <span id="y"></span></p>
+    </div>
+    <canvas id="source" width="4001" height="4001"></canvas>
+
+    <canvas id="target"></canvas>
+
+</body>
+</html>
