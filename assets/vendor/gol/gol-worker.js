@@ -2,10 +2,9 @@ importScripts('gol.js')
 
 postMessage({ action: 'log', data: 'Starting' })
 
-var SIZE = 500
 var DELAY = 100
 
-var matrix = new GoL.Matrix(SIZE)
+var matrix = new GoL.Matrix(GoL.SIZE)
 
 /*
 // Simple Glider
@@ -17,8 +16,8 @@ matrix.spawn(6, 3)
 */
 
 // Randomly fill entire matrix
-for(var x = 0; x < SIZE; x++) {
-	for(var y = 0; y < SIZE; y++) {
+for(var x = 0; x < GoL.SIZE; x++) {
+	for(var y = 0; y < GoL.SIZE; y++) {
 		if(Math.floor(Math.random() * 2) == 1) {
 			matrix.spawn(x, y)
 		}
