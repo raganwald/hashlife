@@ -16,10 +16,11 @@
       viewport = $viewport[0];
       viewportContext = viewport.getContext("2d");
       
-      $universe = MinimumSquareEnclosing(viewport.width, viewport.height);
-      universe = $universe.canvas();
+      viewport.height = window.innerHeight;
+      viewport.width = window.innerWidth;
       
-      console.log("SOURCE", universe)
+      $universe = MinimumSquareEnclosing(viewport.width * 2, viewport.height * 2);
+      universe = $universe.canvas();
       
       /*
        * Setup drag listening for viewport canvas to scroll over universe canvas
@@ -107,7 +108,6 @@
       $('#x').html(_scroll.x);
       $('#y').html(_scroll.y);
       
-      console.log("DRAW",universe, _scroll.x, _scroll.y, viewport.width, viewport.height, 0, 0, viewport.width, viewport.height)
   }
 
 
