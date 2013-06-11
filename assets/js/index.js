@@ -60,9 +60,11 @@
       // TODO: incorporate _scroll!!!!!!!!!
       
       var relativeToBuffer = {
-        x: Math.floor((_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / CellSize()),
-        y: Math.floor((_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / CellSize())
+        x: Math.floor((-_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / CellSize()),
+        y: Math.floor((-_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / CellSize())
       };
+      
+      console.log(_scrollFromCenter.x, (vCanvas.width / 2), event.clientX)
       
       relativeToBuffer.x = relativeToBuffer.x >= 0
                            ? relativeToBuffer.x + 1
