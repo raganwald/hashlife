@@ -1,4 +1,6 @@
 (function (root, $, undefined) {
+  
+  var _ = root._ || require('underscore');
 	
   var GRID_LINE_WIDTH = 1;
 	
@@ -10,14 +12,17 @@
   
   var CELL_SIZE_PX = 8;
   
-  var _ = root._ || require('underscore');
-  
+  // TODO: Remove `_.decorator`
+  //
   PaintsCanvas = _.decorator({
+    canvasSize: function () {
+      return this.children[0].canvasSize() * 2;
+    },
     canvas: function () {
       if (this._canvas != null) return this._canvas;
       var childCanvases = _.invoke(this.children, 'canvas');
       var canvas = this._canvas = document.createElement('canvas');
-      var SIZE = canvas.width = canvas.height = childCanvases[0].width * 2;
+      var SIZE = canvas.width = canvas.height = this.canvasSize();
     	var SQUARE_OFFSET = ((SIZE - GRID_LINE_WIDTH) / 2);
     	var SQUARE_WIDTH = SQUARE_OFFSET - 2 * GRID_LINE_WIDTH;
       var context = canvas.getContext('2d');
@@ -62,11 +67,15 @@
   });
   
   PaintsCanvas.call(QuadTree.prototype);
+  
+  Cell.prototype.canvasSize = function () {
+    return CELL_SIZE_PX;
+  }
 	
 	Cell.prototype.canvas = function () {
 	  if (this._canvas != null) return this._canvas;
 	  else return this._canvas = _.tap(document.createElement('canvas'), function (canvas) {
-	    canvas.width = canvas.height = CELL_SIZE_PX;
+	    canvas.width = canvas.height = this.canvasSize();
       var context = canvas.getContext('2d');
   		context.clearRect(0, 0, CELL_SIZE_PX, CELL_SIZE_PX);
   		context.fillStyle = (this.id === 0 ? COLORS.BACKGROUND : COLORS.LIFE);
@@ -74,21 +83,8 @@
     }.bind(this));
 	}
   
-  PaintsCanvas.call(Leaf.prototype);
-  
-  var LOG2 = Math.log(2);
-  
-  function MinimumSquareEnclosing(height, width) {
-    var length = Math.ceil(Math.max(height, width) / CELL_SIZE_PX),
-        log2 = Math.log(length)/LOG2,
-        generation = Math.ceil(log2),
-        qt = EmptyQuadTree(generation);
-        
-    return qt;
-  }
-  
-  _.extend(window, {
-    MinimumSquareEnclosing: MinimumSquareEnclosing
+  _.extend(root, {
+    CELL_SIZE_PX: CELL_SIZE_PX
   })
   
 })(this, jQuery);

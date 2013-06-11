@@ -8,6 +8,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            cursor: pointer;
         }
 
         #source {
@@ -26,7 +27,7 @@
 
     </style>
 
-    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="./assets/vendor/jquery-1.8.2.min.js"></script>
     
 		<script src="./assets/vendor/underscore.js" type="text/javascript"></script>
 		
@@ -47,16 +48,13 @@
 		<script src="./assets/js/quad-tree.js" type="text/javascript"></script>
     
 		<script src="./assets/js/canvas.js" type="text/javascript"></script>
+    
+		<script src="./assets/js/children.js" type="text/javascript"></script>
 		
 		<script src="./assets/js/index.js" type="text/javascript"></script>
 
 </head>
 <body>
-    <div id="coords">
-        <p>Drag the viewport with the mouse</p>
-        <p>x: <span id="x"></span></p>
-        <p>y: <span id="y"></span></p>
-    </div>
 
     <canvas id="viewport"></canvas>
 
