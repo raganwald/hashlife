@@ -42,6 +42,84 @@
     ]);
   };
   
+  Cell.prototype.flip = function (offset) {
+    console.log('flipping cell', this.id, 1-this.id)
+    return Cell(1 - this.id);
+  };
+  
+  QuadTree.prototype.flip = function (offset) {
+    var x = offset.x,
+        y = offset.y,
+        grandchildSize,
+        childSize;
+        
+    if (this.generation > 1) {
+      grandchildSize = Math.pow(2, this.generation - 2);
+      childSize = grandchildSize * 2;
+      if (x >= childSize || y >= childSize) throw "Wrong!";
+      if (x === 0 || y === 0) throw "Zero";
+    }
+    else {
+      grandchildSize = 0;
+    }
+        
+    console.log('flipping tree', x, y);
+        
+    if (x < 0 && y < 0) {
+      return new QuadTree([
+        this.children[0].flip({
+          x: removeZero(x + grandchildSize),
+          y: removeZero(y + grandchildSize)
+        }),
+        this.children[1],
+        this.children[2],
+        this.children[3]
+      ]);
+    }
+    else if (x > 0 && y < 0) {
+      return new QuadTree([
+        this.children[0],
+        this.children[1].flip({
+          x: removeZero(x - 1 - grandchildSize),
+          y: removeZero(y + grandchildSize)
+        }),
+        this.children[2],
+        this.children[3]
+      ]);
+    }
+    else if (x > 0 && y > 0) {
+      return new QuadTree([
+        this.children[0],
+        this.children[1],
+        this.children[2].flip({
+          x: removeZero(x - 1 - grandchildSize),
+          y: removeZero(y - 1 - grandchildSize)
+        }),
+        this.children[3]
+      ]);
+    }
+    else if (x < 0 && y > 0) {
+      return new QuadTree([
+        this.children[0],
+        this.children[1],
+        this.children[2],
+        this.children[3].flip({
+          x: removeZero(x + grandchildSize),
+          y: removeZero(y - 1 - grandchildSize)
+        })
+      ]);
+    }
+    else throw "unhandled"
+    
+    //////////
+    
+    function removeZero (n) {
+      return n < 0
+             ? n
+             : n + 1;
+    }
+  }
+  
   QuadTree.prototype.resizeTo = function (generation) {
     if (this.generation > generation) throw "implement me";
     var resized = this;
