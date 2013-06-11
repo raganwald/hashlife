@@ -53,10 +53,25 @@
         grandchildSize,
         childSize;
         
-    if (this.generation > 1) {
+    if (this.generation > 2) {
       grandchildSize = Math.pow(2, this.generation - 2);
       childSize = grandchildSize * 2;
-      if (x >= childSize || y >= childSize) throw "Wrong!";
+      if (x > childSize) throw "Wrong! " + x + " > " + childSize;
+      if (y > childSize) throw "Wrong! " + y + " > " + childSize;
+      if (x === 0 || y === 0) throw "Zero";
+    }
+    else if (this.generation === 2) {
+      grandchildSize = 1;
+      childSize = 2;
+      if (x > childSize) throw "Wrong! " + x + " > " + childSize;
+      if (y > childSize) throw "Wrong! " + y + " > " + childSize;
+      if (x === 0 || y === 0) throw "Zero";
+    }
+    else if (this.generation === 1) {
+      grandchildSize = 1;
+      childSize = 1;
+      if (x > childSize) throw "Wrong! " + x + " > " + childSize;
+      if (y > childSize) throw "Wrong! " + y + " > " + childSize;
       if (x === 0 || y === 0) throw "Zero";
     }
     else {

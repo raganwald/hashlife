@@ -19,9 +19,11 @@
       return this.children[0].canvasSize() * 2;
     },
     canvas: function () {
-      if (this._canvas != null) return this._canvas;
+      this._canvases || (this._canvases = {});
+      if (this._canvases[CELL_SIZE_PX]) return this._canvases[CELL_SIZE_PX];
+      
       var childCanvases = _.invoke(this.children, 'canvas');
-      var canvas = this._canvas = document.createElement('canvas');
+      var canvas = this._canvases[CELL_SIZE_PX] = document.createElement('canvas');
       var SIZE = canvas.width = canvas.height = this.canvasSize();
     	var SQUARE_OFFSET = ((SIZE - GRID_LINE_WIDTH) / 2);
     	var SQUARE_WIDTH = SQUARE_OFFSET - 2 * GRID_LINE_WIDTH;
@@ -61,7 +63,7 @@
   		context.stroke()
       context.closePath()
     
-      return this._canvas;
+      return canvas;
     }
     
   });
@@ -73,8 +75,10 @@
   }
 	
 	Cell.prototype.canvas = function () {
-	  if (this._canvas != null) return this._canvas;
-	  else return this._canvas = _.tap(document.createElement('canvas'), function (canvas) {
+      this._canvases || (this._canvases = {});
+      if (this._canvases[CELL_SIZE_PX]) return this._canvases[CELL_SIZE_PX];
+      
+	  else return this._canvases[CELL_SIZE_PX] = _.tap(document.createElement('canvas'), function (canvas) {
 	    canvas.width = canvas.height = this.canvasSize();
       var context = canvas.getContext('2d');
   		context.clearRect(0, 0, CELL_SIZE_PX, CELL_SIZE_PX);
@@ -82,9 +86,14 @@
   		context.fillRect(0, 0, CELL_SIZE_PX, CELL_SIZE_PX);
     }.bind(this));
 	}
+	
+	function CellSize (optionalSize) {
+	  if (optionalSize != null) CELL_SIZE_PX = optionalSize;
+	  return CELL_SIZE_PX;
+	}
   
   _.extend(root, {
-    CELL_SIZE_PX: CELL_SIZE_PX
+    CellSize: CellSize
   })
   
 })(this, jQuery);

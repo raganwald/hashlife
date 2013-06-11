@@ -12,7 +12,7 @@
     vCanvas.width = window.innerWidth;
     
     // the buffer within the universe
-    var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / CELL_SIZE_PX),
+    var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / CellSize()),
         log2 = Math.log(length)/LOG2,
         bufferGeneration = Math.ceil(log2),
         bufferTree = EmptyQuadTree(4, Cell(1)),
@@ -29,19 +29,39 @@
       .bind('mousedown', onDragStart)
       .dblclick(onClick);
       
+    $(document)
+      .keypress(onKeypess);
+      
     $(window)
       .resize(draw)
       .trigger("resize");
       
     ///////////////////////////////////////////////////////////////////
     
+    function onKeypess (event) {
+      if (event.which === 43) {
+        console.log('zoom in');
+        CellSize(CellSize() * 2);
+        console.log(bufferTree.canvasSize())
+        draw(true);
+      }
+      else if (event.which === 45) {
+        console.log('zoom out');
+        if (root.CellSize() >= 2) {
+        CellSize(CellSize() / 2);
+          draw(true);
+        }
+      }
+      else return void 0;
+    }
+    
     function onClick (event) {
       
       // TODO: incorporate _scroll!!!!!!!!!
       
       var relativeToBuffer = {
-        x: Math.floor((_bufferFromCenter.x - (vCanvas.width / 2) + event.clientX) / CELL_SIZE_PX),
-        y: Math.floor((_bufferFromCenter.y - (vCanvas.height / 2) + event.clientY) / CELL_SIZE_PX)
+        x: Math.floor((_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / CellSize()),
+        y: Math.floor((_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / CellSize())
       };
       
       relativeToBuffer.x = relativeToBuffer.x >= 0
