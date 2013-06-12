@@ -124,6 +124,8 @@
 
     function draw (force) {
       
+      console.log('drawing')
+      
       force = !!force;
       
       vCanvas[0].width = $(window).width();
@@ -146,12 +148,12 @@
       ) {
         force = false;
         upperLeft = {
-          x: _scrollFromCenter.x - (vCanvas.width / 2),
-          y: _scrollFromCenter.y - (vCanvas.width / 2)
+          x: _scrollFromCenter.x - (vCanvas[0].width / 2),
+          y: _scrollFromCenter.y - (vCanvas[0].width / 2)
         };
         lowerRight = {
-          x: _scrollFromCenter.x + (vCanvas.width / 2),
-          y: _scrollFromCenter.y + (vCanvas.width / 2)
+          x: _scrollFromCenter.x + (vCanvas[0].width / 2),
+          y: _scrollFromCenter.y + (vCanvas[0].width / 2)
         };
         
         bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
@@ -170,7 +172,7 @@
         }
         
       } 
-      vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas.width, vCanvas.height, 0, 0, vCanvas.width, vCanvas.height);
+      vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas[0].width, vCanvas[0].height, 0, 0, vCanvas[0].width, vCanvas[0].height);
     }   
 
   function getBufferInfo (upperLeft, lowerRight) {
