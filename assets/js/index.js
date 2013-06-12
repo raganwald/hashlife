@@ -15,7 +15,7 @@
     var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / CellSize()),
         log2 = Math.log(length)/LOG2,
         bufferGeneration = Math.ceil(log2),
-        bufferTree = EmptyQuadTree(4, Cell(1)),
+        bufferTree = Cell(0).resizeTo(bufferGeneration),
         bufferCanvas = bufferTree.canvas();
         
     // the universe
@@ -78,8 +78,6 @@
       if (relativeToBuffer.y === 0) throw "BAD y";
       
       root.universe = root.universe.flip(relativeToBuffer);
-      
-      console.log(root.universe);
       
       draw(true);
     }
@@ -155,13 +153,10 @@
           x: _scrollFromCenter.x + (vCanvas.width / 2),
           y: _scrollFromCenter.y + (vCanvas.width / 2)
         };
-        // 
-        // console.log('getting buffer info', relativeScroll.x, relativeScroll.y);
         
         bufferInfo = root.universe.bufferInfo(upperLeft, lowerRight);
     
         while (bufferInfo == null) {
-          // console.log('double!');
           root.universe = root.universe.double();
           bufferInfo = root.universe.bufferInfo(upperLeft, lowerRight);
         }
@@ -169,14 +164,11 @@
         bufferCanvas = bufferTree.canvas();
         _bufferFromCenter = bufferInfo.fromCenter;
         
-        // console.log("Buffer is now", _bufferFromCenter.x, _bufferFromCenter.y);
-        
         relativeScroll = {
           x: ((bufferCanvas.width - vCanvas.width) / 2 ) - _scrollFromCenter.x + _bufferFromCenter.x,
           y: ((bufferCanvas.height - vCanvas.height)/ 2 ) - _scrollFromCenter.y + _bufferFromCenter.y
         }
         
-        console.log("relativeScroll", relativeScroll.x, relativeScroll.y);
       } 
       vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas.width, vCanvas.height, 0, 0, vCanvas.width, vCanvas.height);
     }   
