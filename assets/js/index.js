@@ -12,7 +12,7 @@
     vCanvas.width = window.innerWidth;
     
     // the buffer within the universe
-    var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / CellSize()),
+    var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / Cell.size()),
         log2 = Math.log(length)/LOG2,
         bufferGeneration = Math.ceil(log2),
         bufferTree = Cell(0).resizeTo(bufferGeneration),
@@ -41,14 +41,14 @@
     function onKeypess (event) {
       if (event.which === 43) {
         console.log('zoom in');
-        CellSize(CellSize() * 2);
+        Cell.size(Cell.size() * 2);
         console.log(bufferTree.canvasSize())
         draw(true);
       }
       else if (event.which === 45) {
         console.log('zoom out');
-        if (root.CellSize() >= 2) {
-        CellSize(CellSize() / 2);
+        if (root.Cell.size() >= 2) {
+        Cell.size(Cell.size() / 2);
           draw(true);
         }
       }
@@ -60,8 +60,8 @@
       // TODO: incorporate _scroll!!!!!!!!!
       
       var relativeToBuffer = {
-        x: Math.floor((-_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / CellSize()),
-        y: Math.floor((-_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / CellSize())
+        x: Math.floor((-_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: Math.floor((-_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / Cell.size())
       };
       
       console.log(_scrollFromCenter.x, (vCanvas.width / 2), event.clientX)
@@ -154,11 +154,11 @@
           y: _scrollFromCenter.y + (vCanvas.width / 2)
         };
         
-        bufferInfo = root.universe.bufferInfo(upperLeft, lowerRight);
+        bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
     
         while (bufferInfo == null) {
           root.universe = root.universe.double();
-          bufferInfo = root.universe.bufferInfo(upperLeft, lowerRight);
+          bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
         }
         bufferTree = bufferInfo.bufferTree;
         bufferCanvas = bufferTree.canvas();
@@ -174,12 +174,12 @@
     }   
 
   function getBufferInfo (upperLeft, lowerRight) {
-    var bufferInfo = $bufferInfo = root.universe.bufferInfo(upperLeft, lowerRight);
+    var bufferInfo = $bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
     
     while (bufferInfo == null) {
       console.log('double!');
       root.universe = root.universe.double();
-      bufferInfo = $bufferInfo = root.universe.bufferInfo(upperLeft, lowerRight);
+      bufferInfo = $bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
     }
     
     buffer = bufferInfo.bufferTree.canvas();

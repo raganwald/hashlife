@@ -1,4 +1,4 @@
-(function (root, undefined) {
+(function (root) {
   
   var _ = root._ || require('underscore');
   

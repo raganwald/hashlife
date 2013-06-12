@@ -10,20 +10,20 @@
 		LIFE: '#356AA0'
 	}
   
-  var CELL_SIZE_PX = 8;
-  
   // TODO: Remove `_.decorator`
   //
-  PaintsCanvas = _.decorator({
+  _.extend(QuadTree.prototype, {
+    
     canvasSize: function () {
       return this.children[0].canvasSize() * 2;
     },
+    
     canvas: function () {
       this._canvases || (this._canvases = {});
-      if (this._canvases[CELL_SIZE_PX]) return this._canvases[CELL_SIZE_PX];
+      if (this._canvases[Cell.size()]) return this._canvases[Cell.size()];
       
       var childCanvases = _.invoke(this.children, 'canvas');
-      var canvas = this._canvases[CELL_SIZE_PX] = document.createElement('canvas');
+      var canvas = this._canvases[Cell.size()] = document.createElement('canvas');
       var SIZE = canvas.width = canvas.height = this.canvasSize();
     	var SQUARE_OFFSET = ((SIZE - GRID_LINE_WIDTH) / 2);
     	var SQUARE_WIDTH = SQUARE_OFFSET - 2 * GRID_LINE_WIDTH;
@@ -68,32 +68,34 @@
     
   });
   
-  PaintsCanvas.call(QuadTree.prototype);
+  _.extend(Cell, {
+    size: (function (size) {
+      return function (optionalSize) {
+    	  if (optionalSize != null) size = optionalSize;
+    	  return size;
+    	}
+    })(8)
+  });
   
-  Cell.prototype.canvasSize = function () {
-    return CELL_SIZE_PX;
-  }
-	
-	Cell.prototype.canvas = function () {
-      this._canvases || (this._canvases = {});
-      if (this._canvases[CELL_SIZE_PX]) return this._canvases[CELL_SIZE_PX];
+  _.extend(Cell.prototype, {
+    
+    canvasSize: function () {
+      return Cell.size();
+    },
+    
+    canvas: function () {
+        this._canvases || (this._canvases = {});
+        if (this._canvases[Cell.size()]) return this._canvases[Cell.size()];
       
-	  else return this._canvases[CELL_SIZE_PX] = _.tap(document.createElement('canvas'), function (canvas) {
-	    canvas.width = canvas.height = this.canvasSize();
-      var context = canvas.getContext('2d');
-  		context.clearRect(0, 0, CELL_SIZE_PX, CELL_SIZE_PX);
-  		context.fillStyle = (this.id === 0 ? COLORS.BACKGROUND : COLORS.LIFE);
-  		context.fillRect(0, 0, CELL_SIZE_PX, CELL_SIZE_PX);
-    }.bind(this));
-	}
-	
-	function CellSize (optionalSize) {
-	  if (optionalSize != null) CELL_SIZE_PX = optionalSize;
-	  return CELL_SIZE_PX;
-	}
-  
-  _.extend(root, {
-    CellSize: CellSize
-  })
+  	  else return this._canvases[Cell.size()] = _.tap(document.createElement('canvas'), function (canvas) {
+  	    canvas.width = canvas.height = this.canvasSize();
+        var context = canvas.getContext('2d');
+    		context.clearRect(0, 0, Cell.size(), Cell.size());
+    		context.fillStyle = (this.id === 0 ? COLORS.BACKGROUND : COLORS.LIFE);
+    		context.fillRect(0, 0, Cell.size(), Cell.size());
+      }.bind(this));
+  	}
+    
+  });
   
 })(this, jQuery);
