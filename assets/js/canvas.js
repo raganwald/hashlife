@@ -15,7 +15,7 @@
   _.extend(QuadTree.prototype, {
     
     canvasSize: function () {
-      return this.children[0].canvasSize() * 2;
+      return this.size() * Cell.size();
     },
     
     canvas: function () {

@@ -115,66 +115,82 @@
     },
   
     // Brute force and sloppy
+    // relative to the center of the tree being called
+    // given in cells, not pixels
     findTreeEnclosingRectangle: function (upperLeft, lowerRight) {
-      var currentSquare = this,
-          size = this.canvasSize(),
-          viewportSize = Math.max(Math.abs(lowerRight.x - upperLeft.x), Math.abs(lowerRight.y - upperLeft.y)),
-          halfChildSize = size / 4,
-          nsIndex,
+      //alert("findTreeEnclosingRectangle for " + this.id)
+      var size = this.size(),
+          extant = Math.floor(size / 2),
           ewIndex,
-          childTopLeft,
-          childBottomRight,
-          child,
-          descendantInfo;
+          nsIndex;
         
-      // Case: doesn't fit at all
-      if (Math.abs(upperLeft.x) >size) return;
-      if (Math.abs(upperLeft.y) >size) return;
-      if (Math.abs(lowerRight.x) >size) return;
-      if (Math.abs(lowerRight.y) >size) return;
-    
-      // Case: isn't double the size
-      if (size < (viewportSize * 2)) return;
-    
-      // children
+      // Case: doesn't fit at all. redundant check!?
+      if (Math.abs(upperLeft.x) > extant) return;
+      if (Math.abs(upperLeft.y) > extant) return;
+      if (Math.abs(lowerRight.x) > extant) return;
+      if (Math.abs(lowerRight.y) > extant) return;
+      
+      if (this.generation === 1) return {
+                                   bufferTree: this,
+                                   fromCenterInCells: {
+                                     x: 0,
+                                     y: 0
+                                   }
+                                 };
+      
+      var upperLeftRelativeToChild,
+          lowerRightRelativeToChild,
+          child,
+          childOrDescendantInfo,
+          childExtant = Math.floor(extant / 2); //Distance to center to child
+      
+      // fits, so check children
+      // TODO: Check all and return smallest!
       for (nsIndex = -1; nsIndex < 2; ++nsIndex) {
         for (ewIndex = -1; ewIndex < 2; ++ewIndex) {
-          childTopLeft = {
-            x: (ewIndex - 1) * halfChildSize,
-            y: (nsIndex - 1) * halfChildSize
+          
+          upperLeftRelativeToChild = {
+            x: upperLeft.x - (ewIndex * childExtant),
+            y: upperLeft.y - (nsIndex * childExtant)
           };
-          childBottomRight = {
-            x: (ewIndex + 1) * halfChildSize,
-            y: (nsIndex + 1) * halfChildSize
+          
+          if (Math.abs(upperLeftRelativeToChild.x) > childExtant) continue;
+          if (Math.abs(upperLeftRelativeToChild.y) > childExtant) continue;
+          
+          lowerRightRelativeToChild = {
+            x: lowerRight.x - (ewIndex * childExtant),
+            y: lowerRight.y - (nsIndex * childExtant)
           }
-          if (upperLeft.x >= childTopLeft.x &&
-              upperLeft.y >= childTopLeft.y &&
-              lowerRight.x <= childBottomRight.x &&
-              lowerRight.y <= childBottomRight.y) {
-            child = this.subTreeByIndices(ewIndex, nsIndex);
-            upperLeft = {
-              x: upperLeft.x - childTopLeft.x,
-              y: upperLeft.y - childTopLeft.y
-            };
-            lowerRight = {
-              x: lowerRight.x - childTopLeft.x,
-              y: lowerRight.y - childTopLeft.y
-            }
-            descendantInfo = child.findTreeEnclosingRectangle(upperLeft, lowerRight);
-            return descendantInfo
-                   ? descendantInfo
-                   : {
-                       bufferTree: child,
-                       fromCenter: {
-                         x: ((childBottomRight.x + childTopLeft.x) / 2),
-                         y: ((childBottomRight.y + childTopLeft.y) / 2)
-                       }
-                     };
+          
+          if (Math.abs(lowerRightRelativeToChild.x) > childExtant) continue;
+          if (Math.abs(lowerRightRelativeToChild.y) > childExtant) continue;
+          
+          child = this.subTreeByIndices(ewIndex, nsIndex);
+          
+          childOrDescendantInfo = child.findTreeEnclosingRectangle(upperLeftRelativeToChild, lowerRightRelativeToChild);
+          
+          if (childOrDescendantInfo) {
+            var r = {
+                     bufferTree: childOrDescendantInfo.bufferTree,
+                     fromCenterInCells: {
+                       x: childOrDescendantInfo.fromCenterInCells.x + (ewIndex * childExtant),
+                       y: childOrDescendantInfo.fromCenterInCells.y + (nsIndex * childExtant)
+                     }
+                   };
+            return r;
           }
+          alert("WE SHOULD NOT GET HERE");
         }
       }
+      //alert("no children fit " + this.id + " of size " + this.size());
+      return {
+               bufferTree: this,
+               fromCenterInCells: {
+                 x: 0,
+                 y: 0
+               }
+             };
     }
-    
   });
   
   

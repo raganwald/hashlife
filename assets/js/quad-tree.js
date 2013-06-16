@@ -16,7 +16,6 @@
   _.extend(Cell.prototype, {
     
     flip: function (offset) {
-      console.log('flipping cell', this.id, 1-this.id)
       return Cell(1 - this.id);
     },
     

@@ -4,7 +4,7 @@
   
   $(document).ready(function () {
     
-    // viewpoet
+    // viewport
     var vCanvas = $('canvas#viewport'),
         vContext = vCanvas[0].getContext("2d");
     
@@ -23,11 +23,16 @@
     
     // scroll is relative to the center of the universe
     var _scrollFromCenter = { x: 0, y: 0 },
-        _bufferFromCenter = { x: 0, y: 0 };
+        _bufferUpperLeftFromUniverseCenter = { x: -(bufferTree.canvasSize() / 2), y: -(bufferTree.canvasSize() / 2) };
+        _bufferLowerRightFromUniverseCenter = { x: (bufferTree.canvasSize() / 2), y: (bufferTree.canvasSize() / 2) };
+    
+    var findBufferTree = (function (upperLeft, lowerRight) {
+      return root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
+    });
     
     vCanvas
       .bind('mousedown', onDragStart)
-      .dblclick(onClick);
+      .dblclick(flipCell);
       
     $(document)
       .keypress(onKeypess);
@@ -40,44 +45,45 @@
     
     function onKeypess (event) {
       if (event.which === 43) {
-        console.log('zoom in');
+        console.log('zoom in', bufferTree.generation);
         Cell.size(Cell.size() * 2);
-        console.log(bufferTree.canvasSize())
+        // _scrollFromCenter = {
+        //   x: _scrollFromCenter.x * 2,
+        //   y: _scrollFromCenter.y * 2
+        // }
         draw(true);
+        console.log('zoomed in', bufferTree.canvasSize());
       }
       else if (event.which === 45) {
-        console.log('zoom out');
+        console.log('zoom out', bufferTree.canvasSize());
         if (root.Cell.size() >= 2) {
-        Cell.size(Cell.size() / 2);
+          Cell.size(Cell.size() / 2);
+          // _scrollFromCenter = {
+          //   x: _scrollFromCenter.x / 2,
+          //   y: _scrollFromCenter.y / 2
+          // }
           draw(true);
+          console.log('zoomed out', bufferTree.canvasSize());
         }
       }
       else return void 0;
     }
     
-    function onClick (event) {
+    function noZero (n) {
+      return Math.floor(n >= 0
+                        ? n + 1
+                        : n
+             );
+    }
+    
+    function flipCell (event) {
       
-      // TODO: incorporate _scroll!!!!!!!!!
-      
-      var relativeToBuffer = {
-        x: Math.floor((-_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / Cell.size()),
-        y: Math.floor((-_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / Cell.size())
+      var relativeToUniverseCenterInCells = {
+        x: noZero((_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: noZero((_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / Cell.size())
       };
       
-      console.log(_scrollFromCenter.x, (vCanvas.width / 2), event.clientX)
-      
-      relativeToBuffer.x = relativeToBuffer.x >= 0
-                           ? relativeToBuffer.x + 1
-                           : relativeToBuffer.x;
-      
-      relativeToBuffer.y = relativeToBuffer.y >= 0
-                           ? relativeToBuffer.y + 1
-                           : relativeToBuffer.y;
-                           
-      if (relativeToBuffer.x === 0) throw "BAD x";
-      if (relativeToBuffer.y === 0) throw "BAD y";
-      
-      root.universe = root.universe.flip(relativeToBuffer);
+      root.universe = root.universe.flip(relativeToUniverseCenterInCells);
       
       draw(true);
     }
@@ -103,8 +109,8 @@
           top : (event.clientY - event.data.lastCoord.top)
       };
 
-      _scrollFromCenter.x = _scrollFromCenter.x + delta.left;
-      _scrollFromCenter.y = _scrollFromCenter.y + delta.top;
+      _scrollFromCenter.x = _scrollFromCenter.x - delta.left;
+      _scrollFromCenter.y = _scrollFromCenter.y - delta.top;
     
       event.data.lastCoord = {
         left : event.clientX,
@@ -124,85 +130,86 @@
 
     function draw (force) {
       
-      console.log('drawing')
-      
-      force = !!force;
-      
+      //synchronize window and canvas dimensions
       vCanvas[0].width = $(window).width();
       vCanvas[0].height = $(window).height();
       
       var bufferInfo,
-          upperLeft, 
-          lowerRight,
+          upperLeftInPixels = {
+            x: _scrollFromCenter.x - (vCanvas[0].width / 2),
+            y: _scrollFromCenter.y - (vCanvas[0].height / 2)
+          },
+          // in pixels
+          lowerRightInPixels = {
+            x: _scrollFromCenter.x + (vCanvas[0].width / 2),
+            y: _scrollFromCenter.y + (vCanvas[0].height / 2)
+          },
           relativeScroll = {
-            x: ((bufferCanvas.width - vCanvas.width) / 2 ) - _scrollFromCenter.x + _bufferFromCenter.x,
-            y: ((bufferCanvas.height - vCanvas.height)/ 2 ) - _scrollFromCenter.y + _bufferFromCenter.y
+            x: upperLeftInPixels.x - _bufferUpperLeftFromUniverseCenter.x,
+            y: upperLeftInPixels.y - _bufferUpperLeftFromUniverseCenter.y 
           };
-      
-      while (
-        relativeScroll.x < 0 ||
-        relativeScroll.x > (bufferCanvas.width - vCanvas.width) ||
-        relativeScroll.y < 0 ||
-        relativeScroll.y > (bufferCanvas.height - vCanvas.height) ||
+          
+      if (
+        upperLeftInPixels.x < _bufferUpperLeftFromUniverseCenter.x ||
+        upperLeftInPixels.y < _bufferUpperLeftFromUniverseCenter.y ||
+        lowerRightInPixels.x > _bufferLowerRightFromUniverseCenter.x ||
+        lowerRightInPixels.y > _bufferLowerRightFromUniverseCenter.y ||
         force
       ) {
         force = false;
-        upperLeft = {
-          x: _scrollFromCenter.x - (vCanvas[0].width / 2),
-          y: _scrollFromCenter.y - (vCanvas[0].width / 2)
+        
+        upperLeftInCells = {
+          x: Math.floor(upperLeftInPixels.x / Cell.size()),
+          y: Math.floor(upperLeftInPixels.y / Cell.size())
         };
-        lowerRight = {
-          x: _scrollFromCenter.x + (vCanvas[0].width / 2),
-          y: _scrollFromCenter.y + (vCanvas[0].width / 2)
+        lowerRightInCells = {
+          x: Math.ceil(lowerRightInPixels.x / Cell.size()),
+          y: Math.ceil(lowerRightInPixels.y / Cell.size())
         };
         
-        bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
+        bufferInfo = findBufferTree(upperLeftInCells, lowerRightInCells);
     
         while (bufferInfo == null) {
           root.universe = root.universe.double();
-          bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
+          bufferInfo = findBufferTree(upperLeftInCells, lowerRightInCells);
         }
+        
         bufferTree = bufferInfo.bufferTree;
         bufferCanvas = bufferTree.canvas();
-        _bufferFromCenter = bufferInfo.fromCenter;
         
+        var bufferExtant = bufferTree.canvasSize() / 2,
+            fromCenterInPixels = {
+              x: bufferInfo.fromCenterInCells.x * Cell.size(),
+              y: bufferInfo.fromCenterInCells.y * Cell.size()
+            };
+        
+        _bufferUpperLeftFromUniverseCenter = { 
+          x: fromCenterInPixels.x - bufferExtant, 
+          y: fromCenterInPixels.y - bufferExtant
+        };
+        _bufferLowerRightFromUniverseCenter = { 
+          x: fromCenterInPixels.x + bufferExtant, 
+          y: fromCenterInPixels.y + bufferExtant 
+        };
         relativeScroll = {
-          x: ((bufferCanvas.width - vCanvas.width) / 2 ) - _scrollFromCenter.x + _bufferFromCenter.x,
-          y: ((bufferCanvas.height - vCanvas.height)/ 2 ) - _scrollFromCenter.y + _bufferFromCenter.y
+          x: upperLeftInPixels.x - _bufferUpperLeftFromUniverseCenter.x,
+          y: upperLeftInPixels.y - _bufferUpperLeftFromUniverseCenter.y 
+        };
+        
+        if (
+          upperLeftInPixels.x < _bufferUpperLeftFromUniverseCenter.x ||
+          upperLeftInPixels.y < _bufferUpperLeftFromUniverseCenter.y ||
+          lowerRightInPixels.x > _bufferLowerRightFromUniverseCenter.x ||
+          lowerRightInPixels.y > _bufferLowerRightFromUniverseCenter.y 
+        ) {
+          console.log(upperLeftInCells.x, upperLeftInCells.y, bufferInfo.fromCenter.x, bufferInfo.fromCenter.y)
+          throw 'something';
         }
         
-      } 
-      vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas[0].width, vCanvas[0].height, 0, 0, vCanvas[0].width, vCanvas[0].height);
-    }   
-
-  function getBufferInfo (upperLeft, lowerRight) {
-    var bufferInfo = $bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
-    
-    while (bufferInfo == null) {
-      console.log('double!');
-      root.universe = root.universe.double();
-      bufferInfo = $bufferInfo = root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
-    }
-    
-    buffer = bufferInfo.bufferTree.canvas();
-    
-    _limits = {
-      lower: {
-        x: viewportDOMElement.width / 2,
-        y: viewportDOMElement.height / 2
-      },
-      upper: {
-        x: buffer.width - (viewportDOMElement.width / 2),
-        y: buffer.height - (viewportDOMElement.height / 2)
       }
-    };
-    
-    _scroll = {
-      x: (buffer.width / 2) - (viewportDOMElement.width / 2),
-      y: (buffer.height / 2) - (viewportDOMElement.height / 2)
+        
+      vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas[0].width, vCanvas[0].height, 0, 0, vCanvas[0].width, vCanvas[0].height)
     }
-    
-  }
   
 });
 
