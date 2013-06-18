@@ -1,0 +1,24 @@
+{
+  "author": "Reg Braithwaite <reg@braythwayt.com> (http://braythwayt.com)",
+  "name": "LaHermosaVida",
+  "description": "HashLife in the browser",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/raganwald/LaHermosaVida.git"
+  },
+  "scripts": {
+    "test": "jasmine-node --coffee --verbose spec"
+  },
+  "engines": {
+    "node": ""
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jasmine-node": "",
+    "coffee-script": "",
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.0"
+  }
+}

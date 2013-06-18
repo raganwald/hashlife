@@ -10,6 +10,7 @@
     if (!(this instanceof Cell)) return new Cell(id);
 	  this.id = id;
 	  this.generation = 0;
+	  this.population = id;
 	  CACHE[id] = this;
 	}
   
@@ -39,6 +40,7 @@
     return container[nw_ne_se_sw[3].id] || (
       this.id = ++ID,
       this.children = nw_ne_se_sw,
+      this.population = _.reduce(_.pluck(nw_ne_se_sw, 'population'), function (x, y) { return x + y; }, 0),
       this.generation = nw_ne_se_sw[0].generation + 1,
       container[nw_ne_se_sw[3].id] = this
     );

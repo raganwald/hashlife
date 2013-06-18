@@ -1,4 +1,4 @@
-(function (root, $, undefined) {
+(function (root, undefined) {
   
   var NW = 0,
       NE = 1,
@@ -13,6 +13,11 @@
       
   
   var _ = root._ || require('underscore');
+  
+  var env = require('./quad-tree');
+    
+  var QuadTree = env.QuadTree,
+      Cell = env.Cell;
   
   _.extend(Cell.prototype, {
     
@@ -194,4 +199,4 @@
   });
   
   
-})(this, jQuery);
+})(this);
