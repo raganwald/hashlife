@@ -78,12 +78,12 @@
                 + fourByFour.subTreeByIndices(-1, 0).population
                 + ne.children[3].id;
                 
-    var nwNext  = nextState(nwState, nwCount),
-        neNext  = nextState(neState, neCount),
-        seNext  = nextState(seState, seCount),
-        swNext  = nextState(swState, swCount);
+    var nwNext  = new Cell( nextState(nwState, nwCount) ),
+        neNext  = new Cell( nextState(neState, neCount) ),
+        seNext  = new Cell( nextState(seState, seCount) ),
+        swNext  = new Cell( nextState(swState, swCount) );
   
-    fourByFour._future = QuadTree([nwNext, neNext, seNext, swNext]);
+    fourByFour._future = new QuadTree([nwNext, neNext, seNext, swNext]);
                 
     function nextState(state, count) {
       if (state === 0) {
@@ -91,7 +91,7 @@
                ? 1
                : 0;
       }
-      else return (count === 2 || count === 3)
+      else return (count === 4 || count === 5)
                   ? 1
                   : 0;
     }
@@ -102,7 +102,7 @@
   });
   
   _.extend(QuadTree.prototype, {
-    future: function () { return _future; }
+    future: function () { return this._future; }
   });
   
 })(this);

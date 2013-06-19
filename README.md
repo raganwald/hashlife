@@ -25,7 +25,7 @@ The Life "universe" is represented as a [QuadTree][qt], with every node fully [c
 
 The memory requirement for any given state of the universe depends deeply on the amount of entropy in the pattern as we see it as well as in its dynamic behaviour. Methuselah patterns can take up a lot of space while highly regular patterns like glider guns can take up very little space despite creating billions of live cells in their lifetime.
 
-La Hermosa Vida begins with a very large square. If you pan near the edge, it doubles in size automatically. Thus, it gives the illusion of being an infinite plane. The cells are rendered on a canvas, and behind the scenes a "buffer canvas" allows for smooth scrolling within a neighborhood.
+La Hermosa Vida begins with a very large square. If you pan near the edge, it doubles in size automatically. Thus, it gives the illusion of being an infinite plane. The cells are rendered on a canvas, and behind the scenes a "buffer canvas" allows for smooth scrolling within a neighbourhood.
 
 ### prior art
 
