@@ -12,7 +12,7 @@
       SOUTH = -1;
       
   
-  var _ = root._ || require('underscore');
+  var _ = root._ || require('../vendor/underscore');
   
   var env = require('./quad-tree');
     

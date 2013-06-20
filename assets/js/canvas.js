@@ -1,6 +1,6 @@
 (function (root, $, undefined) {
   
-  var _ = root._ || require('underscore');
+  var _ = root._ || require('../vendor/underscore');
 	
   var GRID_LINE_WIDTH = 1;
 	

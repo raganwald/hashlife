@@ -1,6 +1,6 @@
 (function (root) {
   
-  var _ = root._ || require('underscore');
+  var _ = root._ || require('../vendor/underscore');
   
   require('../vendor/underscore-contrib');
   

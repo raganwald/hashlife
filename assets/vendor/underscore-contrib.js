@@ -15,11 +15,11 @@
   // --------------
 
   // Establish the root object, `window` in the browser, or `global` on the server.
-  var _ = root._ || require('underscore');
+  var _ = root._ || require('./underscore');
 
   // Helpers
   // -------
-  
+
   // Create quick reference variables for speed access to core prototypes.
   var slice   = Array.prototype.slice,
       concat  = Array.prototype.concat;
@@ -31,7 +31,7 @@
 
   _.mixin({
     // Concatenates one or more arrays given as arguments.  If given objects and
-    // scalars as arguments `cat` will plop them down in place in the result 
+    // scalars as arguments `cat` will plop them down in place in the result
     // array.  If given an `arguments` object, `cat` will treat it like an array
     // and concatenate it likewise.
     cat: function() {
@@ -101,7 +101,7 @@
       if (sz === 0) return array;
       if (sz === 1) return array;
 
-      return slice.call(_.mapcat(array, function(elem) { 
+      return slice.call(_.mapcat(array, function(elem) {
         return _.cons(elem, [inter]);
       }), 0, -1);
     },
@@ -178,7 +178,7 @@
       return ret;
     },
 
-    // Runs its given function on the index of the elements rather than 
+    // Runs its given function on the index of the elements rather than
     // the elements themselves, keeping all of the truthy values in the end.
     keepIndexed: function(array, pred) {
       return _.filter(_.map(_.range(_.size(array)), function(i) {
@@ -423,7 +423,7 @@
         return fn.apply(this, arguments);
       }
       else throw new RangeError('Only a single argument may be accepted.');
-      
+
     }
   }
 
@@ -451,7 +451,7 @@
       });
     };
   }());
-  
+
   // Mixing in the arity functions
   // -----------------------------
 
@@ -503,7 +503,7 @@
         return fun.call(this, a, b, c, d);
       };
     },
-    
+
     // Flexible curry function with strict arity.
     // Argument application left to right.
     // source: https://github.com/eborden/js-curry
@@ -512,7 +512,7 @@
     // Flexible right to left curry with strict arity.
     rCurry: function (func) {
         return curry.call(this, func, true);
-    },  
+    },
 
 
     curry2: function (fun) {
@@ -532,7 +532,7 @@
         })
       })
     },
-    
+
       // reverse currying for functions taking two arguments.
     rcurry2: function (fun) {
       return enforcesUnary(function (last) {
@@ -551,7 +551,7 @@
         })
       })
     }
-    
+
   });
 
   _.arity = (function () {
@@ -605,9 +605,9 @@
       else return fun(first, optionalLast);
     };
   };
-  
+
   // n.b. depends on underscore.function.arity.js
-    
+
   // Takes a target function and a mapping function. Returns a function
   // that applies the mapper to its arguments before evaluating the body.
   function baseMapArgs (fun, mapFun) {
@@ -615,7 +615,7 @@
       return fun.apply(this, __map.call(arguments, mapFun));
     });
   };
-  
+
   // Mixing in the combinator functions
   // ----------------------------------
 
@@ -627,7 +627,7 @@
     },
 
     // Takes some number of functions, either as an array or variadically
-    // and returns a function that takes some value as its first argument 
+    // and returns a function that takes some value as its first argument
     // and runs it through a pipeline of the original functions given.
     pipeline: function(/*, funs */){
       var funs = (_.isArray(arguments[0])) ? arguments[0] : arguments;
@@ -748,7 +748,7 @@
         };
       }
     },
-    
+
     // map the arguments of a function
     mapArgs: curry2(baseMapArgs),
 
@@ -804,18 +804,18 @@
         return fun.apply(null, reversed);
       };
     },
-    
+
     k: _.always,
     t: _.pipeline
   });
-  
+
   _.unsplatr = _.unsplat;
-    
+
   // map the arguments of a function, takes the mapping function
   // first so it can be used as a combinator
   _.mapArgsWith = curry2(_.flip(baseMapArgs));
-  
-  
+
+
 
 })(this);
 
@@ -833,24 +833,24 @@
 
   // Helpers
   // -------
-  
+
   var HASNTBEENRUN = {};
-  
+
   function unary (fun) {
     return function (first) {
       return fun.call(this, first);
     };
   }
-  
+
   function binary (fun) {
     return function (first, second) {
       return fun.call(this, first, second);
     };
   }
-  
+
   var undefined = void 0;
 
-  
+
   // Mixing in the iterator functions
   // --------------------------------
 
@@ -869,7 +869,7 @@
       }
       return state;
     };
-  
+
     function unfold (seed, unaryFn) {
       var state = HASNTBEENRUN;
       return function () {
@@ -882,7 +882,7 @@
         else return state;
       };
     };
-  
+
     // note that the unfoldWithReturn behaves differently than
     // unfold with respect to the first value returned
     function unfoldWithReturn (seed, unaryFn) {
@@ -917,7 +917,7 @@
         }
       };
     };
-  
+
     function accumulateWithReturn (iter, binaryFn, initial) {
       var state = initial,
           stateAndReturnValue;
@@ -938,7 +938,7 @@
         }
       };
     };
-  
+
     function map (iter, unaryFn) {
       return function() {
         var element;
@@ -964,13 +964,13 @@
         return void 0;
       };
     };
-  
+
     function reject (iter, unaryPredicateFn) {
       return select(iter, function (something) {
         return !unaryPredicateFn(something);
       });
     };
-  
+
     function find (iter, unaryPredicateFn) {
       return select(iter, unaryPredicateFn)();
     }
@@ -991,11 +991,11 @@
       }
       else return iter;
     };
-  
+
     function drop (iter, numberToDrop) {
       return slice(iter, numberToDrop == null ? 1 : numberToDrop);
     }
-  
+
     function take (iter, numberToTake) {
       return slice(iter, 0, numberToTake == null ? 1 : numberToTake);
     }
@@ -1006,7 +1006,7 @@
         return array[index++];
       };
     };
-  
+
     function Tree (array) {
       var index, myself, state;
       index = 0;
@@ -1035,7 +1035,7 @@
       };
       return myself;
     };
-  
+
     function K (value) {
       return function () {
         return value;
@@ -1045,7 +1045,7 @@
     function upRange (from, to, by) {
       return function () {
         var was;
-      
+
         if (from > to) {
           return void 0;
         }
@@ -1060,7 +1060,7 @@
     function downRange (from, to, by) {
       return function () {
         var was;
-      
+
         if (from < to) {
           return void 0;
         }
@@ -1071,7 +1071,7 @@
         }
       };
     };
-  
+
     function range (from, to, by) {
       if (from == null) {
         return upRange(1, Infinity, 1);
@@ -1093,7 +1093,7 @@
       }
       else return k(from);
     };
-  
+
     var numbers = unary(range);
 
     _.iterators = {
@@ -1250,7 +1250,7 @@
       };
     };
   };
-  
+
   // Mixing in the object builders
   // ----------------------------
 
@@ -1439,7 +1439,7 @@
   // Helpers
   // -------
 
-  
+
   // Mixing in the truthiness
   // ------------------------
 
@@ -1463,7 +1463,7 @@
 
   // Establish the root object, `window` in the browser, or `global` on the server.
   var _ = root._ || require('underscore');
-  
+
   // Mixing in the operator functions
   // -----------------------------
 
@@ -1589,7 +1589,7 @@
   // Helpers
   // -------
 
-  
+
   // Mixing in the truthiness
   // ------------------------
 

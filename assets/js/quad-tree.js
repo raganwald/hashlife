@@ -1,17 +1,25 @@
 (function (root) {
   
-  var _ = root._ || require('underscore');
+  var _ = root._ || require('../vendor/underscore');
   
-  var CACHE = {};
+  var QUAD_TREE_CACHE = {};
+  var ALIVE = DEAD = void 0;
   var ID = 100;
   
 	function Cell (id) {
-	  if (CACHE[id]) return CACHE[id];
-    if (!(this instanceof Cell)) return new Cell(id);
+	  if (id === 0) {
+	    if (DEAD) return DEAD;
+      if (!(this instanceof Cell)) return new Cell(id);
+      DEAD = this;
+	  }
+	  else if (id === 1) {
+	    if (ALIVE) return ALIVE;
+	    if (!(this instanceof Cell)) return new Cell(id);
+	    ALIVE = this;
+	  }
 	  this.id = id;
 	  this.generation = 0;
 	  this.population = id;
-	  CACHE[id] = this;
 	}
   
   _.extend(Cell.prototype, {
@@ -33,7 +41,11 @@
   });
   
   function QuadTree (nw_ne_se_sw) {
-    var container = CACHE[nw_ne_se_sw[0].id] || (CACHE[nw_ne_se_sw[0].id] = {});
+    if (!(this instanceof QuadTree)) return new QuadTree(nw_ne_se_sw);
+    
+    if(!_.all(nw_ne_se_sw, function (child) { return child instanceof QuadTree || child instanceof Cell; })) throw "BAD";
+    
+    var container = QUAD_TREE_CACHE[nw_ne_se_sw[0].id] || (QUAD_TREE_CACHE[nw_ne_se_sw[0].id] = {});
         container = container[nw_ne_se_sw[1].id] || (container[nw_ne_se_sw[1].id] = {});
         container = container[nw_ne_se_sw[2].id] || (container[nw_ne_se_sw[2].id] = {});
     
@@ -153,7 +165,7 @@
       if (this.generation > generation) throw "implement me";
       var resized = this;
       while (resized.generation < generation) {
-        resized = resized.double();
+        resized = new QuadTree([resized, resized, resized, resized]);
       }
       return resized;
     }
