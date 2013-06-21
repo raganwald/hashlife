@@ -11,6 +11,11 @@
   var QuadTree = env.QuadTree,
       Cell = env.Cell;
 
+  var NW = 0,
+      NE = 1,
+      SE = 2,
+      SW = 3;
+
   function mapConcat (choices) {
     return function (list) {
       return _.map(choices, function (choice) {
@@ -44,41 +49,41 @@
     }
     else return forChoices(all(generation - 1));
   }
-  
+
   var generationTwoFuture = (function () {
-    
+
     var TABLE = [
       [0, 0, 0, 1, 0, 0, 0, 0, 0],
       [0, 0, 1, 1, 0, 0, 0, 0, 0]
     ];
 
     return function generationTwoFuture () {
-      var nw = this.children[0],
-          ne = this.children[1],
-          se = this.children[2],
-          sw = this.children[3];
+      var nw = this.children[NW],
+          ne = this.children[NE],
+          se = this.children[SE],
+          sw = this.children[SW];
 
-      var nwState = nw.children[2].id,
-          neState = ne.children[3].id,
-          seState = se.children[0].id,
-          swState = sw.children[1].id;
+      var nwState = nw.children[SE].id,
+          neState = ne.children[SW].id,
+          seState = se.children[NW].id,
+          swState = sw.children[NE].id;
 
       // includes +2 if self is alive
-      var nwCount = nw.children[0].id + nw.children[1].id + ne.children[0].id
-                  + nw.children[3].id                     + ne.children[3].id
-                  + sw.children[0].id + sw.children[1].id + se.children[0].id,
+      var nwCount = nw.children[NW].id + nw.children[NE].id + ne.children[NW].id
+                  + nw.children[SW].id                      + ne.children[SW].id
+                  + sw.children[NW].id + sw.children[NE].id + se.children[NW].id,
 
-          neCount = nw.children[1].id + ne.children[0].id + ne.children[1].id
-                  + nw.children[2].id                     + ne.children[2].id
-                  + sw.children[1].id + se.children[0].id + se.children[1].id,
+          neCount = nw.children[NE].id + ne.children[NW].id + ne.children[NE].id
+                  + nw.children[SE].id                      + ne.children[SE].id
+                  + sw.children[NE].id + se.children[NW].id + se.children[NE].id,
 
-          seCount = nw.children[2].id + ne.children[3].id + ne.children[2].id
-                  + sw.children[1].id                     + se.children[1].id
-                  + sw.children[2].id + se.children[3].id + se.children[2].id,
+          seCount = nw.children[SE].id + ne.children[SW].id + ne.children[SE].id
+                  + sw.children[NE].id                      + se.children[NE].id
+                  + sw.children[SE].id + se.children[SW].id + se.children[SE].id,
 
-          swCount = nw.children[3].id + nw.children[2].id + ne.children[3].id
-                  + sw.children[0].id                     + se.children[0].id
-                  + sw.children[3].id + sw.children[2].id + se.children[3].id;
+          swCount = nw.children[SW].id + nw.children[SE].id + ne.children[SW].id
+                  + sw.children[NW].id                      + se.children[NW].id
+                  + sw.children[SW].id + sw.children[SE].id + se.children[SW].id;
 
       var nwNext  = TABLE[nwState][nwCount],
           neNext  = TABLE[neState][neCount],
@@ -94,8 +99,41 @@
         nwCell, neCell, seCell, swCell
       ]);
     }
-    
+
   })();
+  
+  // ....|....
+  // ....|....    ...|...
+  // ....|....    ...|...
+  // ....|....    ...|...
+  // ----+---- => ---+---
+  // ....|....    ...|...
+  // ....|....    ...|...
+  // ....|....    ...|...
+  // ....|....
+  
+  function bigFuture () {
+    
+    var nw = this.children[NW],
+        ne = this.children[NE],
+        se = this.children[SE],
+        sw = this.children[SW];
+        
+    var nn = new QuadTree(
+          nw.children[NE],
+          ne.children[NW],
+          ne.children[SW],
+          nw.children[SE]
+        ),
+        ee = new QuadTree(
+          ne.children[SW],
+          ne.children[SE],
+          se.children[NE],
+          se.children[NW]
+        ),
+        
+    
+  }
 
   _.extend(QuadTree.prototype, {
     future: function () {

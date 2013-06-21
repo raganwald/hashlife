@@ -45,7 +45,7 @@ describe "futures", ->
             '..'
           )
 
-          expect( blink4.future().toJSON() ).toEqual blink2.toJSON()
+          expect( blink4.future() ).toBe blink2
 
         it "should blink in position 0H", ->
 
@@ -61,7 +61,7 @@ describe "futures", ->
             '*.'
           )
 
-          expect( blink4.future().toJSON() ).toEqual blink2.toJSON()
+          expect( blink4.future() ).toBe blink2
 
         it "should blink in position 1V", ->
 
@@ -77,7 +77,7 @@ describe "futures", ->
             '..'
           )
 
-          expect( blink4.future().toJSON() ).toEqual blink2.toJSON()
+          expect( blink4.future() ).toBe blink2
 
         it "should blink in position 1H", ->
 
@@ -93,7 +93,7 @@ describe "futures", ->
             '.*'
           )
 
-          expect( blink4.future().toJSON() ).toEqual blink2.toJSON()
+          expect( blink4.future() ).toBe blink2
 
         it "should blink in position 2V", ->
 
@@ -109,7 +109,7 @@ describe "futures", ->
             '**'
           )
 
-          expect( blink4.future().toJSON() ).toEqual blink2.toJSON()
+          expect( blink4.future() ).toBe blink2
 
         it "should blink in position 2H", ->
 
@@ -125,4 +125,36 @@ describe "futures", ->
             '.*'
           )
 
-          expect( blink4.future().toJSON() ).toEqual blink2.toJSON()
+          expect( blink4.future() ).toBe blink2
+
+        it "should blink in position 3V", ->
+
+          blink4 = QuadTree.fromString(
+            '....',
+            '.*..',
+            '.*..',
+            '.*..'
+          );
+
+          blink2 = QuadTree.fromString(
+            '..',
+            '**'
+          )
+
+          expect( blink4.future() ).toBe blink2
+
+        it "should blink in position 3H", ->
+
+          blink4 = QuadTree.fromString(
+            '....',
+            '....',
+            '***.',
+            '....'
+          );
+
+          blink2 = QuadTree.fromString(
+            '*.',
+            '*.'
+          )
+
+          expect( blink4.future() ).toBe blink2
