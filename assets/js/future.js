@@ -11,11 +11,6 @@
   var QuadTree = env.QuadTree,
       Cell = env.Cell;
 
-  var NW = 0,
-      NE = 1,
-      SE = 2,
-      SW = 3;
-
   function mapConcat (choices) {
     return function (list) {
       return _.map(choices, function (choice) {
@@ -58,32 +53,32 @@
     ];
 
     return function generationTwoFuture () {
-      var nw = this.children[NW],
-          ne = this.children[NE],
-          se = this.children[SE],
-          sw = this.children[SW];
+      var nw = this.nw(),
+          ne = this.ne(),
+          se = this.se(),
+          sw = this.sw();
 
-      var nwState = nw.children[SE].id,
-          neState = ne.children[SW].id,
-          seState = se.children[NW].id,
-          swState = sw.children[NE].id;
+      var nwState = nw.se().id,
+          neState = ne.sw().id,
+          seState = se.nw().id,
+          swState = sw.ne().id;
 
       // includes +2 if self is alive
-      var nwCount = nw.children[NW].id + nw.children[NE].id + ne.children[NW].id
-                  + nw.children[SW].id                      + ne.children[SW].id
-                  + sw.children[NW].id + sw.children[NE].id + se.children[NW].id,
+      var nwCount = nw.nw().id + nw.ne().id + ne.nw().id
+                  + nw.sw().id              + ne.sw().id
+                  + sw.nw().id + sw.ne().id + se.nw().id,
 
-          neCount = nw.children[NE].id + ne.children[NW].id + ne.children[NE].id
-                  + nw.children[SE].id                      + ne.children[SE].id
-                  + sw.children[NE].id + se.children[NW].id + se.children[NE].id,
+          neCount = nw.ne().id + ne.nw().id + ne.ne().id
+                  + nw.se().id              + ne.se().id
+                  + sw.ne().id + se.nw().id + se.ne().id,
 
-          seCount = nw.children[SE].id + ne.children[SW].id + ne.children[SE].id
-                  + sw.children[NE].id                      + se.children[NE].id
-                  + sw.children[SE].id + se.children[SW].id + se.children[SE].id,
+          seCount = nw.se().id + ne.sw().id + ne.se().id
+                  + sw.ne().id              + se.ne().id
+                  + sw.se().id + se.sw().id + se.se().id,
 
-          swCount = nw.children[SW].id + nw.children[SE].id + ne.children[SW].id
-                  + sw.children[NW].id                      + se.children[NW].id
-                  + sw.children[SW].id + sw.children[SE].id + se.children[SW].id;
+          swCount = nw.sw().id + nw.se().id + ne.sw().id
+                  + sw.nw().id              + se.nw().id
+                  + sw.sw().id + sw.se().id + se.sw().id;
 
       var nwNext  = TABLE[nwState][nwCount],
           neNext  = TABLE[neState][neCount],
@@ -101,7 +96,7 @@
     }
 
   })();
-  
+
   // ....|....
   // ....|....    ...|...
   // ....|....    ...|...
@@ -111,29 +106,29 @@
   // ....|....    ...|...
   // ....|....    ...|...
   // ....|....
-  
-  function bigFuture () {
-    
-    var nw = this.children[NW],
-        ne = this.children[NE],
-        se = this.children[SE],
-        sw = this.children[SW];
-        
-    var nn = new QuadTree(
-          nw.children[NE],
-          ne.children[NW],
-          ne.children[SW],
-          nw.children[SE]
-        ),
-        ee = new QuadTree(
-          ne.children[SW],
-          ne.children[SE],
-          se.children[NE],
-          se.children[NW]
-        ),
-        
-    
-  }
+
+  // function bigFuture () {
+  //
+  //   var nw = this.nw(),
+  //       ne = this.ne(),
+  //       se = this.se(),
+  //       sw = this.sw();
+  //
+  //   var nn = new QuadTree(
+  //         nw.ne(),
+  //         ne.nw(),
+  //         ne.sw(),
+  //         nw.se()
+  //       ),
+  //       ee = new QuadTree(
+  //         ne.sw(),
+  //         ne.se(),
+  //         se.ne(),
+  //         se.nw()
+  //       ),
+  //
+  //
+  // }
 
   _.extend(QuadTree.prototype, {
     future: function () {

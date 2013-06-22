@@ -39,10 +39,10 @@
         var source = child.canvas();
         context.drawImage(source, 0, 0, source.width, source.height, x * source.width, y * source.height, source.width, source.height);
       }
-      copyChild(this.children[0], 0, 0);
-      copyChild(this.children[1], 1, 0);
-      copyChild(this.children[2], 1, 1);
-      copyChild(this.children[3], 0, 1);
+      copyChild(this.nw(), 0, 0);
+      copyChild(this.ne(), 1, 0);
+      copyChild(this.se(), 1, 1);
+      copyChild(this.sw(), 0, 1);
     
       // draw grid
   		context.strokeStyle = COLORS.GRID 
