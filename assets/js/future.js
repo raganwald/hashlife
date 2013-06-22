@@ -107,28 +107,32 @@
   // ....|....    ...|...
   // ....|....
 
-  // function bigFuture () {
-  //
-  //   var nw = this.nw(),
-  //       ne = this.ne(),
-  //       se = this.se(),
-  //       sw = this.sw();
-  //
-  //   var nn = new QuadTree(
-  //         nw.ne(),
-  //         ne.nw(),
-  //         ne.sw(),
-  //         nw.se()
-  //       ),
-  //       ee = new QuadTree(
-  //         ne.sw(),
-  //         ne.se(),
-  //         se.ne(),
-  //         se.nw()
-  //       ),
-  //
-  //
-  // }
+  function bigFuture () {
+  
+    // calculate the futures of all the children:
+    
+    var nw = this.nw().future(),
+        ne = this.ne().future(),
+        se = this.se().future(),
+        sw = this.sw().future(),
+        nn = this.nn().future(),
+        ee = this.ee().future(),
+        ss = this.ss().future(),
+        ww = this.ww().future(),
+        cc = this.cc().future();
+        
+    // build four "overlapping" trees:
+    
+    var onw = new QuadTree([nw, nn, cc, ww]),
+        one = new QuadTree([nn, ne, ee, cc]),
+        ose = new QuadTree([cc, ee, se, ss]),
+        osw = new QuadTree([ww, cc, ss, sw]);
+        
+    // return our future:
+    
+    return new QuadTree([onw, one, ose, osw]).future();
+    
+  };
 
   _.extend(QuadTree.prototype, {
     future: function () {
@@ -141,7 +145,7 @@
       else if (this.generation === 2) {
         return (this._future = generationTwoFuture.call(this))
       }
-      else throw "FIXME: Implement this"
+      else return (this._future = bigFuture.call(this));
     }
   })
 
