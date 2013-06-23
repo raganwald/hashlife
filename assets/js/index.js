@@ -32,8 +32,7 @@
     });
 
     vCanvas
-      .bind('mousedown', onDragStart)
-      .dblclick(flipCell);
+      .bind('mousedown', onDragStart);
 
     $(document)
       .keypress(onKeypress)
@@ -107,7 +106,8 @@
         lastCoord:{
           left : event.clientX,
           top : event.clientY
-        }
+        },
+        mouseDownTime: new Date().getTime()
       };
 
       $(document)
@@ -117,6 +117,9 @@
      document.body.style.cursor = 'all-scroll';
     }
 
+    var MAXCLICKDRAGDISTANCE = 1,
+        MAXIMUMCLICKMILLISECONDS = 250;
+        
     function onDragging (event) {
       var delta = {
           left : (event.clientX - event.data.lastCoord.left),
@@ -125,21 +128,36 @@
 
       _scrollFromCenter.x = _scrollFromCenter.x - delta.left;
       _scrollFromCenter.y = _scrollFromCenter.y - delta.top;
+      
+      event.data || (event.data = {});
+      
+      event.data.lastCoord || (event.data.lastCoord = {});
 
-      event.data.lastCoord = {
+      _.extend(event.data.lastCoord, {
         left : event.clientX,
         top : event.clientY
-      };
-
+      });
+      
+      if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
+        event.data.mouseDownTime = null;
+      }
       draw();
     }
 
-    function onDragEnd () {
+    function onDragEnd (event) {
       $(document)
         .unbind("mousemove", onDragging)
         .unbind("mouseup", onDragEnd);
+        
+      var mouseUpTime = new Date().getTime(),
+          mouseDownTime = event && event.data && event.data.mouseDownTime;
+          
+      if (mouseDownTime && (mouseUpTime - mouseDownTime) < MAXIMUMCLICKMILLISECONDS) {
+        flipCell(event);
+      }
+          
 
-     document.body.style.cursor = 'pointer';
+      document.body.style.cursor = 'pointer';
     }
 
     function draw (force) {
