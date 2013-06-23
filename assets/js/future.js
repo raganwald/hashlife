@@ -2,14 +2,16 @@
 
   var _ = root._ || require('../vendor/underscore');
 
-  require('../vendor/underscore-contrib');
+  if (_.isUndefined(_.arity)) {
+    require('../vendor/underscore-contrib');
+  }
 
-  var env = require('./quad-tree');
-
-  require('./children');
-
-  var QuadTree = env.QuadTree,
-      Cell = env.Cell;
+  var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
+      Cell     = root.Cell     || require('./quad-tree').Cell
+      
+  if (_.isUndefined(Cell.prototype.generation)) {
+    require('./children');
+  }
 
   function mapConcat (choices) {
     return function (list) {

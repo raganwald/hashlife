@@ -4,12 +4,12 @@
 
   var _ = root._ || require('../vendor/underscore');
 
-  require('../vendor/underscore-contrib');
+  if (_.isUndefined(_.arity)) {
+    require('../vendor/underscore-contrib');
+  }
 
-  var env = require('./quad-tree');
-
-  var QuadTree = env.QuadTree,
-      Cell = env.Cell;
+  var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
+      Cell     = root.Cell     || require('./quad-tree').Cell
 
   _.extend(Cell.prototype, {
     toJSON: function () {
