@@ -215,12 +215,26 @@
     },
 
     resizeTo: function (generation) {
-      if (this.generation > generation) throw "implement me";
       var resized = this;
       while (resized.generation < generation) {
         resized = new QuadTree([resized, resized, resized, resized]);
       }
       return resized;
+    },
+    
+    trimmed: function () {
+      var cc;
+      
+      if (this.generation === 1) {
+        return this;
+      }
+      else {
+        cc = this.cc();
+        if (cc.population === this.population) {
+          return cc.trimmed();
+        }
+        else return this;
+      }
     }
 
   });
