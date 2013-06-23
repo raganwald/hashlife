@@ -4,6 +4,8 @@ require('../assets/js/future')
 
 require('../assets/js/json')
 
+_ = require('../assets/vendor/underscore')
+
 describe "futures", ->
 
   describe "4x4", ->
@@ -158,3 +160,105 @@ describe "futures", ->
           )
 
           expect( blink4.future() ).toBe blink2
+
+  describe "8x8", ->
+    
+    describe "intermediate expectations", ->
+      
+      it "should do the right thing with intermediate nw", ->
+        
+        fourByFour = QuadTree.fromString(
+          '....',
+          '....',
+          '..**',
+          '..**'
+        );
+        
+        twoByTwo = QuadTree.fromString(
+          '..',
+          '.*'
+        );
+        
+        expect( fourByFour.future() ).toBe twoByTwo
+      
+      it "should do the right thing with intermediate nn", ->
+        
+        fourByFour = QuadTree.fromString(
+          '....',
+          '....',
+          '**..',
+          '**..'
+        );
+        
+        twoByTwo = QuadTree.fromString(
+          '..',
+          '*.'
+        );
+        
+        expect( fourByFour.future() ).toBe twoByTwo
+        
+    it "should get the correct ne() and nn() in the first place", ->
+      
+      eightByEight = QuadTree.fromString(
+        '........',
+        '........',
+        '..**....',
+        '..**....',
+        '........',
+        '........',
+        '........',
+        '........'
+      )
+      
+      nw = QuadTree.fromString(
+        '....',
+        '....',
+        '..**',
+        '..**'
+      );
+      
+      nn = QuadTree.fromString(
+        '....',
+        '....',
+        '**..',
+        '**..'
+      );
+      
+      expect( eightByEight.nw().toJSON() ).toEqual nw.toJSON(), "nw() is broken"
+      
+      expect( eightByEight.nn().toJSON() ).toEqual nn.toJSON(), "nn() is broken"
+
+    it "should return empty for an empty square", ->
+    
+      empty8 = Cell(0).resizeTo(3)
+      empty4 = Cell(0).resizeTo(2)
+    
+      expect( empty8.future() ).toBe empty4
+    
+    it "should return empty for a full square", ->
+    
+      full8 = Cell(1).resizeTo(3)
+      empty4 = Cell(0).resizeTo(2)
+    
+      expect( full8.future() ).toBe empty4
+    
+    it "should return full for various blocks", ->
+    
+      block = QuadTree.fromString(
+        '**',
+        '**'
+      )
+      
+      empty = QuadTree.fromString(
+        '..',
+        '..'
+      )
+      
+      destinations = _.map [0..3], (n) ->
+        children = [empty, empty, empty, empty]
+        children[n] = block
+        new QuadTree(children)
+      
+      _.each destinations, (fourByFour) ->
+        eightByEight = fourByFour.double()
+        expect( eightByEight.future().toJSON() ).toEqual fourByFour.toJSON()

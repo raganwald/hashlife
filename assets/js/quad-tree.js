@@ -87,8 +87,8 @@
       return new QuadTree([
         this.nw().ne(),
         this.ne().nw(),
-        this.nw().se(),
-        this.nw().sw()
+        this.ne().sw(),
+        this.nw().se()
       ]);
     },
 
