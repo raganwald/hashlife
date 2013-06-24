@@ -19,6 +19,7 @@
     }
     this.id = id;
     this.generation = 0;
+    this.width = this.height = 1; // aliased for shits and giggles
     this.population = id;
   }
 
@@ -54,6 +55,7 @@
       this.children = nw_ne_se_sw,
       this.population = _.reduce(_.pluck(nw_ne_se_sw, 'population'), function (x, y) { return x + y; }, 0),
       this.generation = nw_ne_se_sw[0].generation + 1,
+      this.width = this.height = nw_ne_se_sw[0].width * 2, // aliased for shits and giggles
       container[nw_ne_se_sw[3].id] = this
     );
   }
@@ -74,7 +76,7 @@
         new QuadTree([emptyChildCopy, this.sw(), emptyChildCopy, emptyChildCopy])
       ]);
     },
-    
+
     uncrop: function (toGeneration) {
       var uncropped = this,
           timesToDouble = (toGeneration - this.generation),
@@ -231,10 +233,10 @@
       }
       return resized;
     },
-    
+
     trimmed: function () {
       var cc;
-      
+
       if (this.generation === 1) {
         return this;
       }
