@@ -15,7 +15,7 @@
     var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / Cell.size()),
         log2 = Math.log(length)/LOG2,
         bufferGeneration = Math.ceil(log2),
-        bufferTree = Cell(0).resizeTo(bufferGeneration),
+        bufferTree = Cell(0).stretchTo(bufferGeneration),
         bufferCanvas = bufferTree.canvas();
 
     // the universe
@@ -70,7 +70,7 @@
         .double()
         .future()
         .trimmed()
-        .resizeTo(thisGenerationRulesTheNation);
+        .uncrop(thisGenerationRulesTheNation);
       console.log("Generation:", root.generation, "Population:", root.universe.population);
       draw(true);
     }

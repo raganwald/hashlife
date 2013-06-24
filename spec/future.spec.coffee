@@ -12,21 +12,21 @@ describe "futures", ->
 
     it "should return empty for an empty square", ->
 
-      empty4 = Cell(0).resizeTo(2)
-      empty2 = Cell(0).resizeTo(1)
+      empty4 = Cell(0).stretchTo(2)
+      empty2 = Cell(0).stretchTo(1)
 
       expect( empty4.future() ).toBe empty2
 
     it "should return empty for a full square", ->
 
-      full4 = Cell(1).resizeTo(2)
-      empty2 = Cell(0).resizeTo(1)
+      full4 = Cell(1).stretchTo(2)
+      empty2 = Cell(0).stretchTo(1)
 
       expect( full4.future() ).toBe empty2
 
     it "should return full for a block", ->
 
-      block2 = Cell(1).resizeTo(1)
+      block2 = Cell(1).stretchTo(1)
       block4 = block2.double()
 
       expect( block4.future() ).toBe block2
@@ -230,15 +230,15 @@ describe "futures", ->
 
     it "should return empty for an empty square", ->
     
-      empty8 = Cell(0).resizeTo(3)
-      empty4 = Cell(0).resizeTo(2)
+      empty8 = Cell(0).stretchTo(3)
+      empty4 = Cell(0).stretchTo(2)
     
       expect( empty8.future() ).toBe empty4
     
     it "should return empty for a full square", ->
     
-      full8 = Cell(1).resizeTo(3)
-      empty4 = Cell(0).resizeTo(2)
+      full8 = Cell(1).stretchTo(3)
+      empty4 = Cell(0).stretchTo(2)
     
       expect( full8.future() ).toBe empty4
     

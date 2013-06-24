@@ -32,10 +32,10 @@
       return Cell(0);
     },
 
-    resizeTo: function (generation) {
+    stretchTo: function (generation) {
       return generation === 0
              ? this
-             : new QuadTree([this, this, this, this]).resizeTo(generation);
+             : new QuadTree([this, this, this, this]).stretchTo(generation);
     }
 
   });
@@ -73,6 +73,16 @@
         new QuadTree([this.se(), emptyChildCopy, emptyChildCopy, emptyChildCopy]),
         new QuadTree([emptyChildCopy, this.sw(), emptyChildCopy, emptyChildCopy])
       ]);
+    },
+    
+    uncrop: function (toGeneration) {
+      var uncropped = this,
+          timesToDouble = (toGeneration - this.generation),
+          i;
+      for (i = 0; i < timesToDouble; ++i) {
+        uncropped = uncropped.double();
+      }
+      return uncropped;
     },
 
     nw: function () { return this.children[0]; },
@@ -214,7 +224,7 @@
       }
     },
 
-    resizeTo: function (generation) {
+    stretchTo: function (generation) {
       var resized = this;
       while (resized.generation < generation) {
         resized = new QuadTree([resized, resized, resized, resized]);
