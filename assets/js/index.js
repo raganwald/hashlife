@@ -62,11 +62,16 @@
     }
     
     function advance () {
+      var thisGenerationRulesTheNation = root.universe.generation;
+      
       root.generation = root.generation + (root.universe.size() / 2)
       root.universe = root.universe
         .double()
-        .future();
-      console.log("Generation:", root.generation);
+        .double()
+        .future()
+        .trimmed()
+        .resizeTo(thisGenerationRulesTheNation);
+      console.log("Generation:", root.generation, "Population:", root.universe.population);
       draw(true);
     }
     
