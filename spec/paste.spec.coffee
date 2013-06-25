@@ -178,4 +178,28 @@ describe "pasting", ->
       )
       
       expect( empty.paste(checkerboard, -2, 0).toJSON() ).toEqual target.toJSON()
+
+  describe "uneven splits", ->
+    
+    checkerboard = QuadTree.fromString(
+      '.*.*',
+      '*.*.',
+      '.*.*',
+      '*.*.'
+    )
+    
+    it "should handle an off-by-one 4x4", ->
       
+      target = QuadTree.fromString(
+        '....*.*.',
+        '...*.*..',
+        '....*.*.',
+        '...*.*..',
+        '........',
+        '........',
+        '........',
+        '........'
+      )
+      
+      expect( empty.paste(checkerboard, 1, -2).toJSON() ).toEqual target.toJSON()
+          

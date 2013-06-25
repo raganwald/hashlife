@@ -48,7 +48,8 @@
           yRelativeToChild,
           child,
           pastedChild,
-          childExtant = this.width / 4;
+          extant = this.width / 2
+          childExtant = extant / 2;
 
       // TODO: Could this be a functoinal iterator?
       for (ewIndex = -1; ewIndex < 2; ++ewIndex) {
@@ -122,7 +123,7 @@
               this.sw()
             ]);
           }
-          else if (nsIndex === 0 && ewIndex === 0) { // cc
+          else { // (nsIndex === 0 && ewIndex === 0) // cc
             return new QuadTree([
               new QuadTree([this.nw().nw(), this.nw().ne(), pastedChild.nw(), this.nw().sw()]),
               new QuadTree([this.ne().nw(), this.ne().ne(), this.ne().ne(), pastedChild.ne()]),
@@ -130,13 +131,25 @@
               new QuadTree([this.sw().nw(), pastedChild.sw(), this.sw().se(), this.sw().sw()])
             ]);
           }
-          else {
-            console.log(upperLeftRelativeToChild, lowerRightRelativeToChild, childExtant)
-            console.log(this.toJSON())
-            throw ("unimplemented " + ewIndex + ", " + nsIndex)
-          }
         }
       }
+      // We'll brute-force it
+      return (function () {
+        
+        var resultJSON = this.toJSON(),
+            contentJSON = content.toJSON();
+        
+        _.each(contentJSON, function (contentRow, rowIndex) {
+          var resultRow = resultJSON[extant + upperLeft.y + rowIndex];
+          
+          _.each(contentRow, function (contentCell, columnIndex) {
+            resultRow[extant + upperLeft.x + columnIndex] = contentCell;
+          });
+        });
+        
+        return QuadTree.fromJSON(resultJSON);
+        
+      }).call(this);
     }
   });
 
