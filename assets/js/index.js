@@ -35,13 +35,14 @@
       .bind('mousedown', onDragStart);
 
     $(document)
+      .dblclick(gliderGun)
       .keypress(onKeypress)
       .keyup(onKeyup);
 
     $(window)
       .resize(draw)
       .trigger("resize");
-      
+
     console.log("Generation:", root.generation);
 
     ///////////////////////////////////////////////////////////////////
@@ -54,16 +55,16 @@
         zoomOut();
       }
     }
-    
+
     function onKeyup (event) {
       if (event.which === 39) {
         advance();
       }
     }
-    
+
     function advance () {
       var thisGenerationRulesTheNation = root.universe.generation;
-      
+
       root.generation = root.generation + (root.universe.size() / 2)
       root.universe = root.universe
         .double()
@@ -74,12 +75,12 @@
       console.log("Generation:", root.generation, "Population:", root.universe.population);
       draw(true);
     }
-    
+
     function zoomIn () {
       Cell.size(Cell.size() * 2);
       draw(true);
     }
-    
+
     function zoomOut () {
       if (root.Cell.size() >= 2) {
         Cell.size(Cell.size() / 2);
@@ -92,6 +93,18 @@
                         ? n + 1
                         : n
              );
+    }
+
+    function gliderGun (event) {
+
+      var relativeToUniverseCenterInCells = {
+        x: noZero((_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: noZero((_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / Cell.size())
+      };
+
+      root.universe = root.universe.paste(QuadTree.Library.GosperGliderGunSE, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
+
+      draw(true);
     }
 
     function flipCell (event) {
@@ -124,7 +137,7 @@
 
     var MAXCLICKDRAGDISTANCE = 1,
         MAXIMUMCLICKMILLISECONDS = 250;
-        
+
     function onDragging (event) {
       var delta = {
           left : (event.clientX - event.data.lastCoord.left),
@@ -133,16 +146,16 @@
 
       _scrollFromCenter.x = _scrollFromCenter.x - delta.left;
       _scrollFromCenter.y = _scrollFromCenter.y - delta.top;
-      
+
       event.data || (event.data = {});
-      
+
       event.data.lastCoord || (event.data.lastCoord = {});
 
       _.extend(event.data.lastCoord, {
         left : event.clientX,
         top : event.clientY
       });
-      
+
       if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
         event.data.mouseDownTime = null;
       }
@@ -153,14 +166,14 @@
       $(document)
         .unbind("mousemove", onDragging)
         .unbind("mouseup", onDragEnd);
-        
+
       var mouseUpTime = new Date().getTime(),
           mouseDownTime = event && event.data && event.data.mouseDownTime;
-          
+
       if (mouseDownTime && (mouseUpTime - mouseDownTime) < MAXIMUMCLICKMILLISECONDS) {
         flipCell(event);
       }
-          
+
 
       document.body.style.cursor = 'pointer';
     }

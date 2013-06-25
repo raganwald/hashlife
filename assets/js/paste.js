@@ -13,6 +13,10 @@
     require('./children');
   }
 
+  if (_.isUndefined(QuadTree.prototype.toJSON)) {
+    require('./json');
+  }
+
   _.extend(QuadTree.prototype, {
     paste: function (content, xCentre, yCentre) {
       if (!(content instanceof QuadTree)) throw "non-square pastes not implemented yet";
