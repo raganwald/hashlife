@@ -57,9 +57,41 @@
     }
 
     function onKeyup (event) {
+      if (event.which === 37) {
+        panLeft();
+      }
+      if (event.which === 38) {
+        panUp();
+      }
       if (event.which === 39) {
+        panRight();
+      }
+      if (event.which === 40) {
+        panDown();
+      }
+      if (event.which === 32) {
         advance();
       }
+    }
+    
+    function panLeft () {
+      _scrollFromCenter.x -= vCanvas.width;
+      draw(true)
+    }
+    
+    function panRight () {
+      _scrollFromCenter.x += vCanvas.width;
+      draw(true)
+    }
+    
+    function panUp () {
+      _scrollFromCenter.y -= vCanvas.height;
+      draw(true)
+    }
+    
+    function panDown () {
+      _scrollFromCenter.y += vCanvas.height;
+      draw(true)
     }
 
     function advance () {
@@ -259,6 +291,8 @@
       }
 
       vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas[0].width, vCanvas[0].height, 0, 0, vCanvas[0].width, vCanvas[0].height)
+      $('#x').text(_scrollFromCenter.x + " | " + _bufferUpperLeftFromUniverseCenter.x);
+      $('#y').text(_scrollFromCenter.y + " | " + _bufferUpperLeftFromUniverseCenter.y);
     }
 
 });
