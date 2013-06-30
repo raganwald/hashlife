@@ -103,6 +103,61 @@
             y: childWidth
           },
           accessor: "sw"
+        },
+        {
+          childUpperLeft: {
+            x: -childWidth / 2,
+            y: -childWidth
+          },
+          childLowerRight: {
+            x: childWidth / 2,
+            y: 0
+          },
+          accessor: "nn"
+        },
+        {
+          childUpperLeft: {
+            x: 0,
+            y: -childWidth / 2
+          },
+          childLowerRight: {
+            x: childWidth,
+            y: childWidth / 2
+          },
+          accessor: "ee"
+        },
+        {
+          childUpperLeft: {
+            x: -childWidth / 2,
+            y: 0
+          },
+          childLowerRight: {
+            x: childWidth / 2,
+            y: childWidth
+          },
+          accessor: "ss"
+        },
+        {
+          childUpperLeft: {
+            x: -childWidth,
+            y: -childWidth / 2
+          },
+          childLowerRight: {
+            x: 0,
+            y: childWidth / 2
+          },
+          accessor: "ww"
+        },
+        {
+          childUpperLeft: {
+            x: -childWidth / 2,
+            y: -childWidth / 2
+          },
+          childLowerRight: {
+            x: childWidth / 2,
+            y: childWidth / 2
+          },
+          accessor: "cc"
         }
       ];
         
@@ -133,21 +188,50 @@
       }
       else {
         var child = this[found.accessor](),
-            childUpperLeft = found.childUpperLeft;
-            
-        return grandchildFound = child.getBuffer({
-          cellSize: cellSize,
-          viewPort: {
-            height: viewPort.height,
-            width: viewPort.width,
-            offset: {
-              x: viewPort.offset.x - (childUpperLeft.x / 2),
-              y: viewPort.offset.y - (childUpperLeft.y / 2)
+            childUpperLeft = found.childUpperLeft,
+            childLowerRight = found.childLowerRight,
+            childOffset = {
+              x: childUpperLeft.x + ((childLowerRight.x - childUpperLeft.x) / 2),
+              y: childUpperLeft.y + ((childLowerRight.y - childUpperLeft.y) / 2)
             }
-          }
-        });
+            childParams = {
+              cellSize: cellSize,
+              viewPort: {
+                height: viewPort.height,
+                width: viewPort.width,
+                offset: {
+                  x: viewPort.offset.x - childOffset.x,
+                  y: viewPort.offset.y - childOffset.y
+                }
+              }
+            };
+            
+        return child.getBuffer(childParams);
             
       }
+    },
+    
+    drawInto: function (drawParams) {
+      var cellSize = drawParams.cellSize,
+          viewportCanvas = drawParams.canvas,
+          viewportContext = drawParams.context,
+          offset = drawParams.offset,
+          bufferParams = {
+            cellSize: cellSize,
+            viewPort: {
+              height: viewportCanvas.height,
+              width: viewportCanvas.width,
+              offset: offset
+            }
+          },
+          bufferInfo = this.getBuffer(bufferParams) || (function () { throw "Viewport does not fit into receiver"; })(),
+          bufferCanvas = bufferInfo.buffer.canvas(cellSize),
+          relativeScroll = bufferInfo.offset;
+          
+      viewportContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, viewportCanvas.width, viewportCanvas.height, 0, 0, viewportCanvas.width, viewportCanvas.height);
+      
+      return bufferInfo;
+      
     }
     
   })

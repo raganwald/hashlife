@@ -76,22 +76,22 @@
     
     function panLeft () {
       _scrollFromCenter.x -= vCanvas.width;
-      draw(true)
+      draw()
     }
     
     function panRight () {
       _scrollFromCenter.x += vCanvas.width;
-      draw(true)
+      draw()
     }
     
     function panUp () {
       _scrollFromCenter.y -= vCanvas.height;
-      draw(true)
+      draw()
     }
     
     function panDown () {
       _scrollFromCenter.y += vCanvas.height;
-      draw(true)
+      draw()
     }
 
     function advance () {
@@ -105,18 +105,18 @@
         .trimmed()
         .uncrop(thisGenerationRulesTheNation);
       console.log("Generation:", root.generation, "Population:", root.universe.population);
-      draw(true);
+      draw();
     }
 
     function zoomIn () {
       Cell.size(Cell.size() * 2);
-      draw(true);
+      draw();
     }
 
     function zoomOut () {
       if (root.Cell.size() >= 2) {
         Cell.size(Cell.size() / 2);
-        draw(true);
+        draw();
       }
     }
 
@@ -136,7 +136,7 @@
 
       root.universe = root.universe.paste(QuadTree.Library.GosperGliderGunSE, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
 
-      draw(true);
+      draw();
     }
 
     function flipCell (event) {
@@ -148,7 +148,7 @@
 
       root.universe = root.universe.flip(relativeToUniverseCenterInCells);
 
-      draw(true);
+      draw();
     }
 
     function onDragStart (event) {
@@ -210,89 +210,21 @@
       document.body.style.cursor = 'pointer';
     }
 
-    function draw (force) {
+    function draw () {
 
       //synchronize window and canvas dimensions
       vCanvas[0].width = $(window).width();
       vCanvas[0].height = $(window).height();
 
-      var bufferInfo,
-          upperLeftInPixels = {
-            x: _scrollFromCenter.x - (vCanvas[0].width / 2),
-            y: _scrollFromCenter.y - (vCanvas[0].height / 2)
-          },
-          // in pixels
-          lowerRightInPixels = {
-            x: _scrollFromCenter.x + (vCanvas[0].width / 2),
-            y: _scrollFromCenter.y + (vCanvas[0].height / 2)
-          },
-          relativeScroll = {
-            x: upperLeftInPixels.x - _bufferUpperLeftFromUniverseCenter.x,
-            y: upperLeftInPixels.y - _bufferUpperLeftFromUniverseCenter.y
-          };
-
-      if (
-        upperLeftInPixels.x < _bufferUpperLeftFromUniverseCenter.x ||
-        upperLeftInPixels.y < _bufferUpperLeftFromUniverseCenter.y ||
-        lowerRightInPixels.x > _bufferLowerRightFromUniverseCenter.x ||
-        lowerRightInPixels.y > _bufferLowerRightFromUniverseCenter.y ||
-        force
-      ) {
-        force = false;
-
-        upperLeftInCells = {
-          x: Math.floor(upperLeftInPixels.x / Cell.size()),
-          y: Math.floor(upperLeftInPixels.y / Cell.size())
-        };
-        lowerRightInCells = {
-          x: Math.ceil(lowerRightInPixels.x / Cell.size()),
-          y: Math.ceil(lowerRightInPixels.y / Cell.size())
-        };
-
-        bufferInfo = findBufferTree(upperLeftInCells, lowerRightInCells);
-
-        while (bufferInfo == null) {
-          root.universe = root.universe.double();
-          bufferInfo = findBufferTree(upperLeftInCells, lowerRightInCells);
-        }
-
-        bufferTree = bufferInfo.bufferTree;
-        bufferCanvas = bufferTree.canvas();
-
-        var bufferExtant = bufferTree.canvasSize() / 2,
-            fromCenterInPixels = {
-              x: bufferInfo.fromCenterInCells.x * Cell.size(),
-              y: bufferInfo.fromCenterInCells.y * Cell.size()
-            };
-
-        _bufferUpperLeftFromUniverseCenter = {
-          x: fromCenterInPixels.x - bufferExtant,
-          y: fromCenterInPixels.y - bufferExtant
-        };
-        _bufferLowerRightFromUniverseCenter = {
-          x: fromCenterInPixels.x + bufferExtant,
-          y: fromCenterInPixels.y + bufferExtant
-        };
-        relativeScroll = {
-          x: upperLeftInPixels.x - _bufferUpperLeftFromUniverseCenter.x,
-          y: upperLeftInPixels.y - _bufferUpperLeftFromUniverseCenter.y
-        };
-
-        if (
-          upperLeftInPixels.x < _bufferUpperLeftFromUniverseCenter.x ||
-          upperLeftInPixels.y < _bufferUpperLeftFromUniverseCenter.y ||
-          lowerRightInPixels.x > _bufferLowerRightFromUniverseCenter.x ||
-          lowerRightInPixels.y > _bufferLowerRightFromUniverseCenter.y
-        ) {
-          console.log(upperLeftInCells.x, upperLeftInCells.y, bufferInfo.fromCenter.x, bufferInfo.fromCenter.y)
-          throw 'something';
-        }
-
-      }
-
-      vContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, vCanvas[0].width, vCanvas[0].height, 0, 0, vCanvas[0].width, vCanvas[0].height)
-      $('#x').text(_scrollFromCenter.x + " | " + _bufferUpperLeftFromUniverseCenter.x);
-      $('#y').text(_scrollFromCenter.y + " | " + _bufferUpperLeftFromUniverseCenter.y);
+      root.universe.drawInto({
+        cellSize: Cell.size(),
+        canvas: vCanvas[0],
+        context: vContext,
+        offset: _scrollFromCenter
+      });
+      
+      // $('#x').text(_scrollFromCenter.x + " | " + _bufferUpperLeftFromUniverseCenter.x);
+      // $('#y').text(_scrollFromCenter.y + " | " + _bufferUpperLeftFromUniverseCenter.y);
     }
 
 });

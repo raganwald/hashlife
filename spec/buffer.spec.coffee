@@ -187,6 +187,27 @@ describe "buffer and viewporting", ->
       expect(result.offset).toEqual
         x:  24
         y:  0
+        
+  describe "nieces and nephews", ->
+    
+    it "should get nn on a perfect fit", ->
+    
+      result = universe.getBuffer
+        cellSize: 8
+        viewPort:
+          height: 64
+          width: 64
+          offset:
+            x:  0
+            y: -32
+          
+      expect(result.buffer.toJSON()).toEqual universe.nn().toJSON()
+    
+      expect(result.offset).toEqual
+        x:  0
+        y:  0
+      
+      
       
   describe "grandchildren", ->
     
@@ -206,5 +227,22 @@ describe "buffer and viewporting", ->
       expect(result.offset).toEqual
         x: 0
         y: 0
+      
+  describe "regressesions", ->
+    
+    it "should not blow up at size 16", ->
+      
+      ten = Cell(0).stretchTo(10)
+    
+      result = ten.getBuffer
+        cellSize: 16
+        viewPort:
+          height: 386
+          width: 1277
+          offset:
+            x: 0
+            y: 0
+            
+      expect(result).not.toBeNull()
       
       
