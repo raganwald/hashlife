@@ -213,6 +213,15 @@
       //synchronize window and canvas dimensions
       vCanvas[0].width = $(window).width();
       vCanvas[0].height = $(window).height();
+      
+      while (root.universe.doesNotEnclose({
+        cellSize: Cell.size(),
+        viewPort: {
+          height: vCanvas[0].height,
+          width: vCanvas[0].width,
+          offset: _scrollFromCenter
+        }
+      })) root.universe = root.universe.double();
 
       root.universe.drawInto({
         cellSize: Cell.size(),

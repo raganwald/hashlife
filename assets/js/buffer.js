@@ -232,6 +232,28 @@
       
       return bufferInfo;
       
+    },
+    
+    doesNotEnclose: function (params) {
+      var cellSize = params.cellSize,
+          viewPort = params.viewPort,
+          childWidth = this.width * cellSize / 2,
+          viewportUpperLeft = {
+            x: viewPort.offset.x - (viewPort.width / 2),
+            y: viewPort.offset.y - (viewPort.height / 2)
+          },
+          viewportLowerRight = {
+            x: viewPort.offset.x + (viewPort.width / 2),
+            y: viewPort.offset.y + (viewPort.height / 2)
+          },
+          maxExtant = Math.max(
+            Math.abs(viewportUpperLeft.x),
+            Math.abs(viewportUpperLeft.y),
+            Math.abs(viewportLowerRight.x),
+            Math.abs(viewportLowerRight.x)
+          );
+      
+      return (maxExtant > childWidth);
     }
     
   })
