@@ -43,8 +43,6 @@
       .resize(draw)
       .trigger("resize");
 
-    console.log("Generation:", root.generation);
-
     ///////////////////////////////////////////////////////////////////
 
     function onKeypress (event) {
@@ -104,7 +102,7 @@
         .future()
         .trimmed()
         .uncrop(thisGenerationRulesTheNation);
-      console.log("Generation:", root.generation, "Population:", root.universe.population);
+      
       draw();
     }
 
@@ -223,8 +221,22 @@
         offset: _scrollFromCenter
       });
       
-      // $('#x').text(_scrollFromCenter.x + " | " + _bufferUpperLeftFromUniverseCenter.x);
-      // $('#y').text(_scrollFromCenter.y + " | " + _bufferUpperLeftFromUniverseCenter.y);
+      $('#generation').text(addCommas(root.generation));
+      $('#population').text(addCommas(root.universe.population));
+      
+    }
+    
+    // see http://www.mredkj.com/javascript/nfbasic.html
+    function addCommas (nStr) {
+    	nStr += '';
+    	x = nStr.split('.');
+    	x1 = x[0];
+    	x2 = x.length > 1 ? '.' + x[1] : '';
+    	var rgx = /(\d+)(\d{3})/;
+    	while (rgx.test(x1)) {
+    		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    	}
+    	return x1 + x2;
     }
 
 });
