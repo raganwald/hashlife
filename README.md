@@ -1,20 +1,30 @@
 # La Hermosa Vida
 
-"La Hermosa Vida" is--or will be--an implementation of [Conway's Game of Life][gol] in the browser. The purpose of this implementation is to serve as an excuse for talking about a few of the features being added to [Underscore][u] via [Underscore-Contrib][uc]. 
+"La Hermosa Vida" is yet another implementation of [Conway's Game of Life][gol] in the browser. The purpose of this implementation is to serve as an excuse for talking about a few of the features being added to [Underscore][u] via [Underscore-Contrib][uc]. 
 
 [gol]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
 [u]: http://underscorejs.org
 [uc]: https://github.com/documentcloud/underscore-contrib
 
-### trying it
+### infinity
 
-Clone this repo onto your computer, and then open `index.html` in a browser (It has only been tested with Safari on a Macintosh without Retina Display). You should see a window displaying a grid of small (8px by 8px) squares.
+The basic idea is to present the illusion of an infinite Life universe. You can pan indefinitely. You can have massive populations. You can jump huge amounts of time into the future. But there is no concept of a fixed limit in space or time. The universe is not a toroid or klein bottle, it's a plane stretching to infinity in every direction.
 
-* You can flip the state of any square by double-clicking the square.
+### editing the universe
+
+Clone this repo onto your computer, and then open `index.html` in a browser (It has only been tested with Safari on a Macintosh without Retina Display). You will see a window displaying a grid of small (8px by 8px) squares.
+
+* You can flip the state of any square by clicking the square.
+* You can insert a [glider gun][ggg] that points to the lower-right by double-clicking.
 * You can zoom in by pressing `+` on your keyboard, or zoom out by pressing `-`.
-* You can pan by clicking and dragging the grid.
+* You can pan by dragging the grid.
+* You can also press an arrow key to move a screenful up, down, left, or right.
 
-That's all that is working right now.
+[ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
+
+### jumping into the future
+
+Pressing the space bar jumps forward into the future. The number of generations jumped depends upon the size of the pattern in the display, so if you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
 
 ### behind the scenes
 
@@ -25,17 +35,11 @@ The Life "universe" is represented as a [QuadTree][qt], with every node fully [c
 
 The memory requirement for any given state of the universe depends deeply on the amount of entropy in the pattern as we see it as well as in its dynamic behaviour. Methuselah patterns can take up a lot of space while highly regular patterns like glider guns can take up very little space despite creating billions of live cells in their lifetime.
 
-La Hermosa Vida begins with a very large square. If you pan near the edge, it doubles in size automatically. Thus, it gives the illusion of being an infinite plane. The cells are rendered on a canvas, and behind the scenes a "buffer canvas" allows for smooth scrolling within a neighbourhood.
+The current implementation does not perform any cache eviction, so complex patterns can "crash" the engine, while simple figures like the glider gun can grow to trillions of cells.
 
 ### prior art
 
 [A working engine based on QuadTrees, written in CoffeeScript][ru].
-
-### work to be done
-
-* A user experience for adding predefined patterns like Gliders and Puffer Trains
-* Calculating the future of the universe
-* A user experience for animating the universe
 
 ### schedule
 
@@ -43,3 +47,14 @@ La Hermosa Vida will be complete and displayed at [SpainJS] in Madrid, July 5-6 
 
 [SpainJS]: http://spainjs.org
 [ru]: http://recursiveuniver.se
+
+### license
+
+The MIT License (MIT)
+Copyright © 2013 Reginald Braithwaite
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
