@@ -12,7 +12,7 @@ The basic idea is to present the illusion of an infinite Life universe. You can 
 
 ### editing the universe
 
-Clone this repo onto your computer, and then open `index.html` in a browser (It has only been tested with Safari on a Macintosh without Retina Display). You will see a window displaying a grid of small (8px by 8px) squares.
+You can try it online [here][try]. You can also clone this repo onto your computer, and then open `index.html` in a browser (It has only been tested with Safari on a Macintosh without Retina Display). You will see a window displaying a grid of small (8px by 8px) squares.
 
 * You can flip the state of any square by clicking the square.
 * You can insert a [glider gun][ggg] that points to the lower-right by double-clicking.
@@ -21,6 +21,7 @@ Clone this repo onto your computer, and then open `index.html` in a browser (It 
 * You can also press an arrow key to move a screenful up, down, left, or right.
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
+[try]: http://raganwald.com/LaHermosaVida
 
 ### jumping into the future
 
