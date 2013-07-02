@@ -15,10 +15,11 @@ The basic idea is to present the illusion of an infinite Life universe. You can 
 You can try it online [here][try]. You can also clone this repo onto your computer, and then open `index.html` in a browser (It has only been tested with Safari on a Macintosh without Retina Display). You will see a window displaying a grid of small (8px by 8px) squares.
 
 * You can flip the state of any square by clicking the square.
-* You can insert a [glider gun][ggg] that points to the lower-right by double-clicking.
 * You can zoom in by pressing `+` on your keyboard, or zoom out by pressing `-`.
 * You can pan by dragging the grid.
 * You can also press an arrow key to move a screenful up, down, left, or right.
+
+You can also insert a glider gun by pressing `1`, `2`, `3`, or `4`, with each number corresponding to an orientation.
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
 [try]: http://raganwald.com/LaHermosaVida

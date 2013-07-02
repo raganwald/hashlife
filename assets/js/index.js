@@ -7,7 +7,8 @@
     // viewport
     var viewportCanvas = $('canvas#viewport'),
         viewportContext = viewportCanvas[0].getContext("2d"),
-        viewportOffset = { x: 0, y: 0 };
+        viewportOffset = { x: 0, y: 0 },
+        lastMousePosition = { x: 0, y: 0 };
 
     viewportCanvas.height = window.innerHeight;
     viewportCanvas.width = window.innerWidth;
@@ -26,7 +27,8 @@
     ///////////////////////////////////////////////////////////////////
 
     viewportCanvas
-      .bind('mousedown', onDragStart);
+      .bind('mousedown', onDragStart)
+      .bind("mousemove", trackLastMousePosition);
 
     $(document)
       .dblclick(gliderGun)
@@ -47,22 +49,43 @@
         zoomOut();
       }
     }
+    
+    function trackLastMousePosition (event) {
+      lastMousePosition = {
+        x: event.pageX,
+        y: event.pageY
+      }
+    }
 
     function onKeyup (event) {
-      if (event.which === 37) {
-        panLeft();
-      }
-      if (event.which === 38) {
-        panUp();
-      }
-      if (event.which === 39) {
-        panRight();
-      }
-      if (event.which === 40) {
-        panDown();
-      }
       if (event.which === 32) {
         advance();
+      }
+      
+      else if (event.which === 37) {
+        panLeft();
+      }
+      else if (event.which === 38) {
+        panUp();
+      }
+      else if (event.which === 39) {
+        panRight();
+      }
+      else if (event.which === 40) {
+        panDown();
+      }
+      
+      else if (event.which === 49) {
+        gliderGun(2);
+      }
+      else if (event.which === 50) {
+        gliderGun(3);
+      }
+      else if (event.which === 51) {
+        gliderGun(0);
+      }
+      else if (event.which === 52) {
+        gliderGun(1);
       }
     }
     
@@ -119,14 +142,20 @@
              );
     }
 
-    function gliderGun (event) {
+    function  gliderGun (rotations) {
 
       var relativeToUniverseCenterInCells = {
-        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + event.clientX) / Cell.size()),
-        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
+        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
+        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + lastMousePosition.y) / Cell.size())
       };
+      
+      var pasteContent = QuadTree.Library.GosperGliderGunSE;
+      
+      for (var i = 0; i < rotations; ++i) {
+        pasteContent = pasteContent.rotate();
+      }
 
-      root.universe = root.universe.paste(QuadTree.Library.GosperGliderGunSE, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
+      root.universe = root.universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
 
       draw();
     }

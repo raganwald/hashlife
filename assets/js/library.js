@@ -53,5 +53,22 @@
     )
 
   });
+  
+  _.extend(Cell.prototype, {
+    rotate: function () {
+      return this;
+    }
+  });
+  
+  _.extend(QuadTree.prototype, {
+    rotate: function () {
+      return new QuadTree([
+        this.sw().rotate(),
+        this.nw().rotate(),
+        this.ne().rotate(),
+        this.se().rotate()
+      ]);
+    }
+  });
 
 })(this);

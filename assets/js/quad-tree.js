@@ -44,7 +44,10 @@
   function QuadTree (nw_ne_se_sw) {
     if (!(this instanceof QuadTree)) return new QuadTree(nw_ne_se_sw);
 
-    if(!_.all(nw_ne_se_sw, function (child) { return child instanceof QuadTree || child instanceof Cell; })) throw "BAD";
+    if(!_.all(nw_ne_se_sw, function (child) { return child instanceof QuadTree || child instanceof Cell; })) {
+      console.log(nw_ne_se_sw);
+      throw "BAD";
+    }
 
     var container = QUAD_TREE_CACHE[nw_ne_se_sw[0].id] || (QUAD_TREE_CACHE[nw_ne_se_sw[0].id] = {});
         container = container[nw_ne_se_sw[1].id] || (container[nw_ne_se_sw[1].id] = {});
