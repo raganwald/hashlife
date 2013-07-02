@@ -20,7 +20,7 @@
 
     // the universe
     root.universe = bufferTree.double().double();
-    root.generation = 1;
+    root.generation = 0;
 
     // scroll is relative to the center of the universe
     var _scrollFromCenter = { x: 0, y: 0 },
@@ -232,6 +232,7 @@
       
       $('#generation').text(addCommas(root.generation));
       $('#population').text(addCommas(root.universe.population));
+      $('#width').text(addCommas(root.universe.width));
       
     }
     
