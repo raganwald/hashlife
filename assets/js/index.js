@@ -5,11 +5,12 @@
   $(document).ready(function () {
 
     // viewport
-    var vCanvas = $('canvas#viewport'),
-        vContext = vCanvas[0].getContext("2d");
+    var viewportCanvas = $('canvas#viewport'),
+        viewportContext = viewportCanvas[0].getContext("2d"),
+        viewportOffset = { x: 0, y: 0 };
 
-    vCanvas.height = window.innerHeight;
-    vCanvas.width = window.innerWidth;
+    viewportCanvas.height = window.innerHeight;
+    viewportCanvas.width = window.innerWidth;
 
     // the buffer within the universe
     var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / Cell.size()),
@@ -21,17 +22,10 @@
     // the universe
     root.universe = bufferTree.double().double();
     root.generation = 0;
+    
+    ///////////////////////////////////////////////////////////////////
 
-    // scroll is relative to the center of the universe
-    var _scrollFromCenter = { x: 0, y: 0 },
-        _bufferUpperLeftFromUniverseCenter = { x: -(bufferTree.canvasSize() / 2), y: -(bufferTree.canvasSize() / 2) };
-        _bufferLowerRightFromUniverseCenter = { x: (bufferTree.canvasSize() / 2), y: (bufferTree.canvasSize() / 2) };
-
-    var findBufferTree = (function (upperLeft, lowerRight) {
-      return root.universe.findTreeEnclosingRectangle(upperLeft, lowerRight);
-    });
-
-    vCanvas
+    viewportCanvas
       .bind('mousedown', onDragStart);
 
     $(document)
@@ -73,22 +67,22 @@
     }
     
     function panLeft () {
-      _scrollFromCenter.x -= vCanvas.width;
+      viewportOffset.x -= viewportCanvas.width;
       draw()
     }
     
     function panRight () {
-      _scrollFromCenter.x += vCanvas.width;
+      viewportOffset.x += viewportCanvas.width;
       draw()
     }
     
     function panUp () {
-      _scrollFromCenter.y -= vCanvas.height;
+      viewportOffset.y -= viewportCanvas.height;
       draw()
     }
     
     function panDown () {
-      _scrollFromCenter.y += vCanvas.height;
+      viewportOffset.y += viewportCanvas.height;
       draw()
     }
 
@@ -128,8 +122,8 @@
     function gliderGun (event) {
 
       var relativeToUniverseCenterInCells = {
-        x: noZero((_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / Cell.size()),
-        y: noZero((_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / Cell.size())
+        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
       };
 
       root.universe = root.universe.paste(QuadTree.Library.GosperGliderGunSE, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
@@ -140,8 +134,8 @@
     function flipCell (event) {
 
       var relativeToUniverseCenterInCells = {
-        x: noZero((_scrollFromCenter.x - (vCanvas.width / 2) + event.clientX) / Cell.size()),
-        y: noZero((_scrollFromCenter.y - (vCanvas.height / 2) + event.clientY) / Cell.size())
+        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
       };
 
       root.universe = root.universe.flip(relativeToUniverseCenterInCells);
@@ -174,8 +168,8 @@
           top : (event.clientY - event.data.lastCoord.top)
       };
 
-      _scrollFromCenter.x = _scrollFromCenter.x - delta.left;
-      _scrollFromCenter.y = _scrollFromCenter.y - delta.top;
+      viewportOffset.x = viewportOffset.x - delta.left;
+      viewportOffset.y = viewportOffset.y - delta.top;
 
       event.data || (event.data = {});
 
@@ -211,23 +205,23 @@
     function draw () {
 
       //synchronize window and canvas dimensions
-      vCanvas[0].width = $(window).width();
-      vCanvas[0].height = $(window).height();
+      viewportCanvas[0].width = $(window).width();
+      viewportCanvas[0].height = $(window).height();
       
       while (root.universe.doesNotEnclose({
         cellSize: Cell.size(),
         viewPort: {
-          height: vCanvas[0].height,
-          width: vCanvas[0].width,
-          offset: _scrollFromCenter
+          height: viewportCanvas[0].height,
+          width: viewportCanvas[0].width,
+          offset: viewportOffset
         }
       })) root.universe = root.universe.double();
 
       root.universe.drawInto({
         cellSize: Cell.size(),
-        canvas: vCanvas[0],
-        context: vContext,
-        offset: _scrollFromCenter
+        canvas: viewportCanvas[0],
+        context: viewportContext,
+        offset: viewportOffset
       });
       
       $('#generation').text(addCommas(root.generation));
@@ -249,6 +243,6 @@
     	return x1 + x2;
     }
 
-});
+  });
 
 })(this);
