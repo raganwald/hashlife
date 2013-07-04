@@ -55,7 +55,7 @@
           extant = this.width / 2
           childExtant = extant / 2;
 
-      // TODO: Could this be a functoinal iterator?
+      // TODO: Could this be a functional iterator?
       for (ewIndex = -1; ewIndex < 2; ++ewIndex) {
         for (nsIndex = -1; nsIndex < 2; ++nsIndex) {
 
@@ -98,7 +98,7 @@
           else if (nsIndex === -1 && ewIndex === 0) { // nn
             return new QuadTree([
               new QuadTree([this.nw().nw(), pastedChild.nw(), pastedChild.sw(), this.nw().sw()]),
-              new QuadTree([pastedChild.ne(), this.ne().ne(), this.ne().se(), pastedChild.sw()]),
+              new QuadTree([pastedChild.ne(), this.ne().ne(), this.ne().se(), pastedChild.se()]),
               this.se(),
               this.sw()
             ]);
@@ -111,7 +111,7 @@
               new QuadTree([this.sw().nw(), pastedChild.nw(), pastedChild.sw(), this.sw().sw()])
             ]);
           }
-          else if (nsIndex === 0 && ewIndex === -1) { // ee
+          else if (nsIndex === 0 && ewIndex === -1) { // ww
             return new QuadTree([
               new QuadTree([this.nw().nw(), this.nw().ne(), pastedChild.ne(), pastedChild.nw()]),
               this.ne(),
@@ -119,7 +119,7 @@
               new QuadTree([pastedChild.sw(), pastedChild.se(), this.sw().se(), this.sw().sw()])
             ]);
           }
-          else if (nsIndex === 0 && ewIndex === 1) { // ww
+          else if (nsIndex === 0 && ewIndex === 1) { // ee
             return new QuadTree([
               this.nw(),
               new QuadTree([this.ne().nw(), this.ne().ne(), pastedChild.ne(), pastedChild.nw()]),
@@ -130,7 +130,7 @@
           else { // (nsIndex === 0 && ewIndex === 0) // cc
             return new QuadTree([
               new QuadTree([this.nw().nw(), this.nw().ne(), pastedChild.nw(), this.nw().sw()]),
-              new QuadTree([this.ne().nw(), this.ne().ne(), this.ne().ne(), pastedChild.ne()]),
+              new QuadTree([this.ne().nw(), this.ne().ne(), this.ne().se(), pastedChild.ne()]),
               new QuadTree([pastedChild.se(), this.se().ne(), this.se().se(), this.se().sw()]),
               new QuadTree([this.sw().nw(), pastedChild.sw(), this.sw().se(), this.sw().sw()])
             ]);

@@ -42,6 +42,8 @@
   });
 
   function QuadTree (nw_ne_se_sw) {
+    nw_ne_se_sw || (nw_ne_se_sw = [Cell(0), Cell(0), Cell(0), Cell(0)]);
+    
     if (!(this instanceof QuadTree)) return new QuadTree(nw_ne_se_sw);
 
     if(!_.all(nw_ne_se_sw, function (child) { return child instanceof QuadTree || child instanceof Cell; })) {

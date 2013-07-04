@@ -1,15 +1,10 @@
 (function (root, undefined) {
 
-  var NW = 0,
-      NE = 1,
-      SE = 2,
-      SW = 3;
-
   var EAST = 1,
-      NEITHER = 0,
       WEST = -1,
-      NORTH = 1,
-      SOUTH = -1;
+      NEITHER = 0,
+      NORTH = -1,
+      SOUTH = 1;
 
 
   var _ = root._ || require('../vendor/underscore');

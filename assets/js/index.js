@@ -3,6 +3,11 @@
   var LOG2 = Math.log(2);
 
   $(document).ready(function () {
+    
+    // offline hack
+    $('#ribbon')
+      .when('-> window.location.protocol === "file:"')
+        .hide();
 
     // viewport
     var viewportCanvas = $('canvas#viewport'),
@@ -13,16 +18,9 @@
     viewportCanvas.height = window.innerHeight;
     viewportCanvas.width = window.innerWidth;
 
-    // the buffer within the universe
-    var length = Math.ceil(Math.max(window.innerHeight, window.innerWidth) / Cell.size()),
-        log2 = Math.log(length)/LOG2,
-        bufferGeneration = Math.ceil(log2),
-        bufferTree = Cell(0).stretchTo(bufferGeneration),
-        bufferCanvas = bufferTree.canvas();
-
     // the universe
-    root.universe = bufferTree.double().double();
-    root.generation = 0;
+    var universe = new QuadTree();
+    var currentGeneration = 0;
     
     ///////////////////////////////////////////////////////////////////
 
@@ -31,7 +29,6 @@
       .bind("mousemove", trackLastMousePosition);
 
     $(document)
-      .dblclick(gliderGun)
       .keypress(onKeypress)
       .keyup(onKeyup);
 
@@ -75,18 +72,24 @@
         panDown();
       }
       
+      else if (event.which === 18) {
+        rotateUniverse();
+      }
+      
       else if (event.which === 49) {
-        gliderGun(2);
+        insert('Block');
       }
       else if (event.which === 50) {
-        gliderGun(3);
+        insert('Beehive');
       }
       else if (event.which === 51) {
-        gliderGun(0);
+        insert('Glider');
       }
       else if (event.which === 52) {
-        gliderGun(1);
+        insert('GosperGliderGun');
       }
+      
+      else console.log(event.which);
     }
     
     function panLeft () {
@@ -108,17 +111,24 @@
       viewportOffset.y += viewportCanvas.height;
       draw()
     }
+    
+    function rotateUniverse () {
+      universe = universe.rotate();
+      draw();
+    }
 
     function advance () {
-      var thisGenerationRulesTheNation = root.universe.generation;
-
-      root.generation = root.generation + (root.universe.size() / 2)
-      root.universe = root.universe
-        .double()
-        .double()
-        .future()
-        .trimmed()
-        .uncrop(thisGenerationRulesTheNation);
+      var thisGenerationRulesTheNation = universe.generation;
+      universe = universe
+                        .trimmed()
+                        .double()
+                        .double();
+                        
+      currentGeneration = currentGeneration + (universe.size() / 2);
+      
+      universe = universe
+                        .future()
+                        .trimmed();
       
       draw();
     }
@@ -142,20 +152,18 @@
              );
     }
 
-    function  gliderGun (rotations) {
+    function  insert (what) {
 
       var relativeToUniverseCenterInCells = {
         x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
         y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + lastMousePosition.y) / Cell.size())
       };
       
-      var pasteContent = QuadTree.Library.GosperGliderGunSE;
+      console.log(universe.generation, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
       
-      for (var i = 0; i < rotations; ++i) {
-        pasteContent = pasteContent.rotate();
-      }
+      var pasteContent = QuadTree.Library[what];
 
-      root.universe = root.universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
+      universe = universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
 
       draw();
     }
@@ -167,7 +175,7 @@
         y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
       };
 
-      root.universe = root.universe.flip(relativeToUniverseCenterInCells);
+      universe = universe.flip(relativeToUniverseCenterInCells);
 
       draw();
     }
@@ -237,25 +245,25 @@
       viewportCanvas[0].width = $(window).width();
       viewportCanvas[0].height = $(window).height();
       
-      while (root.universe.doesNotEnclose({
+      while (universe.doesNotEnclose({
         cellSize: Cell.size(),
         viewPort: {
           height: viewportCanvas[0].height,
           width: viewportCanvas[0].width,
           offset: viewportOffset
         }
-      })) root.universe = root.universe.double();
+      })) universe = universe.double();
 
-      root.universe.drawInto({
+      universe.drawInto({
         cellSize: Cell.size(),
         canvas: viewportCanvas[0],
         context: viewportContext,
         offset: viewportOffset
       });
       
-      $('#generation').text(addCommas(root.generation));
-      $('#population').text(addCommas(root.universe.population));
-      $('#width').text(addCommas(root.universe.width));
+      $('#generation').text(addCommas(currentGeneration));
+      $('#population').text(addCommas(universe.population));
+      $('#width').text(addCommas(universe.trimmed().width));
       
     }
     
