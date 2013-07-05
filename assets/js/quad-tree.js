@@ -8,18 +8,22 @@
 
   function Cell (id) {
     if (id === 0) {
-      if (DEAD) return DEAD;
-      if (!(this instanceof Cell)) return new Cell(id);
+      if (DEAD)
+        return DEAD;
+      if (!(this instanceof Cell))
+        return new Cell(id);
       DEAD = this;
     }
     else if (id === 1) {
-      if (ALIVE) return ALIVE;
-      if (!(this instanceof Cell)) return new Cell(id);
+      if (ALIVE)
+        return ALIVE;
+      if (!(this instanceof Cell))
+        return new Cell(id);
       ALIVE = this;
     }
     this.id = id;
     this.generation = 0;
-    this.width = this.height = 1; // aliased for shits and giggles
+    this.width = this.height = 1;
     this.population = id;
   }
 
@@ -36,29 +40,46 @@
     stretchTo: function (generation) {
       return generation === 0
              ? this
-             : new QuadTree([this, this, this, this]).stretchTo(generation);
+             : new QuadTree([this, this, this, this])
+                     .stretchTo(generation);
     }
 
   });
 
-  function QuadTree (nw_ne_se_sw) {
-    nw_ne_se_sw || (nw_ne_se_sw = [Cell(0), Cell(0), Cell(0), Cell(0)]);
-    
-    if (!(this instanceof QuadTree)) return new QuadTree(nw_ne_se_sw);
 
-    if(!_.all(nw_ne_se_sw, function (child) { return child instanceof QuadTree || child instanceof Cell; })) {
+
+
+  function QuadTree (nw_ne_se_sw) {
+    nw_ne_se_sw ||
+      (nw_ne_se_sw = [Cell(0), Cell(0), Cell(0), Cell(0)]);
+    
+    if (!(this instanceof QuadTree)) 
+      return new QuadTree(nw_ne_se_sw);
+
+    if(!_.all(nw_ne_se_sw, 
+        function (child) { 
+          return child instanceof QuadTree || 
+            child instanceof Cell; 
+        })) 
+    {
       console.log(nw_ne_se_sw);
       throw "BAD";
     }
 
-    var container = QUAD_TREE_CACHE[nw_ne_se_sw[0].id] || (QUAD_TREE_CACHE[nw_ne_se_sw[0].id] = {});
-        container = container[nw_ne_se_sw[1].id] || (container[nw_ne_se_sw[1].id] = {});
-        container = container[nw_ne_se_sw[2].id] || (container[nw_ne_se_sw[2].id] = {});
+    // auto-vivification
+    var container = QUAD_TREE_CACHE[nw_ne_se_sw[0].id] || 
+      (QUAD_TREE_CACHE[nw_ne_se_sw[0].id] = {});
+        container = container[nw_ne_se_sw[1].id] || 
+          (container[nw_ne_se_sw[1].id] = {});
+        container = container[nw_ne_se_sw[2].id] || 
+          (container[nw_ne_se_sw[2].id] = {});
 
     return container[nw_ne_se_sw[3].id] || (
       this.id = ++ID,
       this.children = nw_ne_se_sw,
-      this.population = _.reduce(_.pluck(nw_ne_se_sw, 'population'), function (x, y) { return x + y; }, 0),
+      this.population = _.reduce(
+        _.pluck(nw_ne_se_sw, 'population'), 
+        function (x, y) { return x + y; }, 0),
       this.generation = nw_ne_se_sw[0].generation + 1,
       this.width = this.height = nw_ne_se_sw[0].width * 2, // aliased for shits and giggles
       container[nw_ne_se_sw[3].id] = this
