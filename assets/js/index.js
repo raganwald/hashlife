@@ -46,6 +46,8 @@
         'gesture_top': panUp,
         'gesture_bottom': panDown
       });
+    
+    if ($('.touch canvas').length) alert('touch me');
 
     ///////////////////////////////////////////////////////////////////
 
