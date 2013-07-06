@@ -27,6 +27,14 @@
         #coords p{
             background: #fff;
         }
+        
+        #wrapper
+        {
+            overflow:hidden;
+            position:relative;
+            background:#000;
+            margin:0 auto;
+        }
 
     </style>
 
@@ -78,8 +86,10 @@
       <p title="The total number of live cells">&#x25A3; <span id="population">0</span></p>
       <p title="The width and height of the active area">&#x25A6; <span id="width">...</span></p>
   </div>
-
-  <canvas id="viewport"></canvas>
+  
+  <div id="wrapper">
+    <canvas id="viewport"></canvas>
+  </div>
 
 </body>
 </html>
