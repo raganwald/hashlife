@@ -39,6 +39,7 @@
     ///////////////////////////////////////////////////////////////////
     
     $('.touch canvas')
+      .gesture('left right top bottom'.split())
       .bind({
         'gesture_left': panLeft,
         'gesture_right': panRight,
