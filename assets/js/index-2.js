@@ -26,7 +26,11 @@
 
     viewportCanvas
       .bind('mousedown', onDragStart)
-      .bind("mousemove", trackLastMousePosition);
+      .bind("mousemove", trackLastMousePosition)
+      .bind("swipeleft", panRight)
+      .bind("swipedown", panUp)
+      .bind("mousemove", trackLastMousePosition)
+    ;
 
     $(document)
       .keypress(onKeypress)
