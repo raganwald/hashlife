@@ -39,7 +39,7 @@
     ///////////////////////////////////////////////////////////////////
     
     $('html.touch canvas')
-      .bind({
+      .bind(
         'swipeleft', function (e) { console.log(e); return false; }
       );
 
