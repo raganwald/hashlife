@@ -31,6 +31,8 @@
     $(document)
       .keypress(onKeypress)
       .keyup(onKeyup);
+      
+    $.mobile.loadingMessage = false;
 
     $(window)
       .on('swipe', function (e, ui) { console.log(e, ui); })
