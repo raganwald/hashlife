@@ -37,14 +37,6 @@
       .trigger("resize");
 
     ///////////////////////////////////////////////////////////////////
-    
-    $('html.touch canvas')
-      .bind('swipeleft', panRight)
-      .bind('swipeRight', panLeft)
-      .bind('swipeUp', panDown  )
-      .bind('swipeDown', panUp   )
-
-    ///////////////////////////////////////////////////////////////////
 
     function onKeypress (event) {
       if (event.which === 43) {
