@@ -40,11 +40,11 @@
       
     if ($('html.touch').length) {
 
-      $(document)
-        .bind("touchmove",function(e){
-          console.log('touchmove',e);
-    	    event.preventDefault();
-        });
+      // $(document)
+      //   .bind("touchmove",function(e){
+      //     console.log('touchmove',e);
+      //          event.preventDefault();
+      //   });
         
       viewportCanvas
         .bind("swipe", function (e) {console.log('swipe',e); e.preventDefault(); return false;})
