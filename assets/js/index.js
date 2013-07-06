@@ -40,7 +40,7 @@
     
     $('html.touch canvas')
       .bind({
-        'swipeleft': panRight, // TODO: animate swn you flick
+        'swipeleft': panRight, // TODO: animate as you flick
         'swipeRight': panLeft,
         'swipeUp': panDown,
         'swipeDown': panUp
