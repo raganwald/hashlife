@@ -39,15 +39,14 @@
     ///////////////////////////////////////////////////////////////////
     
     $('html.touch canvas')
-      .gesture('left right top bottom'.split())
+      .gesture('left right top bottom scale'.split())
       .bind({
         'gesture_left': panLeft,
         'gesture_right': panRight,
         'gesture_top': panUp,
-        'gesture_bottom': panDown
+        'gesture_bottom': panDown,
+        'scale': function (e) { console.log(e); return false; }
       });
-    
-    if ($('html.touch canvas').length) alert('touch me');
 
     ///////////////////////////////////////////////////////////////////
 
