@@ -39,14 +39,9 @@
     ///////////////////////////////////////////////////////////////////
     
     $('html.touch canvas')
-      .gesture('left right top bottom scale'.split())
       .bind({
-        'gesture_left': panLeft,
-        'gesture_right': panRight,
-        'gesture_top': panUp,
-        'gesture_bottom': panDown,
-        'scale': function (e) { console.log(e); return false; }
-      });
+        'swipeleft', function (e) { console.log(e); return false; }
+      );
 
     ///////////////////////////////////////////////////////////////////
 
