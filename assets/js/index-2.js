@@ -36,9 +36,6 @@
       .on('swipe', function (e, ui) { console.log(e, ui); })
       .resize(draw)
       .trigger("resize");
-      
-    $('#wrapper')
-      .fixedtoolbar( "option", "fullscreen", true )
 
     ///////////////////////////////////////////////////////////////////
 
