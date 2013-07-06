@@ -43,7 +43,9 @@
       $(document)
         .bind("touchmove",function(event){
     	    event.preventDefault();
-        })
+        });
+        
+      viewportCanvas
         .bind("swipe", function (e) {console.log(e); e.preventDefault(); return false;})
     
     }
