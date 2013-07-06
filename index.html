@@ -29,22 +29,12 @@ body {
 .selectable, input, textarea {
     -webkit-user-select: auto;
 }
-body > * {
-    -webkit-backface-visibility: hidden;
-    -webkit-box-sizing: border-box;
-    display: block;
-    position: absolute;
-    left: 0;
-    width: 100%;
-    -webkit-transform: translate3d(0,0,0) rotate(0) scale(1);
-    min-height: 420px !important;
-}
 
         #source {
             display: none;
         }
 
-/*        #coords{
+        #coords{
             position: absolute;
             overflow: hidden;
             top: 10px;
@@ -53,21 +43,20 @@ body > * {
         }
         #coords p{
             background: #fff;
-        }*/
+        }
         
         #wrapper
         {
-        
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
             overflow:hidden;
             position:relative;
             background:#000;
             margin:0 auto;
         }    
+        
+        canvas {
+          height: 100%;
+          width: 100%;
+        }
 
     </style>
 
@@ -111,16 +100,16 @@ body > * {
 
 </head>
 <body>
-  <a href="https://github.com/raganwald/LaHermosaVida/tree/gh-pages"><img id='ribbon' style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  <!-- <a href="https://github.com/raganwald/LaHermosaVida/tree/gh-pages"><img id='ribbon' style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
   
   <div id="coords">
       <p><a href="https://github.com/raganwald/LaHermosaVida/tree/gh-pages">about</a></p>
       <p title="The number of generations computed">&#128336; <span id="generation">0</span></p>
       <p title="The total number of live cells">&#x25A3; <span id="population">0</span></p>
       <p title="The width and height of the active area">&#x25A6; <span id="width">...</span></p>
-  </div>
+  </div> -->
   
-  <canvas id="viewport" data-role="page" data-"fullscreen=true"></canvas>
+  <div id="wrapper"><canvas id="viewport"></canvas></div>
 
 </body>
 </html>

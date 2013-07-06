@@ -15,8 +15,8 @@
         viewportOffset = { x: 0, y: 0 },
         lastMousePosition = { x: 0, y: 0 };
 
-    viewportCanvas.height = window.innerHeight;
-    viewportCanvas.width = window.innerWidth;
+    viewportCanvas.height = $('#wrapper').innerHeight;
+    viewportCanvas.width = $('#wrapper').innerWidth;
 
     // the universe
     var universe = new QuadTree();
@@ -243,8 +243,8 @@
     function draw () {
 
       //synchronize window and canvas dimensions
-      viewportCanvas[0].width = $(window).width();
-      viewportCanvas[0].height = $(window).height();
+      viewportCanvas[0].width = $('#wrapper').width();
+      viewportCanvas[0].height = $('#wrapper').height();
       
       while (universe.doesNotEnclose({
         cellSize: Cell.size(),
