@@ -15,8 +15,8 @@
         viewportOffset = { x: 0, y: 0 },
         lastMousePosition = { x: 0, y: 0 };
 
-    viewportCanvas.height = $('#wrapper').innerHeight;
-    viewportCanvas.width = $('#wrapper').innerWidth;
+    viewportCanvas.height = window.innerHeight;
+    viewportCanvas.width = window.innerWidth;
 
     // the universe
     var universe = new QuadTree();
@@ -65,12 +65,14 @@
       }
       else if (event.which === 38) {
         panUp();
+        return false;
       }
       else if (event.which === 39) {
         panRight();
       }
       else if (event.which === 40) {
         panDown();
+        return false;
       }
       
       else if (event.which === 18) {
@@ -243,8 +245,8 @@
     function draw () {
 
       //synchronize window and canvas dimensions
-      viewportCanvas[0].width = $('#wrapper').width();
-      viewportCanvas[0].height = $('#wrapper').height();
+      viewportCanvas[0].width = $(window).width();
+      viewportCanvas[0].height = $(window).height();
       
       while (universe.doesNotEnclose({
         cellSize: Cell.size(),
