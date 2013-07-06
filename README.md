@@ -18,8 +18,9 @@ You can try it online [here][try]. You can also clone this repo onto your comput
 * You can zoom in by pressing `+` on your keyboard, or zoom out by pressing `-`.
 * You can pan by dragging the grid.
 * You can also press an arrow key to move a screenful up, down, left, or right.
+* You can rotate the screen by pressing option.
 
-You can also insert a glider gun by pressing `1`, `2`, `3`, or `4`, with each number corresponding to an orientation.
+You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
 [try]: http://raganwald.com/LaHermosaVida

@@ -37,6 +37,16 @@
       .trigger("resize");
 
     ///////////////////////////////////////////////////////////////////
+    
+    $('.touch canvas')
+      .bind({
+        'gesture_left': panLeft,
+        'gesture_right': panRight,
+        'gesture_top': panUp,
+        'gesture_bottom', panDown
+      });
+
+    ///////////////////////////////////////////////////////////////////
 
     function onKeypress (event) {
       if (event.which === 43) {
