@@ -41,10 +41,7 @@
     if ($('html.touch').length) {
 
       $(document)
-        .bind("touchmove",function(e){
-          console.log('touchmove',e);
-               event.preventDefault();
-        });
+        .bind("touchmove", function (e) { event.preventDefault(); });
         
       $.event.special.swipe.handleSwipe = function( start, stop ) {
   			if ( stop.time - start.time < $.event.special.swipe.durationThreshold ) {
@@ -53,13 +50,23 @@
     				Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
 
     				start.origin.trigger( "swipe" )
-    					.trigger( start.coords[0] > stop.coords[ 0 ] ? "swipeleft" : "swiperight" );
+    					.trigger( start.coords[ 0 ] > stop.coords[ 0 ] ? "swipeleft" : "swiperight" );
+    			}
+    			else if (
+    				Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) < $.event.special.swipe.horizontalDistanceThreshold &&
+    				Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) > $.event.special.swipe.verticalDistanceThreshold ) {
+
+    				start.origin.trigger( "swipe" )
+    					.trigger( start.coords[ 1 ] > stop.coords[ 1 ] ? "swipeup" : "swipedown" );
     			}
   			}
   		};
         
       viewportCanvas
-        .bind("swipe", function (e) {console.log('swipe',e); e.preventDefault(); return false;});
+        .bind("swipeleft", panRight)
+        .bind("swiperight", panLeft)
+        .bind("swipeUp", panDown)
+        .bind("swipeDown", panUp);
     
     }
 
