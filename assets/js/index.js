@@ -38,7 +38,7 @@
 
     ///////////////////////////////////////////////////////////////////
     
-    $('.touch canvas')
+    $('html.touch canvas')
       .gesture('left right top bottom'.split())
       .bind({
         'gesture_left': panLeft,
@@ -47,7 +47,7 @@
         'gesture_bottom': panDown
       });
     
-    if ($('.touch canvas').length) alert('touch me');
+    if ($('html.touch canvas').length) alert('touch me');
 
     ///////////////////////////////////////////////////////////////////
 
