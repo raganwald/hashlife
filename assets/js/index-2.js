@@ -33,6 +33,7 @@
       .keyup(onKeyup);
 
     $(window)
+      .on('swipe', function (e, ui) { console.log(e, ui); })
       .resize(draw)
       .trigger("resize");
 
