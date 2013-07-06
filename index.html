@@ -107,14 +107,33 @@ body > * {
 <body>
   <a href="https://github.com/raganwald/LaHermosaVida/tree/gh-pages"><img id='ribbon' style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
   
-  <div id="coords">
+  <!-- <div id="coords">
       <p><a href="https://github.com/raganwald/LaHermosaVida/tree/gh-pages">about</a></p>
       <p title="The number of generations computed">&#128336; <span id="generation">0</span></p>
       <p title="The total number of live cells">&#x25A3; <span id="population">0</span></p>
       <p title="The width and height of the active area">&#x25A6; <span id="width">...</span></p>
-  </div>
+  </div> -->
   
   <!-- <canvas id="viewport" data-role="page" data-"fullscreen=true"></canvas> -->
+  
+    <div data-role="header" data-position="fixed" data-fullscreen="true" data-id="hdr" data-tap-toggle="false">
+    <h1>
+      City
+    </h1><a href="swipe-page.html" data-direction="reverse" data-icon="delete" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
+  </div><!-- /header -->
+  <div data-role="content">
+    <div id="trivia-city" class="trivia ui-content" data-role="popup" data-position-to="window" data-tolerance="50,30,30,30" data-theme="d">
+      <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+      <p>
+        Here some text.
+      </p>
+    </div><!-- /popup -->
+  </div><!-- /content -->
+  <div data-role="footer" data-position="fixed" data-fullscreen="true" data-id="ftr" data-tap-toggle="false">
+    <div data-role="controlgroup" class="control ui-btn-left" data-type="horizontal" data-mini="true">
+      <a href="#" class="prev" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-theme="d">Previous</a> <a href="#" class="next" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-theme="d">Next</a>
+    </div><a href="#trivia-city" data-rel="popup" class="trivia-btn ui-btn-right" data-role="button" data-icon="info" data-iconpos="left" data-theme="d" data-mini="true">Trivia</a>
+  </div><!-- /footer -->
   
   <div>Hello</div>
 
