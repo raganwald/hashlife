@@ -27,7 +27,6 @@
     viewportCanvas
       .bind('mousedown', onDragStart)
       .bind("mousemove", trackLastMousePosition)
-      .bind("swipeleft swiperight swipeup swipedown", function (e) {console.log(e); e.preventDefault(); return false;})
       .bind("mousemove", trackLastMousePosition)
     ;
 
@@ -38,6 +37,16 @@
     $(window)
       .resize(draw)
       .trigger("resize");
+      
+    if ($('html.touch').length) {
+
+      $(document)
+        .bind("touchmove",function(event){
+    	    event.preventDefault();
+        });
+        .bind("swipeleft swiperight swipeup swipedown", function (e) {console.log(e); e.preventDefault(); return false;})
+    
+    }
 
     ///////////////////////////////////////////////////////////////////
 
