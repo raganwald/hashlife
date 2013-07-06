@@ -44,7 +44,7 @@
         .bind("touchmove",function(event){
     	    event.preventDefault();
         })
-        .bind("swipeleft swiperight swipeup swipedown", function (e) {console.log(e); e.preventDefault(); return false;})
+        .bind("swipe", function (e) {console.log(e); e.preventDefault(); return false;})
     
     }
 
