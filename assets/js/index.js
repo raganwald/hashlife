@@ -43,7 +43,7 @@
         'gesture_left': panLeft,
         'gesture_right': panRight,
         'gesture_top': panUp,
-        'gesture_bottom', panDown
+        'gesture_bottom': panDown
       });
 
     ///////////////////////////////////////////////////////////////////
