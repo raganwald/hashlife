@@ -27,8 +27,7 @@
     viewportCanvas
       .bind('mousedown', onDragStart)
       .bind("mousemove", trackLastMousePosition)
-      .bind("swipeleft", panRight)
-      .bind("swipedown", panUp)
+      .bind("swipe", function (e) {console.log(e); return false;})
       .bind("mousemove", trackLastMousePosition)
     ;
 
