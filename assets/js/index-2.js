@@ -33,7 +33,6 @@
       .keyup(onKeyup);
 
     $(window)
-      .on('swipe', function (e, ui) { console.log(e, ui); })
       .resize(draw)
       .trigger("resize");
 
@@ -65,14 +64,12 @@
       }
       else if (event.which === 38) {
         panUp();
-        return false;
       }
       else if (event.which === 39) {
         panRight();
       }
       else if (event.which === 40) {
         panDown();
-        return false;
       }
       
       else if (event.which === 18) {
@@ -98,21 +95,25 @@
     function panLeft () {
       viewportOffset.x -= viewportCanvas.width;
       draw()
+      console.log('left')
     }
     
     function panRight () {
       viewportOffset.x += viewportCanvas.width;
       draw()
+      console.log('right')
     }
     
     function panUp () {
       viewportOffset.y -= viewportCanvas.height;
       draw()
+      console.log('up')
     }
     
     function panDown () {
       viewportOffset.y += viewportCanvas.height;
       draw()
+      console.log('down')
     }
     
     function rotateUniverse () {
