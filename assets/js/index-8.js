@@ -52,19 +52,12 @@
     				start.origin.trigger( "swipe" )
     					.trigger( start.coords[ 0 ] > stop.coords[ 0 ] ? "swipeleft" : "swiperight" );
     			}
-    			else {
-      			console.log(coords);
-    			
-      			if (
-      				Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
-      				Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
+    			else if (
+    				Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
+    				Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
 
-              console.log(coords);
-
-      				start.origin.trigger( "swipe" )
-      					.trigger( start.coords[ 1 ] > stop.coords[ 1 ] ? "swipeup" : "swipedown" );
-      			}
-    			
+    				start.origin.trigger( "swipe" )
+    					.trigger( start.coords[ 1 ] > stop.coords[ 1 ] ? "swipeup" : "swipedown" );
     			}
     			
   			}
@@ -73,8 +66,8 @@
       viewportCanvas
         .bind("swipeleft", panRight)
         .bind("swiperight", panLeft)
-        .bind("swipeUp", panDown)
-        .bind("swipeDown", panUp);
+        .bind("swipeup", panDown)
+        .bind("swipedown", panUp);
     
     }
 
