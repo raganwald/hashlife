@@ -77,7 +77,7 @@
     function gestureStart (event) {
       $(document)
         .bind('gesturechange', gestureChange)
-        .bind('gestureEnd', gestureEnd);
+        .bind('gestureend', gestureEnd);
         
       var scale = 1.0;
         
@@ -99,13 +99,6 @@
       function gestureChange (event) {
         scale = event.originalEvent.scale;
       }
-    }
-    
-    function gestureEnd (event) {
-      if (event.scale > 0)
-        zoomIn();
-      else if (event.scale < 0)
-        zoomOut();
     }
 
     ///////////////////////////////////////////////////////////////////
