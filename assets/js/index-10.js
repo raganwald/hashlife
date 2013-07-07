@@ -43,7 +43,8 @@
     if ($('html.touch').length) {
 
       $(document)
-        .bind("touchmove", function (e) { event.preventDefault(); });
+        .bind("touchmove", function (e) { event.preventDefault(); })
+        .addEventListener('gesturechange', dispatchGesture);
         
       $.event.special.swipe.handleSwipe = function( start, stop ) {
   			if ( stop.time - start.time < $.event.special.swipe.durationThreshold ) {
@@ -69,8 +70,7 @@
         .bind("swipeleft", panRight)
         .bind("swiperight", panLeft)
         .bind("swipeup", panDown)
-        .bind("swipedown", panUp)
-        .addEventListener('gesturechange', dispatchGesture);
+        .bind("swipedown", panUp);
     
     }
     
