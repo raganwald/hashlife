@@ -44,7 +44,7 @@
 
       $(document)
         .bind("touchmove", function (e) { event.preventDefault(); })
-        .addEventListener('gesturechange', dispatchGesture);
+        .bind('gesturestart', gestureStart);
         
       $.event.special.swipe.handleSwipe = function( start, stop ) {
   			if ( stop.time - start.time < $.event.special.swipe.durationThreshold ) {
@@ -74,7 +74,34 @@
     
     }
     
-    function dispatchGesture (event) {
+    function gestureStart (event) {
+      $(document)
+        .bind('gesturechange', gestureChange)
+        .bind('gestureEnd', gestureEnd);
+        
+      var scale = 1.0;
+        
+      function gestureEnd (event) {
+        $(document)
+          .unbind(gestureChange)
+          .unbind(gestureEnd);
+          
+        if (scale >= 1.1)
+          zoomIn();
+        if (scale >= 2.0)
+          zoomIn();
+        if (scale <= 0.9)
+          zoomOut();
+        if (scale >= 0.5)
+          zoomOut();
+      }
+      
+      function gestureChange (event) {
+        scale = event.originalEvent.scale;
+      }
+    }
+    
+    function gestureEnd (event) {
       if (event.scale > 0)
         zoomIn();
       else if (event.scale < 0)
