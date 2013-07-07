@@ -83,8 +83,8 @@
         
       function gestureEnd (event) {
         $(document)
-          .unbind(gestureChange)
-          .unbind(gestureEnd);
+          .unbind('gesturechange', gestureChange)
+          .unbind('gestureend', gestureEnd);
           
         if (scale >= 1.1)
           zoomIn();
@@ -100,7 +100,6 @@
       
       function gestureChange (event) {
         scale = event.originalEvent.scale;
-        console.log('gestureChange', scale);
       }
     }
 
