@@ -172,8 +172,6 @@
       else if (event.which === 52) {
         insert('GosperGliderGun');
       }
-      
-      else console.log(event.which);
     }
     
     function panLeft () {
