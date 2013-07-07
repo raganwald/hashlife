@@ -27,8 +27,7 @@
     viewportCanvas
       .bind('mousedown', onDragStart)
       .bind("mousemove", trackLastMousePosition)
-      .bind("mousemove", trackLastMousePosition)
-    ;
+      .bind("mousemove", trackLastMousePosition);
 
     $(document)
       .keypress(onKeypress)
@@ -37,6 +36,9 @@
     $(window)
       .resize(draw)
       .trigger("resize");
+      
+    $('#generations')
+      .on('click', advance);
       
     ///////////////////////////////////////////////////////////////////
       
@@ -72,6 +74,9 @@
         .bind("swipeup", panDown)
         .bind("swipedown", panUp)
         .bind("taphold", function () { insert('GosperGliderGun'); });
+        
+      $('#generations')
+        .on('tap', advance);
     
     }
     

@@ -10,9 +10,9 @@
 
 The basic idea is to present the illusion of an infinite Life universe. You can pan indefinitely. You can have massive populations. You can jump huge amounts of time into the future. But there is no concept of a fixed limit in space or time. The universe is not a toroid or klein bottle, it's a plane stretching to infinity in every direction.
 
-### editing the universe
+You can try it online [here][try].
 
-You can try it online [here][try]. You can also clone this repo onto your computer, and then open `index.html` in a browser (It has only been tested with Safari on a Macintosh without Retina Display). You will see a window displaying a grid of small (8px by 8px) squares.
+### desktop instructions
 
 * You can flip the state of any square by clicking the square.
 * You can zoom in by pressing `+` on your keyboard, or zoom out by pressing `-`.
@@ -21,6 +21,13 @@ You can try it online [here][try]. You can also clone this repo onto your comput
 * You can rotate the screen by pressing option.
 
 You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
+
+### iOS instructions
+
+* You can flip the state of a square with a single tap.
+* You can zoom in or out using the pinch gesture.
+* You can move a screenful up, down, left, or right with a swipe gesture.
+* You can insert a [glider gun][ggg] by tapping and holding. 
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
 [try]: http://raganwald.com/LaHermosaVida
