@@ -79,27 +79,27 @@
         .bind('gesturechange', gestureChange)
         .bind('gestureend', gestureEnd);
         
-      var scale = 1.0;
+      var lastScale = 1.0;
         
       function gestureEnd (event) {
         $(document)
           .unbind('gesturechange', gestureChange)
           .unbind('gestureend', gestureEnd);
           
-        if (scale >= 1.1)
-          zoomIn();
-        if (scale >= 2.0)
-          zoomIn();
-        if (scale <= 0.9)
-          zoomOut();
-        if (scale >= 0.5)
-          zoomOut();
-          
-        console.log('gestureEnd', scale);
       }
       
       function gestureChange (event) {
-        scale = event.originalEvent.scale;
+        var currentScale = event.originalEvent.scale,
+            relativeScale = currentScale / lastScale;
+        
+        if (relativeScale < 0.75) {
+          lastScale = currentScale;
+          zoomOut();
+        }
+        else if (relativeScale > 1.5) {
+          lastScale = currentScale;
+          zoomIn();
+        }
       }
     }
 
