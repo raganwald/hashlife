@@ -70,7 +70,8 @@
         .bind("swipeleft", panRight)
         .bind("swiperight", panLeft)
         .bind("swipeup", panDown)
-        .bind("swipedown", panUp);
+        .bind("swipedown", panUp)
+        .bind("taphold", function () { insert('GosperGliderGun'); });
     
     }
     
@@ -79,18 +80,20 @@
         .bind('gesturechange', gestureChange)
         .bind('gestureend', gestureEnd);
         
-      var lastScale = 1.0;
+      var lastScale = 1.0,
+          lastRotation = 0;
         
       function gestureEnd (event) {
         $(document)
           .unbind('gesturechange', gestureChange)
           .unbind('gestureend', gestureEnd);
-          
       }
       
       function gestureChange (event) {
         var currentScale = event.originalEvent.scale,
-            relativeScale = currentScale / lastScale;
+            relativeScale = currentScale / lastScale,
+            currentRotation = event.originalEvent.rotation % 360,
+            relativeRotation = currentRotation - lastRotation;
         
         if (relativeScale < 0.75) {
           lastScale = currentScale;
@@ -99,6 +102,15 @@
         else if (relativeScale > 1.5) {
           lastScale = currentScale;
           zoomIn();
+        }
+        
+        if (relativeRotation > 90) {
+          rotateUniverse();
+          lastRotation = currentRotation;
+        }
+        elseif (relativeRotation < -90) {
+          rotateUniverseCounterClockwise();
+          lastRotation = currentRotation;
         }
       }
     }
@@ -181,6 +193,11 @@
     
     function rotateUniverse () {
       universe = universe.rotate();
+      draw();
+    }
+    
+    function rotateUniverseCounterClockwise () {
+      universe = universe.rotate().rotate().rotate();
       draw();
     }
 
