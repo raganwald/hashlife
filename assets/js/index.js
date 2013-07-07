@@ -21,13 +21,14 @@
       $('#ribbon').hide();
 
     // viewport
-    var viewportCanvas = $('canvas#viewport'),
-        viewportContext = viewportCanvas[0].getContext("2d"),
+    var canvasProxy = $('canvas#viewport'),
+        viewPortCanvas = canvasProxy[0],
+        viewportContext = viewPortCanvas.getContext("2d"),
         viewportOffset = { x: 0, y: 0 },
         lastMousePosition = { x: 0, y: 0 };
 
-    viewportCanvas.height = window.innerHeight;
-    viewportCanvas.width = window.innerWidth;
+    viewPortCanvas.height = window.innerHeight;
+    viewPortCanvas.width = window.innerWidth;
 
     // the universe
     var universe = new QuadTree();
@@ -36,19 +37,19 @@
     ///////////////////////////////////////////////////////////////////
     
     var panLeft = triggersRedraw( function () {
-      viewportOffset.x -= viewportCanvas.width;
+      viewportOffset.x -= viewPortCanvas.width;
     });
     
     var panRight = triggersRedraw( function () {
-      viewportOffset.x += viewportCanvas.width;
+      viewportOffset.x += viewPortCanvas.width;
     });
     
     var panUp = triggersRedraw( function () {
-      viewportOffset.y -= viewportCanvas.height;
+      viewportOffset.y -= viewPortCanvas.height;
     });
     
     var panDown = triggersRedraw( function () {
-      viewportOffset.y += viewportCanvas.height;
+      viewportOffset.y += viewPortCanvas.height;
     });
     
     var rotateUniverse = triggersRedraw( function () {
@@ -93,13 +94,10 @@
     var insert = triggersRedraw( function (what) {
 
       var relativeToUniverseCenterInCells = {
-        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
-        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + lastMousePosition.y) / Cell.size())
-      };
-      
-      console.log(universe.generation, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
-      
-      var pasteContent = QuadTree.Library[what];
+            x: noZero((viewportOffset.x - (viewPortCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
+            y: noZero((viewportOffset.y - (viewPortCanvas.height / 2) + lastMousePosition.y) / Cell.size())
+          },
+          pasteContent = QuadTree.Library[what];
 
       universe = universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
 
@@ -108,18 +106,17 @@
     var flipCell = triggersRedraw( function (event) {
 
       var relativeToUniverseCenterInCells = {
-        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + event.clientX) / Cell.size()),
-        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
+        x: noZero((viewportOffset.x - (viewPortCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: noZero((viewportOffset.y - (viewPortCanvas.height / 2) + event.clientY) / Cell.size())
       };
 
       universe = universe.flip(relativeToUniverseCenterInCells);
-
-      draw();
+      
     });
     
     ///////////////////////////////////////////////////////////////////
 
-    viewportCanvas
+    canvasProxy
       .bind('mousedown', onDragStart)
       .bind("mousemove", trackLastMousePosition);
 
@@ -162,7 +159,7 @@
   			}
   		};
         
-      viewportCanvas
+      canvasProxy
         .bind("swipeleft", panRight)
         .bind("swiperight", panLeft)
         .bind("swipeup", panDown)
@@ -330,21 +327,21 @@
     function draw () {
 
       //synchronize window and canvas dimensions
-      viewportCanvas[0].width = $(window).width();
-      viewportCanvas[0].height = $(window).height();
+      viewPortCanvas.width = $(window).width();
+      viewPortCanvas.height = $(window).height();
       
       while (universe.doesNotEnclose({
         cellSize: Cell.size(),
         viewPort: {
-          height: viewportCanvas[0].height,
-          width: viewportCanvas[0].width,
+          height: viewPortCanvas.height,
+          width: viewPortCanvas.width,
           offset: viewportOffset
         }
       })) universe = universe.double();
 
       universe.drawInto({
         cellSize: Cell.size(),
-        canvas: viewportCanvas[0],
+        canvas: viewPortCanvas,
         context: viewportContext,
         offset: viewportOffset
       });
