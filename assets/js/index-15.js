@@ -108,7 +108,7 @@
           rotateUniverse();
           lastRotation = currentRotation;
         }
-        elseif (relativeRotation < -90) {
+        else if (relativeRotation < -90) {
           rotateUniverseCounterClockwise();
           lastRotation = currentRotation;
         }
