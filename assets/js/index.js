@@ -1,13 +1,24 @@
 (function (root) {
 
-  var LOG2 = Math.log(2);
+  var LOG2 = Math.log(2),
+  
+  after = function(decoration) {
+    return function(base) {
+      return function() {
+        var __value__;
+        decoration.call(this, __value__ = base.apply(this, arguments));
+        return __value__;
+      };
+    };
+  };
 
   $(document).ready(function () {
     
+    var triggersRedraw = after(draw);
+    
     // offline hack
-    $('#ribbon')
-      .when('-> window.location.protocol === "file:"')
-        .hide();
+    if (window.location.protocol === "file:")
+      $('#ribbon').hide();
 
     // viewport
     var viewportCanvas = $('canvas#viewport'),
@@ -23,10 +34,93 @@
     var currentGeneration = 0;
     
     ///////////////////////////////////////////////////////////////////
+    
+    var panLeft = triggersRedraw( function () {
+      viewportOffset.x -= viewportCanvas.width;
+    });
+    
+    var panRight = triggersRedraw( function () {
+      viewportOffset.x += viewportCanvas.width;
+    });
+    
+    var panUp = triggersRedraw( function () {
+      viewportOffset.y -= viewportCanvas.height;
+    });
+    
+    var panDown = triggersRedraw( function () {
+      viewportOffset.y += viewportCanvas.height;
+    });
+    
+    var rotateUniverse = triggersRedraw( function () {
+      universe = universe.rotate();
+    });
+    
+    var rotateUniverseCounterClockwise = triggersRedraw( function () {
+      universe = universe.rotate().rotate().rotate();
+    });
+
+    var advance = triggersRedraw( function () {
+      var thisGenerationRulesTheNation = universe.generation;
+      universe = universe
+                        .trimmed()
+                        .double()
+                        .double();
+                        
+      currentGeneration = currentGeneration + (universe.size() / 2);
+      
+      universe = universe
+                        .future()
+                        .trimmed();
+    });
+
+    var zoomIn = triggersRedraw( function () {
+      Cell.size(Cell.size() * 2);
+    });
+
+    var zoomOut = triggersRedraw( function () {
+      if (root.Cell.size() >= 2) {
+        Cell.size(Cell.size() / 2);
+      }
+    });
+
+    function noZero (n) {
+      return Math.floor(n >= 0
+                        ? n + 1
+                        : n
+             );
+    }
+
+    var insert = triggersRedraw( function (what) {
+
+      var relativeToUniverseCenterInCells = {
+        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
+        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + lastMousePosition.y) / Cell.size())
+      };
+      
+      console.log(universe.generation, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
+      
+      var pasteContent = QuadTree.Library[what];
+
+      universe = universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
+
+    });
+
+    var flipCell = triggersRedraw( function (event) {
+
+      var relativeToUniverseCenterInCells = {
+        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + event.clientX) / Cell.size()),
+        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
+      };
+
+      universe = universe.flip(relativeToUniverseCenterInCells);
+
+      draw();
+    });
+    
+    ///////////////////////////////////////////////////////////////////
 
     viewportCanvas
       .bind('mousedown', onDragStart)
-      .bind("mousemove", trackLastMousePosition)
       .bind("mousemove", trackLastMousePosition);
 
     $(document)
@@ -172,99 +266,6 @@
       else if (event.which === 52) {
         insert('GosperGliderGun');
       }
-    }
-    
-    function panLeft () {
-      viewportOffset.x -= viewportCanvas.width;
-      draw()
-    }
-    
-    function panRight () {
-      viewportOffset.x += viewportCanvas.width;
-      draw()
-    }
-    
-    function panUp () {
-      viewportOffset.y -= viewportCanvas.height;
-      draw()
-    }
-    
-    function panDown () {
-      viewportOffset.y += viewportCanvas.height;
-      draw()
-    }
-    
-    function rotateUniverse () {
-      universe = universe.rotate();
-      draw();
-    }
-    
-    function rotateUniverseCounterClockwise () {
-      universe = universe.rotate().rotate().rotate();
-      draw();
-    }
-
-    function advance () {
-      var thisGenerationRulesTheNation = universe.generation;
-      universe = universe
-                        .trimmed()
-                        .double()
-                        .double();
-                        
-      currentGeneration = currentGeneration + (universe.size() / 2);
-      
-      universe = universe
-                        .future()
-                        .trimmed();
-      
-      draw();
-    }
-
-    function zoomIn () {
-      Cell.size(Cell.size() * 2);
-      draw();
-    }
-
-    function zoomOut () {
-      if (root.Cell.size() >= 2) {
-        Cell.size(Cell.size() / 2);
-        draw();
-      }
-    }
-
-    function noZero (n) {
-      return Math.floor(n >= 0
-                        ? n + 1
-                        : n
-             );
-    }
-
-    function  insert (what) {
-
-      var relativeToUniverseCenterInCells = {
-        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
-        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + lastMousePosition.y) / Cell.size())
-      };
-      
-      console.log(universe.generation, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
-      
-      var pasteContent = QuadTree.Library[what];
-
-      universe = universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
-
-      draw();
-    }
-
-    function flipCell (event) {
-
-      var relativeToUniverseCenterInCells = {
-        x: noZero((viewportOffset.x - (viewportCanvas.width / 2) + event.clientX) / Cell.size()),
-        y: noZero((viewportOffset.y - (viewportCanvas.height / 2) + event.clientY) / Cell.size())
-      };
-
-      universe = universe.flip(relativeToUniverseCenterInCells);
-
-      draw();
     }
 
     function onDragStart (event) {

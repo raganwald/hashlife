@@ -1,19 +1,15 @@
 (function (root, undefined) {
   
-  var _ = root._ || require('../vendor/underscore');
-
-  if (_.isUndefined(_.arity)) {
-    require('../vendor/underscore-contrib');
-  }
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser');
 
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
       
-  if (_.isUndefined(Cell.prototype.generation)) {
+  if (A.isUndefined(Cell.prototype.generation)) {
     require('./children');
   }
   
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
 
     // cellSize: 8
     // viewPort:
