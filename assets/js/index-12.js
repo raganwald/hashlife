@@ -94,10 +94,13 @@
           zoomOut();
         if (scale >= 0.5)
           zoomOut();
+          
+        console.log('gestureEnd', scale);
       }
       
       function gestureChange (event) {
         scale = event.originalEvent.scale;
+        console.log('gestureChange', scale);
       }
     }
 
