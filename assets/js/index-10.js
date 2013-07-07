@@ -38,6 +38,8 @@
       .resize(draw)
       .trigger("resize");
       
+    ///////////////////////////////////////////////////////////////////
+      
     if ($('html.touch').length) {
 
       $(document)
@@ -67,8 +69,16 @@
         .bind("swipeleft", panRight)
         .bind("swiperight", panLeft)
         .bind("swipeup", panDown)
-        .bind("swipedown", panUp);
+        .bind("swipedown", panUp)
+        .addEventListener('gesturechange', dispatchGesture);
     
+    }
+    
+    function dispatchGesture (event) {
+      if (event.scale > 0)
+        zoomIn();
+      else if (event.scale < 0)
+        zoomOut();
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -130,25 +140,21 @@
     function panLeft () {
       viewportOffset.x -= viewportCanvas.width;
       draw()
-      console.log('left')
     }
     
     function panRight () {
       viewportOffset.x += viewportCanvas.width;
       draw()
-      console.log('right')
     }
     
     function panUp () {
       viewportOffset.y -= viewportCanvas.height;
       draw()
-      console.log('up')
     }
     
     function panDown () {
       viewportOffset.y += viewportCanvas.height;
       draw()
-      console.log('down')
     }
     
     function rotateUniverse () {
