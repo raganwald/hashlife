@@ -297,10 +297,8 @@
 
       event.data.lastCoord || (event.data.lastCoord = {});
 
-      _.extend(event.data.lastCoord, {
-        left : event.clientX,
-        top : event.clientY
-      });
+      event.data.lastCoord.left = event.clientX;
+      event.data.lastCoord.top = event.clientY;
 
       if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
         event.data.mouseDownTime = null;
