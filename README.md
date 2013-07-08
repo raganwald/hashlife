@@ -8,7 +8,7 @@
 
 ### infinity
 
-The basic idea is to present the illusion of an infinite Life universe. You can pan indefinitely. You can have massive populations. You can jump huge amounts of time into the future. But there is no concept of a fixed limit in space or time. The universe is not a toroid or klein bottle, it's a plane stretching to infinity in every direction.
+The basic idea is to present the illusion of an infinite Life universe. You can pan indefinitely. You can have massive populations. You can jump huge amounts of time into the future. But there is no concept of a fixed limit in space or time. The universe is a plane stretching to infinity in every direction.
 
 You can try it online [here][try].
 
