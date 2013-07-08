@@ -1,21 +1,15 @@
 (function (root) {
-
-  var _ = root._ || require('../vendor/underscore');
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
-
-  if (_.isUndefined(_.arity)) {
-    require('../vendor/underscore-contrib');
-  }
 
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
 
-  if (_.isUndefined(Cell.prototype.generation)) {
+  if (Cell.prototype.generation === undefined) {
     require('./children');
   }
 
-  if (_.isUndefined(QuadTree.prototype.toJSON)) {
+  if (QuadTree.prototype.toJSON === undefined) {
     require('./json');
   }
 
@@ -145,10 +139,10 @@
         var resultJSON = this.toJSON(),
             contentJSON = content.toJSON();
         
-        _.each(contentJSON, function (contentRow, rowIndex) {
+        contentJSON.forEach(function (contentRow, rowIndex) {
           var resultRow = resultJSON[extant + upperLeft.y + rowIndex];
           
-          _.each(contentRow, function (contentCell, columnIndex) {
+          contentRow.forEach(function (contentCell, columnIndex) {
             resultRow[extant + upperLeft.x + columnIndex] = contentCell;
           });
         });

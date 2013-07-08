@@ -4,14 +4,10 @@
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
-  if (_.isUndefined(_.arity)) {
-    require('../vendor/underscore-contrib');
-  }
-
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
 
-  if (_.isUndefined(QuadTree.prototype.toJSON)) {
+  if (QuadTree.prototype.toJSON === undefined) {
     require('./json');
   }
 
