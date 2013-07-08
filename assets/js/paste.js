@@ -1,6 +1,8 @@
 (function (root) {
 
   var _ = root._ || require('../vendor/underscore');
+  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   if (_.isUndefined(_.arity)) {
     require('../vendor/underscore-contrib');
@@ -17,7 +19,7 @@
     require('./json');
   }
 
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
     paste: function (content, xCentre, yCentre) {
       if (!(content instanceof QuadTree)) throw "non-square pastes not implemented yet";
 

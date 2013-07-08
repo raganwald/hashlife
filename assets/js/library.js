@@ -1,6 +1,8 @@
 (function (root) {
 
   var _ = root._ || require('../vendor/underscore');
+  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   if (_.isUndefined(_.arity)) {
     require('../vendor/underscore-contrib');
@@ -124,13 +126,13 @@
 
   });
   
-  _.extend(Cell.prototype, {
+  A.extendClass(Cell, {
     rotate: function () {
       return this;
     }
   });
   
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
     rotate: function () {
       return new QuadTree([
         this.sw().rotate(),

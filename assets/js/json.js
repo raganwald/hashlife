@@ -3,6 +3,8 @@
   var __slice = [].slice;
 
   var _ = root._ || require('../vendor/underscore');
+  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   if (_.isUndefined(_.arity)) {
     require('../vendor/underscore-contrib');
@@ -11,13 +13,13 @@
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
 
-  _.extend(Cell.prototype, {
+  A.extendClass(Cell, {
     toJSON: function () {
       return this.id;
     }
   });
 
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
     toJSON: function () {
       var childrenJSON = _.invoke(this.children, 'toJSON');
       if (this.generation === 1) {

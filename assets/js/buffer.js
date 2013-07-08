@@ -1,6 +1,6 @@
 (function (root, undefined) {
   
-  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser');
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell

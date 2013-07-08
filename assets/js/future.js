@@ -1,6 +1,8 @@
 (function (root) {
 
   var _ = root._ || require('../vendor/underscore');
+  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   if (_.isUndefined(_.arity)) {
     require('../vendor/underscore-contrib');
@@ -153,7 +155,7 @@
     
   };
 
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
     future: function () {
       if (this._future) {
         return this._future;

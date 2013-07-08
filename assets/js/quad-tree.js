@@ -1,6 +1,8 @@
 (function (root) {
 
   var _ = root._ || require('../vendor/underscore');
+  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   var QUAD_TREE_CACHE = {};
   var ALIVE = DEAD = void 0;
@@ -27,7 +29,7 @@
     this.population = id;
   }
 
-  _.extend(Cell.prototype, {
+  A.extendClass(Cell, {
 
     flip: function (offset) {
       return Cell(1 - this.id);
@@ -86,7 +88,7 @@
     );
   }
 
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
 
     emptyCopy: function () {
       var emptyChildCopy = this.nw().emptyCopy();

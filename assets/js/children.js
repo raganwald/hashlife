@@ -9,10 +9,12 @@
 
   var _ = root._ || require('../vendor/underscore');
   
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
+  
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
 
-  _.extend(Cell.prototype, {
+  A.extendClass(Cell, {
 
     generation: function () { return 0; },
 
@@ -20,7 +22,7 @@
 
   });
 
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
 
     generation: function () {
       return 1 + this.children[0].generation();

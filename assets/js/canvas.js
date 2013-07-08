@@ -1,6 +1,8 @@
 (function (root, $, undefined) {
   
   var _ = root._ || require('../vendor/underscore');
+  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 	
   var GRID_LINE_WIDTH = 1;
 	
@@ -12,7 +14,7 @@
   
   // TODO: Remove `_.decorator`
   //
-  _.extend(QuadTree.prototype, {
+  A.extendClass(QuadTree, {
     
     canvasSize: function () {
       return this.size() * Cell.size();
@@ -77,7 +79,7 @@
     })(8)
   });
   
-  _.extend(Cell.prototype, {
+  A.extendClass(Cell, {
     
     canvasSize: function () {
       return Cell.size();
