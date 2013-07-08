@@ -1,10 +1,10 @@
 # La Hermosa Vida
 
-"La Hermosa Vida" is yet another implementation of [Conway's Game of Life][gol] in the browser. The purpose of this implementation is to serve as an excuse for talking about a few of the features being added to [Underscore][u] via [Underscore-Contrib][uc]. 
+"La Hermosa Vida" is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. It was written to accompany my [La Hermosa Visa talk][lhs] at SpainJS, 2013.
 
 [gol]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
-[u]: http://underscorejs.org
-[uc]: https://github.com/documentcloud/underscore-contrib
+[HashLife]: https://en.wikipedia.org/wiki/Hashlife
+[lhs]: http://www.haikudeck.com/p/x2kAbNDLL9/la-hermosa-vida
 
 ### infinity
 
@@ -34,7 +34,7 @@ You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
 
 ### jumping into the future
 
-Pressing the space bar jumps forward into the future. The number of generations jumped depends upon the size of the pattern in the display, so if you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
+You can tap the little click or press the space bar to jump forward into the future. The number of generations jumped depends upon the size of the pattern in the display, so if you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
 
 ### behind the scenes
 
@@ -50,10 +50,6 @@ The current implementation does not perform any cache eviction, so complex patte
 ### prior art
 
 [A working engine based on QuadTrees, written in CoffeeScript][ru].
-
-### schedule
-
-La Hermosa Vida will be complete and displayed at [SpainJS] in Madrid, July 5-6 2013.
 
 [SpainJS]: http://spainjs.org
 [ru]: http://recursiveuniver.se

@@ -6,10 +6,6 @@
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
-  if (_.isUndefined(_.arity)) {
-    require('../vendor/underscore-contrib');
-  }
-
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
 
@@ -26,10 +22,10 @@
         return [[childrenJSON[0], childrenJSON[1]], [childrenJSON[3], childrenJSON[2]]];
       }
       else {
-        var topHalf = _.map(_.zip(childrenJSON[0], childrenJSON[1]), function (pair) {
+        var topHalf = A.map(_.zip(childrenJSON[0], childrenJSON[1]), function (pair) {
           return pair[0].concat(pair[1]);
         });
-        var bottomHalf = _.map(_.zip(childrenJSON[3], childrenJSON[2]), function (pair) {
+        var bottomHalf = A.map(_.zip(childrenJSON[3], childrenJSON[2]), function (pair) {
           return pair[0].concat(pair[1]);
         });
         return topHalf.concat(bottomHalf);
@@ -78,7 +74,7 @@
       }).apply(this), function(i) {
         var _j, _ref1, _results1;
         if (json[i].length < sz) {
-          return json[i] = json[i].concat(_.map((function() {
+          return json[i] = json[i].concat(A.map((function() {
             _results1 = [];
             for (var _j = 1, _ref1 = sz - json[i].length; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; 1 <= _ref1 ? _j++ : _j--){ _results1.push(_j); }
             return _results1;
@@ -88,13 +84,13 @@
         }
       });
       if (json.length < sz) {
-        json = json.concat(_.map((function() {
+        json = json.concat(A.map((function() {
           _results1 = [];
           for (var _j = 1, _ref1 = sz - json.length; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; 1 <= _ref1 ? _j++ : _j--){ _results1.push(_j); }
           return _results1;
         }).apply(this), function() {
           var _k, _results2;
-          return _.map((function() {
+          return A.map((function() {
             _results2 = [];
             for (var _k = 1; 1 <= sz ? _k <= sz : _k >= sz; 1 <= sz ? _k++ : _k--){ _results2.push(_k); }
             return _results2;
