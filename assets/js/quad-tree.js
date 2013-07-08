@@ -1,6 +1,4 @@
 (function (root) {
-
-  var _ = root._ || require('../vendor/underscore');
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
@@ -58,16 +56,6 @@
     if (!(this instanceof QuadTree)) 
       return new QuadTree(nw_ne_se_sw);
 
-    if(!_.all(nw_ne_se_sw, 
-        function (child) { 
-          return child instanceof QuadTree || 
-            child instanceof Cell; 
-        })) 
-    {
-      console.log(nw_ne_se_sw);
-      throw "BAD";
-    }
-
     // auto-vivification
     var container = QUAD_TREE_CACHE[nw_ne_se_sw[0].id] || 
       (QUAD_TREE_CACHE[nw_ne_se_sw[0].id] = {});
@@ -80,7 +68,7 @@
       this.id = ++ID,
       this.children = nw_ne_se_sw,
       this.population = A.foldl(
-        _.pluck(nw_ne_se_sw, 'population'), 
+        A.map(nw_ne_se_sw, A.getWith('population')), 
         function (x, y) { return x + y; }, 0),
       this.generation = nw_ne_se_sw[0].generation + 1,
       this.width = this.height = nw_ne_se_sw[0].width * 2, // aliased for shits and giggles
