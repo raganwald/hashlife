@@ -170,7 +170,7 @@
     }
   })
 
-  _.extend(QuadTree, {
+  A.extend(QuadTree, {
     all: all
   });
 

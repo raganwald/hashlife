@@ -279,7 +279,7 @@
 
   });
 
-  _.extend(root, {
+  A.extend(root, {
     QuadTree: QuadTree,
     Cell: Cell
   });

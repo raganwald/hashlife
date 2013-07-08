@@ -17,7 +17,7 @@
 
   QuadTree.Library || (QuadTree.Library = {});
 
-  _.extend(QuadTree.Library, {
+  A.extend(QuadTree.Library, {
 
     Block: QuadTree.fromString(
       '**',

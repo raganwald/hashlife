@@ -21,7 +21,7 @@
 
   A.extendClass(QuadTree, {
     toJSON: function () {
-      var childrenJSON = _.invoke(this.children, 'toJSON');
+      var childrenJSON = A.map(this.children, '.toJSON()');
       if (this.generation === 1) {
         return [[childrenJSON[0], childrenJSON[1]], [childrenJSON[3], childrenJSON[2]]];
       }
@@ -37,7 +37,7 @@
     }
   });
 
-  _.extend(QuadTree, {
+  A.extend(QuadTree, {
     fromString: function() {
       var json, sz, strs = __slice.call(arguments, 0);
       if (strs.length === 1) {

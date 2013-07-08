@@ -1,7 +1,5 @@
 (function (root, $, undefined) {
   
-  var _ = root._ || require('../vendor/underscore');
-  
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 	
   var GRID_LINE_WIDTH = 1;
@@ -12,8 +10,6 @@
 		LIFE: '#356AA0'
 	}
   
-  // TODO: Remove `_.decorator`
-  //
   A.extendClass(QuadTree, {
     
     canvasSize: function () {
@@ -24,7 +20,7 @@
       this._canvases || (this._canvases = {});
       if (this._canvases[Cell.size()]) return this._canvases[Cell.size()];
       
-      var childCanvases = _.invoke(this.children, 'canvas');
+      var childCanvases = A.map(this.children, '.canvas()');
       var canvas = this._canvases[Cell.size()] = document.createElement('canvas');
       var SIZE = canvas.width = canvas.height = this.canvasSize();
     	var SQUARE_OFFSET = ((SIZE - GRID_LINE_WIDTH) / 2);
@@ -70,7 +66,7 @@
     
   });
   
-  _.extend(Cell, {
+  A.extend(Cell, {
     size: (function (size) {
       return function (optionalSize) {
     	  if (optionalSize != null) size = optionalSize;
@@ -89,7 +85,7 @@
         this._canvases || (this._canvases = {});
         if (this._canvases[Cell.size()]) return this._canvases[Cell.size()];
       
-  	  else return this._canvases[Cell.size()] = _.tap(document.createElement('canvas'), function (canvas) {
+  	  else return this._canvases[Cell.size()] = A.tap(document.createElement('canvas'), function (canvas) {
   	    canvas.width = canvas.height = this.canvasSize();
         var context = canvas.getContext('2d');
     		context.clearRect(0, 0, Cell.size(), Cell.size());
