@@ -157,12 +157,12 @@
         }
       ];
         
-      var found = _.find(childArr, function (info) {
+      var found = A.first(childArr, function (info) {
         return (viewportUpperLeft.x >= info.childUpperLeft.x &&
                 viewportUpperLeft.y >= info.childUpperLeft.y &&
                 viewportLowerRight.x <= info.childLowerRight.x &&
                 viewportLowerRight.y <= info.childLowerRight.y);
-      }, this);
+      });
       
       if (found == null) {
         return {

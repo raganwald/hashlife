@@ -806,6 +806,21 @@
   
   var filterWith = flip(filter);
   
+  var first = function first (list, optionalFn) {
+    if (arguments.length < 2) return list[0];
+    
+    var fn = functionalize(optionalFn),
+        i,
+        item;
+    
+    for (i in list) {
+      item = list[i];
+      if (fn(item)) return item;
+    }
+  };
+  
+  var firstWith = flip(first);
+  
   var map = binary( function map (list, fn) {
     fn = functionalize(fn);
     var fnLength = fn.length;
@@ -858,6 +873,8 @@
     mapArgumentsWith: mapArgumentsWith,
     filter: filter,
     filterWith: filterWith,
+    first: first,
+    firstWith: firstWith,
     deepMap: deepMap,
     deepMapWith: deepMapWith
   });
