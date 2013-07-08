@@ -1,44 +1,38 @@
 (function (root) {
-
-  var _ = root._ || require('../vendor/underscore');
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
-
-  if (_.isUndefined(_.arity)) {
-    require('../vendor/underscore-contrib');
-  }
 
   var QuadTree = root.QuadTree || require('./quad-tree').QuadTree,
       Cell     = root.Cell     || require('./quad-tree').Cell
       
-  if (_.isUndefined(Cell.prototype.generation)) {
+  if (Cell.prototype.generation === undefined) {
     require('./children');
   }
 
   function mapConcat (choices) {
     return function (list) {
-      return _.map(choices, function (choice) {
+      return A.map(choices, function (choice) {
         return list.concat([choice])
       })
     }
   }
 
   function flatMapWith (fn, list) {
-    return _.reduce(list, function (acc, element) {
+    return A.foldl(list, function (acc, element) {
       return acc.concat(fn(element));
     }, [])
   }
 
   function unit (choices) {
-    return _.map(choices, function (choice) {
+    return A.map(choices, function (choice) {
       return [choice];
     });
   }
 
   function forChoices (choices) {
-    var chooser = _.partial(flatMapWith, mapConcat(choices));
-    return _.map(
-      _.compose(chooser, chooser, chooser)(unit(choices)),
+    var chooser = A.call(flatMapWith, mapConcat(choices));
+    return A.map(
+      A.compose(chooser, chooser, chooser)(unit(choices)),
       function (children) { return new QuadTree(children); });
   }
 

@@ -5,9 +5,6 @@
       NEITHER = 0,
       NORTH = -1,
       SOUTH = 1;
-
-
-  var _ = root._ || require('../vendor/underscore');
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
   
