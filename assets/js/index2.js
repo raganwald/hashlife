@@ -246,8 +246,6 @@
                 left : (event.originalEvent.pageX - event.data.lastCoord.left),
                 top : (event.originalEvent.pageY - event.data.lastCoord.top)
             };
-            
-        console.log(delta);
         
         if (relativeScale < 0.75) {
           lastScale = currentScale;
@@ -266,6 +264,19 @@
           rotateUniverseCounterClockwise();
           lastRotation = currentRotation;
         }
+        
+        if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
+          viewportOffset.x = viewportOffset.x - delta.left;
+          viewportOffset.y = viewportOffset.y - delta.top;
+
+          event.data || (event.data = {});
+
+          event.data.lastCoord || (event.data.lastCoord = {});
+
+          event.data.lastCoord.left = event.pageX;
+          event.data.lastCoord.top = event.pageY;
+        }
+        
       }
     }
 
