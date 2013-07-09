@@ -274,7 +274,9 @@
           event.data.lastCoord || (event.data.lastCoord = {});
 
           event.data.lastCoord.left = event.pageX;
-          event.data.lastCoord.top = event.pageY;
+          event.data.lastCoord.top = event.pageY
+          
+          draw();
         }
         
       }
