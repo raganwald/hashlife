@@ -247,7 +247,7 @@
                 top : (event.originalEvent.clientY - event.data.lastCoord.top)
             };
             
-        console.log(event);
+        console.log(delta);
         
         if (relativeScale < 0.75) {
           lastScale = currentScale;
