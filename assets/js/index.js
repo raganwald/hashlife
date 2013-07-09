@@ -171,6 +171,49 @@
     
     }
     
+/*
+    function onDragStart (event) {
+      event.data = {
+        lastCoord:{
+          left : event.clientX,
+          top : event.clientY
+        },
+        mouseDownTime: new Date().getTime()
+      };
+
+      $(document)
+        .bind("mouseup", event.data, onDragEnd)
+        .bind("mousemove", event.data, onDragging);
+
+     document.body.style.cursor = 'all-scroll';
+    }
+
+    var MAXCLICKDRAGDISTANCE = 1,
+        MAXIMUMCLICKMILLISECONDS = 250;
+
+    function onDragging (event) {
+      var delta = {
+          left : (event.clientX - event.data.lastCoord.left),
+          top : (event.clientY - event.data.lastCoord.top)
+      };
+
+      viewportOffset.x = viewportOffset.x - delta.left;
+      viewportOffset.y = viewportOffset.y - delta.top;
+
+      event.data || (event.data = {});
+
+      event.data.lastCoord || (event.data.lastCoord = {});
+
+      event.data.lastCoord.left = event.clientX;
+      event.data.lastCoord.top = event.clientY;
+
+      if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
+        event.data.mouseDownTime = null;
+      }
+      draw();
+    }
+*/
+    
     function gestureStart (event) {
       $(document)
         .bind('gesturechange', gestureChange)
@@ -190,6 +233,8 @@
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
             relativeRotation = currentRotation - lastRotation;
+            
+        console.log(event);
         
         if (relativeScale < 0.75) {
           lastScale = currentScale;
