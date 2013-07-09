@@ -215,9 +215,18 @@
 */
     
     function gestureStart (event) {
+      
+      event.data = {
+        lastCoord:{
+          left : event.originalEvent.clientX,
+          top : event.originalEvent.clientY
+        },
+        gestureTime: new Date().getTime()
+      };
+      
       $(document)
-        .bind('gesturechange', gestureChange)
-        .bind('gestureend', gestureEnd);
+        .bind('gesturechange', event.data, gestureChange)
+        .bind('gestureend', event.data, gestureEnd);
         
       var lastScale = 1.0,
           lastRotation = 0;
@@ -232,7 +241,11 @@
         var currentScale = event.originalEvent.scale,
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
-            relativeRotation = currentRotation - lastRotation;
+            relativeRotation = currentRotation - lastRotation,
+            delta = {
+                left : (event.originalEvent.clientX - event.data.lastCoord.left),
+                top : (event.originalEvent.clientY - event.data.lastCoord.top)
+            };
             
         console.log(event);
         
