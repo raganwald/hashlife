@@ -218,8 +218,8 @@
       
       event.data = {
         lastCoord:{
-          left : event.originalEvent.clientX,
-          top : event.originalEvent.clientY
+          left : event.originalEvent.pageX,
+          top : event.originalEvent.pageY
         },
         gestureTime: new Date().getTime()
       };
@@ -243,8 +243,8 @@
             currentRotation = event.originalEvent.rotation % 360,
             relativeRotation = currentRotation - lastRotation,
             delta = {
-                left : (event.originalEvent.clientX - event.data.lastCoord.left),
-                top : (event.originalEvent.clientY - event.data.lastCoord.top)
+                left : (event.originalEvent.pageX - event.data.lastCoord.left),
+                top : (event.originalEvent.pageY - event.data.lastCoord.top)
             };
             
         console.log(delta);
