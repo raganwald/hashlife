@@ -265,7 +265,8 @@
           lastRotation = currentRotation;
         }
         
-        if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
+        if ( true ) { // (delta.left + delta.top) > MAXCLICKDRAGDISTANCE]
+          
           viewportOffset.x = viewportOffset.x - delta.left;
           viewportOffset.y = viewportOffset.y - delta.top;
 
@@ -275,6 +276,8 @@
 
           event.data.lastCoord.left = event.pageX;
           event.data.lastCoord.top = event.pageY
+          
+          console.log('!');
           
           draw();
         }
