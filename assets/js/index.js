@@ -195,8 +195,6 @@
             relativeRotation = currentRotation - lastRotation,
             delta,
             lastCoord;
-            
-        console.log(event.originalEvent.pageX, event.originalEvent.clientX, event.data.lastCoord.top);
         
         if (relativeRotation > 90) {
           rotateUniverse();
@@ -214,9 +212,9 @@
           lastScale = currentScale;
           zoomIn();
         }
-        else if (event.originalEvent.pageX instanceof Number && event.originalEvent.pageY instanceof Number) {
+        else if (event.originalEvent.pageX != null && event.originalEvent.pageY != null) {
           
-          if (event.data.lastCoord.top instanceof Number && event.data.lastCoord.left instanceof Number) {
+          if (event.data.lastCoord.top != null && event.data.lastCoord.left != null) {
             delta = {
                 left : (event.originalEvent.pageX - event.data.lastCoord.left),
                 top : (event.originalEvent.pageY - event.data.lastCoord.top)
