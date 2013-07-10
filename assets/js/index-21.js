@@ -16,7 +16,7 @@
     
     var WE_ARE_MOBILE = !!$('html.touch').length,
         THROTTLE_MILLIS = WE_ARE_MOBILE
-                          ? 50
+                          ? 25
                           : 10;
 
     var draw = _.throttle( function () {
