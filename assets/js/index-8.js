@@ -195,15 +195,8 @@
             relativeRotation = currentRotation - lastRotation,
             delta,
             lastCoord;
-        
-        if (relativeScale < 0.75) {
-          lastScale = currentScale;
-          zoomOut();
-        }
-        else if (relativeScale > 1.5) {
-          lastScale = currentScale;
-          zoomIn();
-        }
+            
+        console.log(event.originalEvent.pageX, event.originalEvent.clientX, event.data.lastCoord.top);
         
         if (relativeRotation > 90) {
           rotateUniverse();
@@ -213,8 +206,15 @@
           rotateUniverseCounterClockwise();
           lastRotation = currentRotation;
         }
-            
-      if (event.originalEvent.pageX instanceof Number && event.originalEvent.pageY instanceof Number) {
+        else if (relativeScale < 0.75) {
+          lastScale = currentScale;
+          zoomOut();
+        }
+        else if (relativeScale > 1.5) {
+          lastScale = currentScale;
+          zoomIn();
+        }
+        else if (event.originalEvent.pageX instanceof Number && event.originalEvent.pageY instanceof Number) {
           
           if (event.data.lastCoord.top instanceof Number && event.data.lastCoord.left instanceof Number) {
             delta = {
@@ -226,7 +226,7 @@
                   left: 0,
                   top: 0
                 };
-          
+        
           viewportOffset.x = viewportOffset.x - delta.left;
           viewportOffset.y = viewportOffset.y - delta.top;
 
@@ -236,7 +236,7 @@
 
           event.data.lastCoord.left = event.originalEvent.pageX;
           event.data.lastCoord.top = event.originalEvent.pageY;
-          
+        
           draw();
         }
         
