@@ -240,8 +240,10 @@
 
           event.data.lastCoord.left = event.originalEvent.pageX;
           event.data.lastCoord.top = event.originalEvent.pageY;
-        
+          console.log("<draw>")
+          var d = (new Date()).getTime()
           draw();
+          console.log("</draw>", (new Date()).getTime() - d)
         }
         
       }, THROTTLE_MILLIS);
