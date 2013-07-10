@@ -196,7 +196,7 @@
             delta,
             lastCoord;
             
-        console.log(event.originalEvent.pageX, event.originalEvent.clientX, event.data.lastCoord.top);
+        console.log(event.originalEvent, event.data);
         
         if (relativeRotation > 90) {
           rotateUniverse();
@@ -239,7 +239,6 @@
         
           draw();
         }
-        
       }
     }
 
