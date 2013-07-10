@@ -202,10 +202,6 @@
         },
         gestureTime: new Date().getTime()
       };
-      
-      $(document)
-        .bind('gesturechange', event.data, gestureChange)
-        .bind('gestureend', event.data, gestureEnd);
         
       var lastScale = 1.0,
           lastRotation = 0;
@@ -216,7 +212,7 @@
           .unbind('gestureend', gestureEnd);
       }
       
-      function gestureChange (event) {
+      var gestureChange = _.debounce( function (event) {
         var currentScale = event.originalEvent.scale,
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
@@ -257,7 +253,12 @@
           draw();
         }
         
-      }
+      }, 100);
+      
+      $(document)
+        .bind('gesturechange', event.data, gestureChange)
+        .bind('gestureend', event.data, gestureEnd);
+        
     }
 
     ///////////////////////////////////////////////////////////////////
