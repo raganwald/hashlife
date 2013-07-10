@@ -222,12 +222,10 @@
                 top : (event.originalEvent.pageY - event.data.lastCoord.top)
             };
           }
-          else {
-            delta = {
-              left: 0,
-              top: 0;
-            }
-          }
+          else delta = {
+                  left: 0,
+                  top: 0
+                };
           
           viewportOffset.x = viewportOffset.x - delta.left;
           viewportOffset.y = viewportOffset.y - delta.top;
