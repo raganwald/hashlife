@@ -19,6 +19,7 @@ You can try it online [here][try].
 * You can pan by dragging the grid.
 * You can also press an arrow key to move a screenful up, down, left, or right.
 * You can rotate the screen by pressing option.
+* You can press the space bar to jump into the future.
 
 You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
 
@@ -26,15 +27,16 @@ You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
 
 * You can flip the state of a square with a single tap.
 * You can zoom in or out using the pinch gesture.
-* You can move a screenful up, down, left, or right with a swipe gesture.
+* You can drag the universe within the window using two fingers.
 * You can insert a [glider gun][ggg] by tapping and holding. 
+* You can jump into the future by swiping to the left or right (it doesn't matter which way you swipe)
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
 [try]: http://raganwald.com/LaHermosaVida
 
 ### jumping into the future
 
-You can tap the little click or press the space bar to jump forward into the future. The number of generations jumped depends upon the size of the pattern in the display, so if you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
+When you jump into the future, the number of generations jumped depends upon the size of the pattern in the display. If you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
 
 ### behind the scenes
 

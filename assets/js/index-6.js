@@ -160,59 +160,10 @@
   		};
         
       canvasProxy
-        .bind("swipeleft", panRight)
-        .bind("swiperight", panLeft)
-        .bind("swipeup", panDown)
-        .bind("swipedown", panUp)
+        .bind("swipeleft", advance)
         .bind("taphold", function () { insert('GosperGliderGun'); });
-        
-      $('#generations')
-        .on('tap', advance);
     
     }
-    
-/*
-    function onDragStart (event) {
-      event.data = {
-        lastCoord:{
-          left : event.clientX,
-          top : event.clientY
-        },
-        mouseDownTime: new Date().getTime()
-      };
-
-      $(document)
-        .bind("mouseup", event.data, onDragEnd)
-        .bind("mousemove", event.data, onDragging);
-
-     document.body.style.cursor = 'all-scroll';
-    }
-
-    var MAXCLICKDRAGDISTANCE = 1,
-        MAXIMUMCLICKMILLISECONDS = 250;
-
-    function onDragging (event) {
-      var delta = {
-          left : (event.clientX - event.data.lastCoord.left),
-          top : (event.clientY - event.data.lastCoord.top)
-      };
-
-      viewportOffset.x = viewportOffset.x - delta.left;
-      viewportOffset.y = viewportOffset.y - delta.top;
-
-      event.data || (event.data = {});
-
-      event.data.lastCoord || (event.data.lastCoord = {});
-
-      event.data.lastCoord.left = event.clientX;
-      event.data.lastCoord.top = event.clientY;
-
-      if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
-        event.data.mouseDownTime = null;
-      }
-      draw();
-    }
-*/
     
     function gestureStart (event) {
       
@@ -242,10 +193,8 @@
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
             relativeRotation = currentRotation - lastRotation,
-            delta = {
-                left : (event.originalEvent.pageX - event.data.lastCoord.left),
-                top : (event.originalEvent.pageY - event.data.lastCoord.top)
-            };
+            delta,
+            lastCoord;
         
         if (relativeScale < 0.75) {
           lastScale = currentScale;
@@ -264,8 +213,21 @@
           rotateUniverseCounterClockwise();
           lastRotation = currentRotation;
         }
-        
-        if ( true ) { // (delta.left + delta.top) > MAXCLICKDRAGDISTANCE]
+            
+      if (event.originalEvent.pageX instanceof Number && event.originalEvent.pageY instanceof Number)
+          
+          if (event.data.lastCoord.top instanceof Number && event.data.lastCoord.left instanceof Number) {
+            delta = {
+                left : (event.originalEvent.pageX - event.data.lastCoord.left),
+                top : (event.originalEvent.pageY - event.data.lastCoord.top)
+            };
+          }
+          else {
+            delta = {
+              left: 0,
+              top: 0;
+            }
+          }
           
           viewportOffset.x = viewportOffset.x - delta.left;
           viewportOffset.y = viewportOffset.y - delta.top;
@@ -274,10 +236,8 @@
 
           event.data.lastCoord || (event.data.lastCoord = {});
 
-          event.data.lastCoord.left = event.pageX;
-          event.data.lastCoord.top = event.pageY
-          
-          console.log('!', delta.left, delta.top);
+          event.data.lastCoord.left = event.originalEvent.pageX;
+          event.data.lastCoord.top = event.originalEvent.pageY;
           
           draw();
         }
