@@ -167,29 +167,29 @@
         .bind("touchmove", function (e) { event.preventDefault(); })
         .bind('gesturestart', gestureStart);
         
-      $.event.special.swipe.handleSwipe = function( start, stop ) {
-  			if ( stop.time - start.time < $.event.special.swipe.durationThreshold ) {
-  			  if (
-    				Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
-    				Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
-
-    				start.origin.trigger( "swipe" )
-    					.trigger( start.coords[ 0 ] > stop.coords[ 0 ] ? "swipeleft" : "swiperight" );
-    			}
-    			else if (
-    				Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
-    				Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
-
-    				start.origin.trigger( "swipe" )
-    					.trigger( start.coords[ 1 ] > stop.coords[ 1 ] ? "swipeup" : "swipedown" );
-    			}
-    			
-  			}
-  		};
+      //       $.event.special.swipe.handleSwipe = function( start, stop ) {
+      //  if ( stop.time - start.time < $.event.special.swipe.durationThreshold ) {
+      //    if (
+      //            Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
+      //            Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
+      // 
+      //            start.origin.trigger( "swipe" )
+      //              .trigger( start.coords[ 0 ] > stop.coords[ 0 ] ? "swipeleft" : "swiperight" );
+      //          }
+      //          else if (
+      //            Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
+      //            Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
+      // 
+      //            start.origin.trigger( "swipe" )
+      //              .trigger( start.coords[ 1 ] > stop.coords[ 1 ] ? "swipeup" : "swipedown" );
+      //          }
+      //          
+      //  }
+      // };
         
-      canvasProxy
-        .bind("swipeleft", advance)
-        .bind("taphold", function () { insert('GosperGliderGun'); });
+      // canvasProxy
+      //   .bind("swipeleft", advance)
+      //   .bind("taphold", function () { insert('GosperGliderGun'); });
     
     }
     
