@@ -115,6 +115,8 @@
     });
 
     var draw () = _.debounce( function () {
+      
+      console.log("!")
 
       //synchronize window and canvas dimensions
       viewPortCanvas.width = $(window).width();
