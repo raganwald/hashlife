@@ -203,7 +203,7 @@
           .unbind('gestureend', gestureEnd);
       }
       
-      var gestureChange = _.debounce( function (event) {
+      var gestureChange = _.throttle( function (event) {
         var currentScale = event.originalEvent.scale,
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
