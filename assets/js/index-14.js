@@ -13,6 +13,34 @@
   };
 
   $(document).ready(function () {
+
+    var draw () = _.debounce( function () {
+
+      //synchronize window and canvas dimensions
+      viewPortCanvas.width = $(window).width();
+      viewPortCanvas.height = $(window).height();
+      
+      while (universe.doesNotEnclose({
+        cellSize: Cell.size(),
+        viewPort: {
+          height: viewPortCanvas.height,
+          width: viewPortCanvas.width,
+          offset: viewportOffset
+        }
+      })) universe = universe.double();
+
+      universe.drawInto({
+        cellSize: Cell.size(),
+        canvas: viewPortCanvas,
+        context: viewportContext,
+        offset: viewportOffset
+      });
+      
+      $('#generation').text(addCommas(currentGeneration));
+      $('#population').text(addCommas(universe.population));
+      $('#width').text(addCommas(universe.trimmed().width));
+      
+    }, 100, true);
     
     var triggersRedraw = after(draw);
     
@@ -113,36 +141,6 @@
       universe = universe.flip(relativeToUniverseCenterInCells);
       
     });
-
-    var draw = _.debounce( function () {
-      
-      console.log("!")
-
-      //synchronize window and canvas dimensions
-      viewPortCanvas.width = $(window).width();
-      viewPortCanvas.height = $(window).height();
-      
-      while (universe.doesNotEnclose({
-        cellSize: Cell.size(),
-        viewPort: {
-          height: viewPortCanvas.height,
-          width: viewPortCanvas.width,
-          offset: viewportOffset
-        }
-      })) universe = universe.double();
-
-      universe.drawInto({
-        cellSize: Cell.size(),
-        canvas: viewPortCanvas,
-        context: viewportContext,
-        offset: viewportOffset
-      });
-      
-      $('#generation').text(addCommas(currentGeneration));
-      $('#population').text(addCommas(universe.population));
-      $('#width').text(addCommas(universe.trimmed().width));
-      
-    }, 100, true);
     
     ///////////////////////////////////////////////////////////////////
 
