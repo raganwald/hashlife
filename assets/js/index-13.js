@@ -114,7 +114,7 @@
       
     });
 
-    var draw () = _.debounce( function () {
+    var draw = _.debounce( function () {
       
       console.log("!")
 
