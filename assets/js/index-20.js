@@ -203,7 +203,7 @@
           .unbind('gestureend', gestureEnd);
       }
       
-      var gestureChange = _.throttle( function (event) {
+      function gestureChange (event) {
         var currentScale = event.originalEvent.scale,
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
@@ -246,7 +246,7 @@
           console.log("</draw>", (new Date()).getTime() - d)
         }
         
-      }, THROTTLE_MILLIS);
+      }
       
       $(document)
         .bind('gesturechange', event.data, gestureChange)
