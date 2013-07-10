@@ -214,7 +214,7 @@
           lastRotation = currentRotation;
         }
             
-      if (event.originalEvent.pageX instanceof Number && event.originalEvent.pageY instanceof Number)
+      if (event.originalEvent.pageX instanceof Number && event.originalEvent.pageY instanceof Number) {
           
           if (event.data.lastCoord.top instanceof Number && event.data.lastCoord.left instanceof Number) {
             delta = {
