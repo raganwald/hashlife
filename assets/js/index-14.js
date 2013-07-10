@@ -14,7 +14,7 @@
 
   $(document).ready(function () {
 
-    var draw () = _.debounce( function () {
+    var draw = _.debounce( function () {
 
       //synchronize window and canvas dimensions
       viewPortCanvas.width = $(window).width();
