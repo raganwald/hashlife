@@ -193,16 +193,18 @@
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
             relativeRotation = currentRotation - lastRotation,
-            delta,
-            lastCoord;
+            deltaLeft,
+            deltaTop,
+            lastCoordX,
+            lastCoordY;
         
         if (relativeRotation > 90) {
-          rotateUniverse();
           lastRotation = currentRotation;
+          rotateUniverse();
         }
         else if (relativeRotation < -90) {
-          rotateUniverseCounterClockwise();
           lastRotation = currentRotation;
+          rotateUniverseCounterClockwise();
         }
         else if (relativeScale < 0.75) {
           lastScale = currentScale;
@@ -212,21 +214,10 @@
           lastScale = currentScale;
           zoomIn();
         }
-        else if (event.originalEvent.pageX != null && event.originalEvent.pageY != null) {
-          
-          if (event.data.lastCoord.top != null && event.data.lastCoord.left != null) {
-            delta = {
-                left : (event.originalEvent.pageX - event.data.lastCoord.left),
-                top : (event.originalEvent.pageY - event.data.lastCoord.top)
-            };
-          }
-          else delta = {
-                  left: 0,
-                  top: 0
-                };
+        else {
         
-          viewportOffset.x = viewportOffset.x - delta.left;
-          viewportOffset.y = viewportOffset.y - delta.top;
+          viewportOffset.x = viewportOffset.x - (event.originalEvent.pageX - event.data.lastCoord.left);
+          viewportOffset.y = viewportOffset.y - (event.originalEvent.pageY - event.data.lastCoord.top);
 
           event.data || (event.data = {});
 
