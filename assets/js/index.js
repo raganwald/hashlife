@@ -13,8 +13,13 @@
   };
 
   $(document).ready(function () {
+    
+    var WE_ARE_MOBILE = !!$('html.touch').length,
+        THROTTLE_MILLIS = WE_ARE_MOBILE
+                          ? 50
+                          : 10;
 
-    var draw = _.debounce( function () {
+    var draw = _.throttle( function () {
 
       //synchronize window and canvas dimensions
       viewPortCanvas.width = $(window).width();
@@ -40,7 +45,7 @@
       $('#population').text(addCommas(universe.population));
       $('#width').text(addCommas(universe.trimmed().width));
       
-    }, 100, true);
+    }, THROTTLE_MILLIS);
     
     var triggersRedraw = after(draw);
     
@@ -141,27 +146,10 @@
       universe = universe.flip(relativeToUniverseCenterInCells);
       
     });
-    
-    ///////////////////////////////////////////////////////////////////
-
-    canvasProxy
-      .bind('mousedown', onDragStart)
-      .bind("mousemove", trackLastMousePosition);
-
-    $(document)
-      .keypress(onKeypress)
-      .keyup(onKeyup);
-
-    $(window)
-      .resize(draw)
-      .trigger("resize");
-      
-    $('#generations')
-      .on('click', advance);
       
     ///////////////////////////////////////////////////////////////////
       
-    if ($('html.touch').length) {
+    if (WE_ARE_MOBILE) {
 
       $(document)
         .bind("touchmove", function (e) { event.preventDefault(); })
@@ -190,8 +178,11 @@
       // canvasProxy
       //   .bind("swipeleft", advance)
       //   .bind("taphold", function () { insert('GosperGliderGun'); });
+      
+      Cell.size(32);
     
     }
+    else Cell.size(16);
     
     function gestureStart (event) {
       
@@ -253,13 +244,30 @@
           draw();
         }
         
-      }, 100);
+      }, THROTTLE_MILLIS);
       
       $(document)
         .bind('gesturechange', event.data, gestureChange)
         .bind('gestureend', event.data, gestureEnd);
         
     }
+    
+    ///////////////////////////////////////////////////////////////////
+
+    canvasProxy
+      .bind('mousedown', onDragStart)
+      .bind("mousemove", trackLastMousePosition);
+
+    $(document)
+      .keypress(onKeypress)
+      .keyup(onKeyup);
+      
+    $('#generations')
+      .on('click', advance);
+
+    $(window)
+      .resize(draw)
+      .trigger("resize");
 
     ///////////////////////////////////////////////////////////////////
 
