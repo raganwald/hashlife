@@ -1,8 +1,6 @@
 (function (root) {
-
-  var LOG2 = Math.log(2),
   
-  var after = function(decoration) {
+  function after (decoration) {
     return function(base) {
       return function() {
         var __value__;
@@ -21,6 +19,8 @@
         THROTTLE_MILLIS = WE_ARE_MOBILE
                           ? 25
                           : 10;
+
+    var LOG2 = Math.log(2);
 
     var draw = _.throttle( function () {
 
