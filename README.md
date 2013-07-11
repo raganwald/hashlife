@@ -1,6 +1,8 @@
 # La Hermosa Vida
 
-"La Hermosa Vida" is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. It was written to accompany my [La Hermosa Visa talk][lhs] at SpainJS, 2013.
+"La Hermosa Vida" is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. It was written to accompany my [talk][lhs] at SpainJS, 2013.
+
+You can try it online [here][try].
 
 [gol]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
 [HashLife]: https://en.wikipedia.org/wiki/Hashlife
@@ -8,9 +10,9 @@
 
 ### infinity
 
-The basic idea is to present the illusion of an infinite Life universe. You can pan indefinitely. You can have massive populations. You can jump huge amounts of time into the future. But there is no concept of a fixed limit in space or time. The universe is a plane stretching to infinity in every direction.
+The basic idea is to present the illusion of an infinite Life universe. You can pan indefinitely. You can generate patterns with trillions of live cells. You can quadrillions of generations into the future. But there is no concept of a fixed limit in space or time. The universe is a plane stretching to infinity in every direction.
 
-You can try it online [here][try].
+For example, you can pan in any direction as far as you like and then place some live cells, perhaps a glider or shuttle. There is no edge in any direction. The plane does not wrap back on itself. Patterns that grow in space, like two gliders travelling in opposite directions, can grow indefinitely. Patterns that grow in population, like a glider gun, can also grow indefinitely.
 
 ### desktop instructions
 
@@ -20,29 +22,30 @@ You can try it online [here][try].
 * You can also press an arrow key to move a screenful up, down, left, or right.
 * You can rotate the screen by pressing option.
 * You can press the space bar to jump into the future.
-
-You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
+* You can insert some shapes by pressing `1`, `2`, `3`, or `4`.
 
 ### iOS instructions
 
 * You can flip the state of a square with a single tap.
 * You can zoom in or out using the pinch gesture.
 * You can drag the universe within the window using two fingers.
+* You can jump into the future by swiping to the left or right (it doesn't matter which way you swipe).
 * You can insert a [glider gun][ggg] by tapping and holding. 
-* You can jump into the future by swiping to the left or right (it doesn't matter which way you swipe)
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
 [try]: http://raganwald.com/LaHermosaVida
 
+On a first-generation iPad Mini, the current implementation is somewhat unreliable. I suspect that Mobile Safari's JavaScript engine is not as robust as OS X Safari when managing large object graphs.
+
 ### jumping into the future
 
-When you jump into the future, the number of generations jumped depends upon the size of the pattern in the display. If you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
+When you jump into the future, the number of generations jumped depends upon the size of the pattern in the display. If you have a pattern that grows in space (like the glider gun), it will jump forward in ever-increasing numbers of generations. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
 
 ### representing the universe
 
 The Life "universe" is represented as a [QuadTree][qt], with every node fully [canonicalized][canon]. Thus, the representation of a square of size `2^n` requires only `n` actual nodes, each of the same fixed size.
 
-[qt]: https://en.wikipedia.org/wiki/Quadtree
+[qt]: https://en.wikipedia.org/wiki/QuadTree
 [canon]: https://en.wikipedia.org/wiki/Canonicalization
 
 The memory requirement for any given state of the universe depends deeply on the amount of entropy in the pattern as we see it as well as in its dynamic behaviour. Methuselah patterns can take up a lot of space while highly regular patterns like glider guns can take up very little space despite creating billions of live cells in their lifetime.
@@ -51,13 +54,13 @@ The current implementation does not perform any cache eviction, so complex patte
 
 ### the user experience
 
-The visible portion of the universe (the "viewport") is rendered in a canvas. To draw this portion, an algorithm locates the smallest possible quadtree in the universe that encloses the viewport, gets a canvas representing the quadtree at the current level of zoom, and then copies the appropriate selection of the quadtree canvas into the viewport canvas.
+The visible portion of the universe (the "viewport") is rendered in a canvas. To draw this portion, an algorithm locates the smallest possible QuadTree in the universe that encloses the viewport, gets a canvas representing the QuadTree at the current level of zoom, and then copies the appropriate selection of the QuadTree canvas into the viewport canvas.
 
-Each quadtree generates canvases on demand by recursively asking their children for canvases and then assembling a new canvas out of the four sub-canvases. Canvases are cached with the canonical quadtrees, so actions like rapidly panning over empty spaces do not require drawing new canvases, just repeatedly locating a quadtree and copying the appropriate portion.
+Each QuadTree generates canvases on demand by recursively asking their children for canvases and then assembling a new canvas out of the four sub-canvases. Canvases are cached with the canonical QuadTrees, so actions like rapidly panning over empty spaces do not require drawing new canvases, just repeatedly locating a QuadTree and copying the appropriate portion.
 
 ### prior art
 
-[A working engine based on QuadTrees, written in CoffeeScript][ru].
+[A command-line HashTree implementation written in Literate CoffeeScript][ru].
 
 [SpainJS]: http://spainjs.org
 [ru]: http://recursiveuniver.se

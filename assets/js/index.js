@@ -160,8 +160,7 @@
         // .bind("touchstart", touchStart)
         
       canvasProxy
-        .bind("swipe", function (e) { console.log("swiper, no swiping", e); })
-        .bind("swipeleft", advance)
+        .bind("swipe", advance)
         .bind("taphold", function () { insert('GosperGliderGun'); });
       
       Cell.size(32);
