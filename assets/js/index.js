@@ -2,7 +2,7 @@
 
   var LOG2 = Math.log(2),
   
-  after = function(decoration) {
+  var after = function(decoration) {
     return function(base) {
       return function() {
         var __value__;
@@ -155,9 +155,9 @@
     if (WE_ARE_MOBILE) {
 
       $(document)
-        // .bind("touchmove", function (e) { event.preventDefault(); })
-        // .bind("touchstart", touchStart)
+        .bind("touchmove", function (e) { event.preventDefault(); })
         .bind('gesturestart', gestureStart);
+        // .bind("touchstart", touchStart)
         
       canvasProxy
         .bind("swipe", function (e) { console.log("swiper, no swiping", e); })
@@ -222,15 +222,11 @@
     
     function gestureStart (event) {
       
-      event.data = {
-        lastCoord: {
-          left: event.originalEvent.pageX,
-          top: event.originalEvent.pageY
-        },
-        gestureTime: new Date().getTime()
-      };
-        
-      var lastScale = 1.0,
+      var lastCoord = {
+            left: event.originalEvent.pageX,
+            top: event.originalEvent.pageY
+          },
+          lastScale = 1.0,
           lastRotation = 0;
         
       function gestureEnd (event) {
@@ -239,15 +235,19 @@
           .unbind('gestureend', gestureEnd);
       }
       
+      var updateDrag = triggersRedraw( function (x, y) {
+        viewportOffset.x = viewportOffset.x - (x - lastCoord.left);
+        viewportOffset.y = viewportOffset.y - (y - lastCoord.top);
+
+        lastCoord.left = x;
+        lastCoord.top = y;
+      });
+      
       function gestureChange (event) {
         var currentScale = event.originalEvent.scale,
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
-            relativeRotation = currentRotation - lastRotation,
-            deltaLeft,
-            deltaTop,
-            lastCoordX,
-            lastCoordY;
+            relativeRotation = currentRotation - lastRotation;
         
         if (relativeRotation > 90) {
           lastRotation = currentRotation;
@@ -265,23 +265,7 @@
           lastScale = currentScale;
           zoomIn();
         }
-        else {
-        
-          viewportOffset.x = viewportOffset.x - (event.originalEvent.pageX - event.data.lastCoord.left);
-          viewportOffset.y = viewportOffset.y - (event.originalEvent.pageY - event.data.lastCoord.top);
-
-          event.data || (event.data = {});
-
-          event.data.lastCoord || (event.data.lastCoord = {});
-
-          event.data.lastCoord.left = event.originalEvent.pageX;
-          event.data.lastCoord.top = event.originalEvent.pageY;
-          console.log("<draw>")
-          var d = (new Date()).getTime()
-          draw();
-          console.log("</draw>", (new Date()).getTime() - d)
-        }
-        
+        else updateDrag(event.originalEvent.pageX, event.originalEvent.pageY);
       }
       
       $(document)
@@ -362,62 +346,55 @@
     }
 
     function onDragStart (event) {
-      event.data = {
-        lastCoord:{
-          left: event.clientX,
-          top: event.clientY
-        },
-        mouseDownTime: new Date().getTime()
-      };
+
+      var MAXCLICKDRAGDISTANCE = 1,
+          MAXIMUMCLICKMILLISECONDS = 250;
+        
+      var lastCoord = {
+            left: event.clientX,
+            top: event.clientY
+          },
+          mouseDownTime = new Date().getTime();
 
       $(document)
         .bind("mouseup", event.data, onDragEnd)
         .bind("mousemove", event.data, onDragging);
 
-     document.body.style.cursor = 'all-scroll';
-    }
+      document.body.style.cursor = 'all-scroll';
 
-    var MAXCLICKDRAGDISTANCE = 1,
-        MAXIMUMCLICKMILLISECONDS = 250;
+      function onDragging (event) {
+        var delta = {
+            left: (event.clientX - lastCoord.left),
+            top: (event.clientY - lastCoord.top)
+        };
 
-    function onDragging (event) {
-      var delta = {
-          left: (event.clientX - event.data.lastCoord.left),
-          top: (event.clientY - event.data.lastCoord.top)
-      };
+        viewportOffset.x = viewportOffset.x - delta.left;
+        viewportOffset.y = viewportOffset.y - delta.top;
 
-      viewportOffset.x = viewportOffset.x - delta.left;
-      viewportOffset.y = viewportOffset.y - delta.top;
+        lastCoord.left = event.clientX;
+        lastCoord.top = event.clientY;
 
-      event.data || (event.data = {});
-
-      event.data.lastCoord || (event.data.lastCoord = {});
-
-      event.data.lastCoord.left = event.clientX;
-      event.data.lastCoord.top = event.clientY;
-
-      if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
-        event.data.mouseDownTime = null;
-      }
-      console.log(event);
+        if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
+          mouseDownTime = null;
+        }
       
-      draw();
-    }
-
-    function onDragEnd (event) {
-      $(document)
-        .unbind("mousemove", onDragging)
-        .unbind("mouseup", onDragEnd);
-
-      var mouseUpTime = new Date().getTime(),
-          mouseDownTime = event && event.data && event.data.mouseDownTime;
-
-      if (mouseDownTime && (mouseUpTime - mouseDownTime) < MAXIMUMCLICKMILLISECONDS) {
-        flipCell(event);
+        draw();
       }
 
+      function onDragEnd (event) {
+        $(document)
+          .unbind("mousemove", onDragging)
+          .unbind("mouseup", onDragEnd);
 
-      document.body.style.cursor = 'pointer';
+        var mouseUpTime = new Date().getTime();
+
+        if (mouseDownTime && (mouseUpTime - mouseDownTime) < MAXIMUMCLICKMILLISECONDS) {
+          flipCell(event);
+        }
+
+
+        document.body.style.cursor = 'pointer';
+      }
     }
     
     // see http://www.mredkj.com/javascript/nfbasic.html
