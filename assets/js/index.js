@@ -155,9 +155,9 @@
     if (WE_ARE_MOBILE) {
 
       $(document)
-        .bind("touchmove", function (e) { event.preventDefault(); })
-        .bind('gesturestart', gestureStart)
-        .bind("touchstart", touchStart);
+        // .bind("touchmove", function (e) { event.preventDefault(); })
+        // .bind("touchstart", touchStart)
+        .bind('gesturestart', gestureStart);
         
       canvasProxy
         .bind("swipe", function (e) { console.log("swiper, no swiping", e); })
