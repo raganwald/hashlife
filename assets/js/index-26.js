@@ -191,19 +191,17 @@
            Math.abs( startCoord.left - lastCoord.left ) > MIN_SWIPE_LENGTH &&
            Math.abs( startCoord.top - lastCoord.top ) < MAX_SWIPE_WIDTH
           ) {
-           event
-            .currentTarget
-              .trigger( "swipe" )
-              .trigger( startCoord.left > lastCoord.left ? "swipeleft" : "swiperight" );
+           $(event.currentTarget)
+            .trigger( "swipe" )
+            .trigger( startCoord.left > lastCoord.left ? "swipeleft" : "swiperight" );
           }
           else if (
             Math.abs( startCoord.top - lastCoord.top ) > MIN_SWIPE_LENGTH &&
             Math.abs( startCoord.left - lastCoord.left ) < MAX_SWIPE_WIDTH
           ) {
-           event
-            .currentTarget
-              .trigger( "swipe" )
-              .trigger( startCoord.top > lastCoord.top ? "swipeup" : "swipedown" );
+           $(event.currentTarget)
+            .trigger( "swipe" )
+            .trigger( startCoord.top > lastCoord.top ? "swipeup" : "swipedown" );
           }
         }
       }
