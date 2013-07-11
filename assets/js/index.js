@@ -286,8 +286,9 @@
     $('#generations')
       .on('click', advance);
       
-    $('#help')
-      .on('click', help);
+    $('#help, #discuss')
+      .on('click', link);
+
 
     $(window)
       .resize(draw)
@@ -295,8 +296,7 @@
 
     ///////////////////////////////////////////////////////////////////
     
-    function help (event) {
-      console.log($(event.currentTarget).attr('href'))
+    function link (event) {
       window.location = $(event.currentTarget).attr('href');
     }
 
