@@ -186,7 +186,7 @@
           .unbind('touchmove', touchMove)
           .unbind('touchend', touchEnd);
           
-        if (new Date().getTime() - event.data.touchTime < DURATION_THRESHOLD) {
+        if (new Date().getTime() - touchTime < DURATION_THRESHOLD) {
          if (
            Math.abs( startCoord.left - lastCoord.left ) > MIN_SWIPE_LENGTH &&
            Math.abs( startCoord.top - lastCoord.top ) < MAX_SWIPE_WIDTH
