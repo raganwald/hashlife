@@ -38,7 +38,7 @@ You can also insert some shapes by pressing `1`, `2`, `3`, or `4`.
 
 When you jump into the future, the number of generations jumped depends upon the size of the pattern in the display. If you have a pattern that grows (like the glider gun), it will jump forward in ever-increasing numbers of generation. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
 
-### behind the scenes
+### representing the universe
 
 The Life "universe" is represented as a [QuadTree][qt], with every node fully [canonicalized][canon]. Thus, the representation of a square of size `2^n` requires only `n` actual nodes, each of the same fixed size.
 
@@ -48,6 +48,12 @@ The Life "universe" is represented as a [QuadTree][qt], with every node fully [c
 The memory requirement for any given state of the universe depends deeply on the amount of entropy in the pattern as we see it as well as in its dynamic behaviour. Methuselah patterns can take up a lot of space while highly regular patterns like glider guns can take up very little space despite creating billions of live cells in their lifetime.
 
 The current implementation does not perform any cache eviction, so complex patterns can "crash" the engine, while simple figures like the glider gun can grow to trillions of cells.
+
+### the user experience
+
+The visible portion of the universe (the "viewport") is rendered in a canvas. To draw this portion, an algorithm locates the smallest possible quadtree in the universe that encloses the viewport, gets a canvas representing the quadtree at the current level of zoom, and then copies the appropriate selection of the quadtree canvas into the viewport canvas.
+
+Each quadtree generates canvases on demand by recursively asking their children for canvases and then assembling a new canvas out of the four sub-canvases. Canvases are cached with the canonical quadtrees, so actions like rapidly panning over empty spaces do not require drawing new canvases, just repeatedly locating a quadtree and copying the appropriate portion.
 
 ### prior art
 

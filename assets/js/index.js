@@ -15,8 +15,11 @@
   $(document).ready(function () {
     
     var WE_ARE_MOBILE = !!$('html.touch').length,
+        DURATION_THRESHOLD = 1000,
+        MIN_SWIPE_LENGTH = 75,
+        MAX_SWIPE_WIDTH = 35,
         THROTTLE_MILLIS = WE_ARE_MOBILE
-                          ? 10
+                          ? 25
                           : 10;
 
     var draw = _.throttle( function () {
@@ -153,30 +156,11 @@
 
       $(document)
         .bind("touchmove", function (e) { event.preventDefault(); })
-        .bind('gesturestart', gestureStart);
+        .bind('gesturestart', gestureStart)
+        .bind("touchstart", touchStart);
         
-      //       $.event.special.swipe.handleSwipe = function( start, stop ) {
-      //  if ( stop.time - start.time < $.event.special.swipe.durationThreshold ) {
-      //    if (
-      //            Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
-      //            Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
-      // 
-      //            start.origin.trigger( "swipe" )
-      //              .trigger( start.coords[ 0 ] > stop.coords[ 0 ] ? "swipeleft" : "swiperight" );
-      //          }
-      //          else if (
-      //            Math.abs( start.coords[ 1 ] - stop.coords[ 1 ] ) > $.event.special.swipe.horizontalDistanceThreshold &&
-      //            Math.abs( start.coords[ 0 ] - stop.coords[ 0 ] ) < $.event.special.swipe.verticalDistanceThreshold ) {
-      // 
-      //            start.origin.trigger( "swipe" )
-      //              .trigger( start.coords[ 1 ] > stop.coords[ 1 ] ? "swipeup" : "swipedown" );
-      //          }
-      //          
-      //  }
-      // };
-        
-      // canvasProxy
-      //   .bind("swipeleft", advance)
+      canvasProxy
+        .bind("swipeleft", advance);
       //   .bind("taphold", function () { insert('GosperGliderGun'); });
       
       Cell.size(32);
@@ -184,12 +168,71 @@
     }
     else Cell.size(16);
     
+    function touchStart (event) {
+      
+      event.data = {
+        startCoord:{
+          left: event.originalEvent.pageX,
+          top: event.originalEvent.pageY
+        },
+        lastCoord:{
+          left: event.originalEvent.pageX,
+          top: event.originalEvent.pageY
+        },
+        touchTime: new Date().getTime()
+      };
+        
+      function touchEnd (event) {
+        
+        $(document)
+          .unbind('touchmove', touchMove)
+          .unbind('touchend', touchEnd);
+          
+        if (new Date().getTime() - event.data.touchTime < DURATION_THRESHOLD) {
+         if (
+           Math.abs( startCoord.left - lastCoord.left ) > MIN_SWIPE_LENGTH &&
+           Math.abs( startCoord.top - lastCoord.top ) < MAX_SWIPE_WIDTH
+          ) {
+           event
+            .currentTarget
+              .trigger( "swipe" )
+              .trigger( startCoord.left > lastCoord.left ? "swipeleft" : "swiperight" );
+          }
+          else if (
+            Math.abs( startCoord.top - lastCoord.top ) > MIN_SWIPE_LENGTH &&
+            Math.abs( startCoord.left - lastCoord.left ) < MAX_SWIPE_WIDTH
+          ) {
+           event
+            .currentTarget
+              .trigger( "swipe" )
+              .trigger( startCoord.top > lastCoord.top ? "swipeup" : "swipedown" );
+          }
+        }
+      }
+      
+      function touchMove (event) {
+        event.data || (event.data = {});
+
+        event.data.lastCoord || (event.data.lastCoord = {});
+
+        event.data.lastCoord.left = event.originalEvent.pageX;
+        event.data.lastCoord.top = event.originalEvent.pageY;
+      }
+      
+      $(document)
+        .bind('touchmove', event.data, touchMove)
+        .bind('touchend', event.data, touchEnd);
+      
+      event.preventDefault();
+      
+    }
+    
     function gestureStart (event) {
       
       event.data = {
-        lastCoord:{
-          left : event.originalEvent.pageX,
-          top : event.originalEvent.pageY
+        lastCoord: {
+          left: event.originalEvent.pageX,
+          top: event.originalEvent.pageY
         },
         gestureTime: new Date().getTime()
       };
@@ -328,8 +371,8 @@
     function onDragStart (event) {
       event.data = {
         lastCoord:{
-          left : event.clientX,
-          top : event.clientY
+          left: event.clientX,
+          top: event.clientY
         },
         mouseDownTime: new Date().getTime()
       };
@@ -346,8 +389,8 @@
 
     function onDragging (event) {
       var delta = {
-          left : (event.clientX - event.data.lastCoord.left),
-          top : (event.clientY - event.data.lastCoord.top)
+          left: (event.clientX - event.data.lastCoord.left),
+          top: (event.clientY - event.data.lastCoord.top)
       };
 
       viewportOffset.x = viewportOffset.x - delta.left;
@@ -363,6 +406,8 @@
       if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
         event.data.mouseDownTime = null;
       }
+      console.log(event);
+      
       draw();
     }
 
