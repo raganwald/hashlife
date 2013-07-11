@@ -276,8 +276,8 @@
     ///////////////////////////////////////////////////////////////////
 
     canvasProxy
-      .bind('mousedown', onDragStart)
-      .bind("mousemove", trackLastMousePosition);
+      .on('mousedown', onDragStart)
+      .on("mousemove", trackLastMousePosition);
 
     $(document)
       .keypress(onKeypress)
@@ -285,12 +285,20 @@
       
     $('#generations')
       .on('click', advance);
+      
+    $('#help')
+      .on('click', help);
 
     $(window)
       .resize(draw)
       .trigger("resize");
 
     ///////////////////////////////////////////////////////////////////
+    
+    function help (event) {
+      console.log($(event.currentTarget).attr('href'))
+      window.location = $(event.currentTarget).attr('href');
+    }
 
     function onKeypress (event) {
       if (event.which === 43) {
