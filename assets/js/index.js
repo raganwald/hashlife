@@ -170,17 +170,15 @@
     
     function touchStart (event) {
       
-      event.data = {
-        startCoord:{
-          left: event.originalEvent.pageX,
-          top: event.originalEvent.pageY
-        },
-        lastCoord:{
-          left: event.originalEvent.pageX,
-          top: event.originalEvent.pageY
-        },
-        touchTime: new Date().getTime()
-      };
+      var startCoord = {
+            left: event.originalEvent.pageX,
+            top: event.originalEvent.pageY
+          },
+          lastCoord = {
+            left: event.originalEvent.pageX,
+            top: event.originalEvent.pageY
+          },
+          touchTime = new Date().getTime();
         
       function touchEnd (event) {
         
@@ -211,12 +209,8 @@
       }
       
       function touchMove (event) {
-        event.data || (event.data = {});
-
-        event.data.lastCoord || (event.data.lastCoord = {});
-
-        event.data.lastCoord.left = event.originalEvent.pageX;
-        event.data.lastCoord.top = event.originalEvent.pageY;
+        lastCoord.left = event.originalEvent.pageX;
+        lastCoord.top = event.originalEvent.pageY;
       }
       
       $(document)
