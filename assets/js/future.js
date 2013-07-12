@@ -161,6 +161,57 @@
         return (this._future = generationTwoFuture.call(this))
       }
       else return (this._future = bigFuture.call(this));
+    },
+    futureAt: function (t) {
+      if (t === 0) {
+        return new QuadTree([
+          this.nw().se(),
+          this.ne().sw(),
+          this.se().nw(),
+          this.sw().ne()
+        ]);
+      }
+      else if (t <= Math.pow(2, this.generation - 3)) {
+        var nw = this.nw().futureAt(t),
+            ne = this.ne().futureAt(t),
+            se = this.se().futureAt(t),
+            sw = this.sw().futureAt(t),
+            nn = this.nn().futureAt(t),
+            ee = this.ee().futureAt(t),
+            ss = this.ss().futureAt(t),
+            ww = this.ww().futureAt(t),
+            cc = this.cc().futureAt(t);
+    
+        var onw = new QuadTree([nw, nn, cc, ww]).futureAt(0),
+            one = new QuadTree([nn, ne, ee, cc]).futureAt(0),
+            ose = new QuadTree([cc, ee, se, ss]).futureAt(0),
+            osw = new QuadTree([ww, cc, ss, sw]).futureAt(0);
+            
+        return new QuadTree([onw, one, ose, osw]);
+      }
+      else if (t < Math.pow(2, this.generation - 2)) {
+        var nw = this.nw().future(),
+            ne = this.ne().future(),
+            se = this.se().future(),
+            sw = this.sw().future(),
+            nn = this.nn().future(),
+            ee = this.ee().future(),
+            ss = this.ss().future(),
+            ww = this.ww().future(),
+            cc = this.cc().future();
+    
+        var onw = new QuadTree([nw, nn, cc, ww]).futureAt(t - Math.pow(2, this.generation - 3)),
+            one = new QuadTree([nn, ne, ee, cc]).futureAt(t - Math.pow(2, this.generation - 3)),
+            ose = new QuadTree([cc, ee, se, ss]).futureAt(t - Math.pow(2, this.generation - 3)),
+            osw = new QuadTree([ww, cc, ss, sw]).futureAt(t - Math.pow(2, this.generation - 3));
+            
+        return new QuadTree([onw, one, ose, osw]);
+      }
+      else if (t === Math.pow(2, this.generation - 2))
+        return this.future();
+      else if (t > Math.pow(2, this.generation - 2))
+        throw "Too big!";
+    
     }
   })
 

@@ -21,8 +21,9 @@ For example, you can pan in any direction as far as you like and then place some
 * You can pan by dragging the grid.
 * You can also press an arrow key to move a screenful up, down, left, or right.
 * You can rotate the screen by pressing option.
-* You can press the space bar to jump into the future.
 * You can insert some shapes by pressing `1`, `2`, `3`, or `4`.
+* You can press the space bar step one generation into the future.
+* You can press enter to jump into the future.
 
 ### iOS instructions
 

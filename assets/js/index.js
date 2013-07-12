@@ -96,6 +96,20 @@
       universe = universe.rotate().rotate().rotate();
     });
 
+    var step = triggersRedraw( function () {
+      var thisGenerationRulesTheNation = universe.generation;
+      universe = universe
+                        .trimmed()
+                        .double()
+                        .double();
+                        
+      currentGeneration = currentGeneration + 1;
+      
+      universe = universe
+                        .futureAt(1)
+                        .trimmed();
+    });
+
     var advance = triggersRedraw( function () {
       var thisGenerationRulesTheNation = universe.generation;
       universe = universe
@@ -317,8 +331,11 @@
     }
 
     function onKeyup (event) {
-      if (event.which === 32) {
+      if (event.which === 13) {
         advance();
+      }
+      else if (event.which === 32) {
+        step();
       }
       
       else if (event.which === 37) {
