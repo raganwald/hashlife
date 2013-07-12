@@ -47,7 +47,7 @@
   });
 
 
-
+  var NODES_IN_CACHE = 0;
 
   function QuadTree (nw_ne_se_sw) {
     nw_ne_se_sw ||
@@ -65,6 +65,7 @@
           (container[nw_ne_se_sw[2].id] = {});
 
     return container[nw_ne_se_sw[3].id] || (
+      NODES_IN_CACHE = NODES_IN_CACHE + 1,
       this.id = ++ID,
       this.children = nw_ne_se_sw,
       this.population = A.foldl(
@@ -75,6 +76,10 @@
       container[nw_ne_se_sw[3].id] = this
     );
   }
+  
+  A.extend(QuadTree, {
+    nodes: function () { return NODES_IN_CACHE; }
+  });
 
   A.extendClass(QuadTree, {
 

@@ -22,6 +22,10 @@
 
     var LOG2 = Math.log(2);
 
+    // the universe
+    var universe = new QuadTree();
+    var currentGeneration = 0;
+
     var draw = _.throttle( function () {
 
       //synchronize window and canvas dimensions
@@ -45,8 +49,9 @@
       });
       
       $('#generation').text(addCommas(currentGeneration));
+      $('#fastforward').text(addCommas(Math.ceil(Math.pow(2, universe.trimmed().generation - 2))));
       $('#population').text(addCommas(universe.population));
-      $('#width').text(addCommas(universe.trimmed().width));
+      $('#nodes').text(addCommas(QuadTree.nodes()));
       
     }, THROTTLE_MILLIS);
     
@@ -65,10 +70,6 @@
 
     viewPortCanvas.height = window.innerHeight;
     viewPortCanvas.width = window.innerWidth;
-
-    // the universe
-    var universe = new QuadTree();
-    var currentGeneration = 0;
     
     ///////////////////////////////////////////////////////////////////
     
@@ -110,7 +111,7 @@
                         .trimmed();
     });
 
-    var advance = triggersRedraw( function () {
+    var fastForward = triggersRedraw( function () {
       var thisGenerationRulesTheNation = universe.generation;
       universe = universe
                         .trimmed()
@@ -174,7 +175,7 @@
         // .bind("touchstart", touchStart)
         
       canvasProxy
-        .bind("swipe", advance)
+        .bind("swipe", fastForward)
         .bind("taphold", function () { insert('GosperGliderGun'); });
       
       Cell.size(32);
@@ -297,8 +298,8 @@
       .keypress(onKeypress)
       .keyup(onKeyup);
       
-    $('#generations')
-      .on('click', advance);
+    $('#doFastForward')
+      .on('click', fastForward);
       
     $('#help, #discuss')
       .on('click', link);
@@ -332,7 +333,7 @@
 
     function onKeyup (event) {
       if (event.which === 13) {
-        advance();
+        fastForward();
       }
       else if (event.which === 32) {
         step();

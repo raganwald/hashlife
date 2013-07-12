@@ -23,14 +23,14 @@ For example, you can pan in any direction as far as you like and then place some
 * You can rotate the screen by pressing option.
 * You can insert some shapes by pressing `1`, `2`, `3`, or `4`.
 * You can press the space bar step one generation into the future.
-* You can press enter to jump into the future.
+* You can press enter to fast forward many generations into the future.
 
 ### iOS instructions
 
 * You can flip the state of a square with a single tap.
 * You can zoom in or out using the pinch gesture.
 * You can drag the universe within the window using two fingers.
-* You can jump into the future by swiping to the left or right (it doesn't matter which way you swipe).
+* You can fast forward many generations into the future by swiping to the left or right (it doesn't matter which way you swipe).
 * You can insert a [glider gun][ggg] by tapping and holding. 
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
@@ -38,9 +38,9 @@ For example, you can pan in any direction as far as you like and then place some
 
 On a first-generation iPad Mini, the current implementation is somewhat unreliable. I suspect that Mobile Safari's JavaScript engine is not as robust as OS X Safari when managing large object graphs.
 
-### jumping into the future
+### fast forwarding into the future
 
-When you jump into the future, the number of generations jumped depends upon the size of the pattern in the display. If you have a pattern that grows in space (like the glider gun), it will jump forward in ever-increasing numbers of generations. It takes 30 or so ever-accelerating jumps to take a glider gun up to a trillion generations and a population of 366 billion cells.
+When you fast forward many into the future, the number of generations jumped depends upon the size of the pattern in the display. If you have a pattern that grows in space (like the glider gun), it will fast forward in ever-increasing numbers of generations. It takes 30 or so ever-accelerating fast forwards to take a glider gun up to a trillion generations and a population of 366 billion cells.
 
 ### representing the universe
 
