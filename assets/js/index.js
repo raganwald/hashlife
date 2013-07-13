@@ -49,7 +49,7 @@
       });
       
       $('#generation').text(addCommas(currentGeneration));
-      $('#fastforward').text(addCommas(Math.ceil(Math.pow(2, universe.trimmed().generation - 2))));
+      $('#fastforward').text(addCommas(Math.ceil(universe.trimmed().maximumGenerations())));
       $('#population').text(addCommas(universe.population));
       $('#nodes').text(addCommas(QuadTree.nodes()));
       
@@ -97,33 +97,28 @@
       universe = universe.rotate().rotate().rotate();
     });
 
-    var step = triggersRedraw( function () {
-      var thisGenerationRulesTheNation = universe.generation;
+    var fastForward = triggersRedraw( function (event, generations) {
+      generations || (generations = universe.trimmed().maximumGenerations());
+      
       universe = universe
                         .trimmed()
                         .double()
                         .double();
+      
+      while (universe.maximumGenerations() < generations) {
+        universe = universe.double();
+      }
                         
-      currentGeneration = currentGeneration + 1;
+      currentGeneration = currentGeneration + generations;
       
       universe = universe
-                        .futureAt(1)
+                        .futureAt(generations)
                         .trimmed();
     });
 
-    var fastForward = triggersRedraw( function () {
-      var thisGenerationRulesTheNation = universe.generation;
-      universe = universe
-                        .trimmed()
-                        .double()
-                        .double();
-                        
-      currentGeneration = currentGeneration + (universe.size() / 2);
-      
-      universe = universe
-                        .future()
-                        .trimmed();
-    });
+    function step (event) { 
+      return fastForward(event, 1); 
+    }
 
     var zoomIn = triggersRedraw( function () {
       Cell.size(Cell.size() * 2);
@@ -170,13 +165,13 @@
     if (WE_ARE_MOBILE) {
 
       $(document)
-        .bind("touchmove", function (e) { event.preventDefault(); })
-        .bind('gesturestart', gestureStart);
-        // .bind("touchstart", touchStart)
+        .on("touchmove", function (e) { event.preventDefault(); })
+        .on('gesturestart', gestureStart);
+        // .on("touchstart", touchStart)
         
       canvasProxy
-        .bind("swipe", fastForward)
-        .bind("taphold", function () { insert('GosperGliderGun'); });
+        .on("swipe", fastForward)
+        .on("taphold", function () { insert('GosperGliderGun'); });
       
       Cell.size(32);
     
@@ -227,8 +222,8 @@
       }
       
       $(document)
-        .bind('touchmove', event.data, touchMove)
-        .bind('touchend', event.data, touchEnd);
+        .on('touchmove', event.data, touchMove)
+        .on('touchend', event.data, touchEnd);
       
       event.preventDefault();
       
@@ -283,8 +278,8 @@
       }
       
       $(document)
-        .bind('gesturechange', event.data, gestureChange)
-        .bind('gestureend', event.data, gestureEnd);
+        .on('gesturechange', event.data, gestureChange)
+        .on('gestureend', event.data, gestureEnd);
         
     }
     
@@ -382,8 +377,8 @@
           mouseDownTime = new Date().getTime();
 
       $(document)
-        .bind("mouseup", event.data, onDragEnd)
-        .bind("mousemove", event.data, onDragging);
+        .on("mouseup", event.data, onDragEnd)
+        .on("mousemove", event.data, onDragging);
 
       document.body.style.cursor = 'all-scroll';
 

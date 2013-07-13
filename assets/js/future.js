@@ -163,6 +163,8 @@
       else return (this._future = bigFuture.call(this));
     },
     futureAt: function (t) {
+      var max = this.maximumGenerations();
+      
       if (t === 0) {
         return new QuadTree([
           this.nw().se(),
@@ -189,7 +191,7 @@
             
         return new QuadTree([onw, one, ose, osw]);
       }
-      else if (t < Math.pow(2, this.generation - 2)) {
+      else if (t < max) {
         var nw = this.nw().future(),
             ne = this.ne().future(),
             se = this.se().future(),
@@ -207,11 +209,13 @@
             
         return new QuadTree([onw, one, ose, osw]);
       }
-      else if (t === Math.pow(2, this.generation - 2))
+      else if (t === max)
         return this.future();
-      else if (t > Math.pow(2, this.generation - 2))
+      else if (t > max)
         throw "Too big!";
-    
+    },
+    maximumGenerations: function () {
+      return Math.ceil(Math.pow(2, this.generation - 2));
     }
   })
 
