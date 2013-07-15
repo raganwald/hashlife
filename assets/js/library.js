@@ -15,12 +15,12 @@
 
   A.extend(QuadTree.Library, {
 
-    Block: QuadTree.fromString(
+    Block: A.memoized( function () { return QuadTree.fromString(
       '**',
       '**'
-    ),
+    ); }),
 
-    Beehive: QuadTree.fromString(
+    Beehive: A.memoized( function () { return QuadTree.fromString(
       '........',
       '........',
       '....*...',
@@ -29,9 +29,9 @@
       '....*...',
       '........',
       '........'
-    ),
+    ); }),
 
-    Glider: QuadTree.fromString(
+    Glider: A.memoized( function () { return QuadTree.fromString(
       '........',
       '........',
       '........',
@@ -40,20 +40,9 @@
       '....*...',
       '........',
       '........'
-    ),
-    
-    Cross: QuadTree.fromString(
-      '........',
-      '........',
-      '........',
-      '...***..',
-      '.....*..',
-      '....*...',
-      '........',
-      '........'
-    ),
+    ); }),
 
-    GosperGliderGun: QuadTree.fromString(
+    GosperGliderGun: A.memoized( function () { return QuadTree.fromString(
       '................................................................',
       '................................................................',
       '................................................................',
@@ -118,7 +107,7 @@
       '................................................................',
       '................................................................',
       '................................................................'
-    )
+    ); })
 
   });
   

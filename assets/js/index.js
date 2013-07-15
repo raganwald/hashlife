@@ -143,7 +143,7 @@
             x: noZero((viewportOffset.x - (viewPortCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
             y: noZero((viewportOffset.y - (viewPortCanvas.height / 2) + lastMousePosition.y) / Cell.size())
           },
-          pasteContent = QuadTree.Library[what];
+          pasteContent = QuadTree.Library[what]();
 
       universe = universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
 
