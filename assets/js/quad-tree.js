@@ -49,7 +49,6 @@
 
   var NODES_IN_CACHE = 0;
 
-/*
   function QuadTree (nw_ne_se_sw) {
     nw_ne_se_sw ||
       (nw_ne_se_sw = [Cell(0), Cell(0), Cell(0), Cell(0)]);
@@ -77,33 +76,7 @@
       container[nw_ne_se_sw[3].id] = this
     );
   }
-*/  
 
-  var idsOf = A.pluckWith('id');
-  
-  function QuadTree (nw_ne_se_sw) {
-    nw_ne_se_sw ||
-      (nw_ne_se_sw = [Cell(0), Cell(0), Cell(0), Cell(0)]);
-    
-    if (!(this instanceof QuadTree)) 
-      return new QuadTree(nw_ne_se_sw);
-      
-    var hash = idsOf(nw_ne_se_sw).join('.');
-    
-    return QUAD_TREE_CACHE[hash] || (QUAD_TREE_CACHE[hash] = (
-      console.log(hash),
-      NODES_IN_CACHE = NODES_IN_CACHE + 1,
-      this.id = ++ID,
-      this.children = nw_ne_se_sw,
-      this.population = A.foldl(
-        A.map(nw_ne_se_sw, A.getWith('population')), 
-        function (x, y) { return x + y; }, 0),
-      this.generation = nw_ne_se_sw[0].generation + 1,
-      this.width = this.height = nw_ne_se_sw[0].width * 2, // aliased for shits and giggles
-      this
-    ));
-  }
-  
   A.extend(QuadTree, {
     nodes: function () { return NODES_IN_CACHE; }
   });
