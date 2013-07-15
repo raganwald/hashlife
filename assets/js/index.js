@@ -49,9 +49,13 @@
       });
       
       $('#generation').text(addCommas(currentGeneration));
-      $('#fastforward').text(addCommas(Math.ceil(universe.trimmed().maximumGenerations())));
       $('#population').text(addCommas(universe.population));
-      $('#nodes').text(addCommas(QuadTree.nodes()));
+      
+      var fastForwardGenerations = addCommas(Math.ceil(universe.trimmed().maximumGenerations()));
+      
+      $('p#doFastForward').attr('title', 'Fast-forward ' + fastForwardGenerations + ' generations');
+      
+      $('p#livecells').attr('title', '' + addCommas(QuadTree.nodes()) + ' nodes in the cache');
       
     }, THROTTLE_MILLIS);
     
