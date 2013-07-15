@@ -2,8 +2,6 @@
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 	
-  var GRID_LINE_WIDTH = 1;
-	
 	var COLORS = {
 		BACKGROUND: '#B1AC9E',
 		GRID: '#3B3B49',
@@ -17,11 +15,29 @@
     },
     
     canvas: function () {
+      var CELLSIZE = Cell.size();
+      
       this._canvases || (this._canvases = {});
-      if (this._canvases[Cell.size()]) return this._canvases[Cell.size()];
+      if (this._canvases[CELLSIZE]) return this._canvases[CELLSIZE];
+      
+      var LINEWIDTH = 0.2;
+      var GRID_LINE_WIDTH = 1;
+      
+      if (CELLSIZE === 2) {
+        LINEWIDTH = LINEWIDTH / 2;
+        GRID_LINE_WIDTH = GRID_LINE_WIDTH / 2;
+      }
+      else if (CELLSIZE === 1) {
+        LINEWIDTH = LINEWIDTH / 4;
+        GRID_LINE_WIDTH = GRID_LINE_WIDTH / 4;
+      }
+      else if (CELLSIZE < 1) {
+        LINEWIDTH = LINEWIDTH / 8;
+        GRID_LINE_WIDTH = GRID_LINE_WIDTH / 8;
+      }
       
       var childCanvases = A.map(this.children, '.canvas()');
-      var canvas = this._canvases[Cell.size()] = document.createElement('canvas');
+      var canvas = this._canvases[CELLSIZE] = document.createElement('canvas');
       var SIZE = canvas.width = canvas.height = this.canvasSize();
     	var SQUARE_OFFSET = ((SIZE - GRID_LINE_WIDTH) / 2);
     	var SQUARE_WIDTH = SQUARE_OFFSET - 2 * GRID_LINE_WIDTH;
@@ -43,8 +59,8 @@
       copyChild(this.sw(), 0, 1);
     
       // draw grid
-  		context.strokeStyle = COLORS.GRID 
-      context.lineWidth = 0.2
+  		context.strokeStyle = COLORS.GRID;
+      context.lineWidth = LINEWIDTH;
   
   		context.beginPath()
     

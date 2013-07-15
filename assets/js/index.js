@@ -352,16 +352,16 @@
       }
       
       else if (event.which === 49) {
-        insert('Block');
-      }
-      else if (event.which === 50) {
-        insert('Beehive');
-      }
-      else if (event.which === 51) {
         insert('Glider');
       }
-      else if (event.which === 52) {
+      else if (event.which === 50) {
         insert('GosperGliderGun');
+      }
+      else if (event.which === 51) {
+        insert('BlockLayingSwitchEngine');
+      }
+      else if (event.which === 52) {
+        insert('NoahsArk');
       }
     }
 
