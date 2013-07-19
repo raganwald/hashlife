@@ -115,7 +115,7 @@
   // ....|....    ...|...
   // ....|....
 
-  function bigFuture () {
+  function maximumFuture () {
   
     // calculate the futures of all the children:
     
@@ -129,23 +129,16 @@
         ww = this.ww().future(),
         cc = this.cc().future();
         
-    // console.log('nn()', this.nn().toJSON())
-    //     
-    // console.log('nw', nw.toJSON())
-    // console.log('nn', nn.toJSON())
-    // console.log('cc', cc.toJSON())
-    // console.log('ww', ww.toJSON())
-        
     // build four "overlapping" trees and get their futures:
     
-    var onw = new QuadTree([nw, nn, cc, ww]).future(),
-        one = new QuadTree([nn, ne, ee, cc]).future(),
-        ose = new QuadTree([cc, ee, se, ss]).future(),
-        osw = new QuadTree([ww, cc, ss, sw]).future();
+    var large_nw = new QuadTree([nw, nn, cc, ww]).future(),
+        large_ne = new QuadTree([nn, ne, ee, cc]).future(),
+        large_se = new QuadTree([cc, ee, se, ss]).future(),
+        large_sw = new QuadTree([ww, cc, ss, sw]).future();
         
     // return our future:
     
-    return new QuadTree([onw, one, ose, osw]);
+    return new QuadTree([large_nw, large_ne, large_se, large_sw]);
     
   };
 
@@ -160,7 +153,7 @@
       else if (this.generation === 2) {
         return (this._future = generationTwoFuture.call(this))
       }
-      else return (this._future = bigFuture.call(this));
+      else return (this._future = maximumFuture.call(this));
     },
     futureAt: function (t) {
       var max = this.maximumGenerations();
