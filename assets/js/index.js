@@ -100,6 +100,37 @@
     var rotateUniverseCounterClockwise = triggersRedraw( function () {
       universe = universe.rotate().rotate().rotate();
     });
+    
+    var timerID = null;
+
+    function startIterating () {
+      
+      var ff = triggersRedraw( function () {
+        universe = universe
+                          .trimmed()
+                          .double()
+                          .double();
+        currentGeneration = currentGeneration + universe.maximumGenerations();
+        universe = universe
+                          .future()
+                          .trimmed();
+        timerID = setTimeout(ff, 0);
+      });
+      
+      timerID = setTimeout(ff, 0);
+      
+    };
+    
+    function stopIterating () {
+      if (timerID)
+        clearTimeout(timerID);
+    }
+    
+    function toggleIterating () {
+      if (timerID)
+        stopIterating();
+      else startIterating();
+    }
 
     function goto (destination, strict) {
       
@@ -120,10 +151,10 @@
           currentGeneration = currentGeneration + sizeOfIteration;
           timerID = setTimeout(ff, 0);
         }
-        else clearTimeout(timerID);
+        else stopIterating();
       });
       
-      var timerID = setTimeout(ff, 0);
+      timerID = setTimeout(ff, 0);
       
     };
 
@@ -349,10 +380,10 @@
 
     function onKeyup (event) {
       if (event.which === 13) {
-        fastForward();
+        step();
       }
       else if (event.which === 32) {
-        step();
+        toggleIterating();
       }
       
       else if (event.which === 37) {
