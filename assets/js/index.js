@@ -93,15 +93,22 @@
       viewportOffset.y += viewPortCanvas.height;
     });
     
-    var rotateUniverse = triggersRedraw( function () {
+    var rotateUniverse = undoable( triggersRedraw( function () {
       universe = universe.rotate();
-    });
+    }));
     
-    var rotateUniverseCounterClockwise = triggersRedraw( function () {
+    var rotateUniverseCounterClockwise = undoable( triggersRedraw( function () {
       universe = universe.rotate().rotate().rotate();
-    });
+    }));
     
-    var timerID = null;
+    ////////////////////////////////////////////////
+    // Iterating
+    
+    var iterationState = {
+      timerID: null,
+      beforeState: universe,
+      beforeGeneration: currentGeneration
+    };
 
     function startIterating () {
       
@@ -114,23 +121,48 @@
         universe = universe
                           .future()
                           .trimmed();
-        timerID = setTimeout(ff, 0);
+        iterationState.timerID = setTimeout(ff, 0);
       });
       
-      timerID = setTimeout(ff, 0);
+      iterationState = {
+        timerID: setTimeout(ff, 0),
+        beforeState: universe,
+        beforeGeneration: currentGeneration
+      };
       
     };
     
     function stopIterating () {
-      if (timerID)
-        clearTimeout(timerID);
+      if (iterationState.timerID) {
+        clearTimeout(iterationState.timerID);
+        var beforeState = iterationState.beforeState,
+            beforeGeneration = iterationState.beforeGeneration;
+        var afterState = universe,
+            afterGeneration = currentGeneration;
+        
+        var undoAction = triggersRedraw(function () {
+          universe = beforeState;
+          currentGeneration = beforeGeneration;
+          REDOSTACK.push(doAction);
+        });
+        
+        var doAction = triggersRedraw(function () {
+          universe = afterState;
+          currentGeneration = afterGeneration;
+          UNDOSTACK.push(undoAction);
+        });
+        
+        UNDOSTACK.push(undoAction);
+      }
     }
     
     function toggleIterating () {
-      if (timerID)
+      if (iterationState.timerID)
         stopIterating();
       else startIterating();
     }
+    
+    ////////////////////////////////////////////////
 
     function goto (destination, strict) {
       
@@ -158,7 +190,7 @@
       
     };
 
-    var fastForward = triggersRedraw( function (event, sizeOfIteration) {
+    var fastForward = undoable( triggersRedraw( function (event, sizeOfIteration) {
       sizeOfIteration || (sizeOfIteration = universe.trimmed().maximumGenerations());
       
       universe = universe
@@ -170,7 +202,7 @@
                         .futureAt(sizeOfIteration)
                         .trimmed();
       currentGeneration = currentGeneration + sizeOfIteration;
-    });
+    }));
 
     function step (event) { 
       return fastForward(event, 1); 
@@ -193,15 +225,15 @@
              );
     }
 
-    var insert = triggersRedraw( function (what) {
+    var insert = undoable( triggersRedraw( function (what) {
 
       var pasteContent = QuadTree.Library[what]();
 
       universe = universe.paste(pasteContent, 0, 0);
 
-    });
+    }));
 
-    var flipCell = triggersRedraw( function (event) {
+    var flipCell = undoable( triggersRedraw( function (event) {
 
       var relativeToUniverseCenterInCells = {
         x: noZero((viewportOffset.x - (viewPortCanvas.width / 2) + event.clientX) / Cell.size()),
@@ -210,7 +242,7 @@
 
       universe = universe.flip(relativeToUniverseCenterInCells);
       
-    });
+    }));
       
     ///////////////////////////////////////////////////////////////////
       
@@ -418,6 +450,13 @@
       else if (event.which === 53) {
         insert('Rabbits');
       }
+      
+      else if (event.which === 90 && event.ctrlKey) {
+        if (event.shiftKey) {
+          redo();
+        }
+        else undo();
+      }
     }
 
     function onDragStart (event) {
@@ -484,12 +523,63 @@
     	}
     	return x1 + x2;
     }
+  
+    //////////////////////////////////////////////////////
+  
+    // Undo/Redo
+  
+    var UNDOSTACK = [],
+        REDOSTACK = [];
+      
+    function undoable (action) {
+    
+      return function () {
+        var beforeState = universe,
+            beforeGeneration = currentGeneration;
+        action.apply(this, arguments);
+        var afterState = universe,
+            afterGeneration = currentGeneration;
+        
+        var undoAction = triggersRedraw(function () {
+          universe = beforeState;
+          currentGeneration = beforeGeneration;
+          REDOSTACK.push(doAction);
+        });
+        
+        var doAction = triggersRedraw(function () {
+          universe = afterState;
+          currentGeneration = afterGeneration;
+          UNDOSTACK.push(undoAction);
+        });
+        
+        UNDOSTACK.push(undoAction);
+        
+      };
+    
+    }
+    
+    function undo () {
+      var action = UNDOSTACK.pop();
+      if (action != null)
+        action();
+    }
+    
+    function redo () {
+      var action = REDOSTACK.pop();
+      if (action != null)
+        action();
+    }
+  
+    //////////////////////////////////////////////////////
     
     // DEBUG STUFF
     
     root.universe = universe;
     
     root.GOTO = goto;
+    
+    root.UNDOSTACK = UNDOSTACK;
+    root.REDOSTACK = REDOSTACK;
 
   });
 
