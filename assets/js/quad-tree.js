@@ -3,8 +3,20 @@
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 
   var QUAD_TREE_CACHE = {};
+  
   var ALIVE = DEAD = void 0;
-  var ID = 100;
+  
+  var StrongReferenceStrategy = (function () {
+    var ID = 100;
+    
+    return function () { return ++ID; };
+  })();
+  
+  function WeakReferenceStrategy () {
+    return new Name();
+  };
+  
+  var nextID = WeakReferenceStrategy;
 
   function Cell (id) {
     if (id === 0) {
@@ -66,7 +78,7 @@
 
     return container[nw_ne_se_sw[3].id] || (
       NODES_IN_CACHE = NODES_IN_CACHE + 1,
-      this.id = ++ID,
+      this.id = nextID(),
       this.children = nw_ne_se_sw,
       this.population = A.foldl(
         A.map(nw_ne_se_sw, A.getWith('population')), 

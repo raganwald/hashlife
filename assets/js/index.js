@@ -101,23 +101,44 @@
       universe = universe.rotate().rotate().rotate();
     });
 
-    var fastForward = triggersRedraw( function (event, generations) {
-      generations || (generations = universe.trimmed().maximumGenerations());
+    function goto (destination, strict) {
+      
+      if (strict == null) strict = true;
+      
+      var ff = triggersRedraw( function () {
+        universe = universe
+                          .trimmed()
+                          .double()
+                          .double();
+        var sizeOfIteration = strict
+                              ? Math.min(destination - currentGeneration, universe.maximumGenerations())
+                              : universe.maximumGenerations();
+        if (currentGeneration < destination) {
+          universe = universe
+                            .futureAt(sizeOfIteration)
+                            .trimmed();
+          currentGeneration = currentGeneration + sizeOfIteration;
+          timerID = setTimeout(ff, 0);
+        }
+        else clearTimeout(timerID);
+      });
+      
+      var timerID = setTimeout(ff, 0);
+      
+    };
+
+    var fastForward = triggersRedraw( function (event, sizeOfIteration) {
+      sizeOfIteration || (sizeOfIteration = universe.trimmed().maximumGenerations());
       
       universe = universe
                         .trimmed()
                         .double()
                         .double();
-      
-      while (universe.maximumGenerations() < generations) {
-        universe = universe.double();
-      }
-                        
-      currentGeneration = currentGeneration + generations;
-      
+      sizeOfIteration = Math.max(1, Math.min(sizeOfIteration, universe.maximumGenerations()));
       universe = universe
-                        .futureAt(generations)
+                        .futureAt(sizeOfIteration)
                         .trimmed();
+      currentGeneration = currentGeneration + sizeOfIteration;
     });
 
     function step (event) { 
@@ -143,13 +164,9 @@
 
     var insert = triggersRedraw( function (what) {
 
-      var relativeToUniverseCenterInCells = {
-            x: noZero((viewportOffset.x - (viewPortCanvas.width / 2) + lastMousePosition.x) / Cell.size()),
-            y: noZero((viewportOffset.y - (viewPortCanvas.height / 2) + lastMousePosition.y) / Cell.size())
-          },
-          pasteContent = QuadTree.Library[what]();
+      var pasteContent = QuadTree.Library[what]();
 
-      universe = universe.paste(pasteContent, relativeToUniverseCenterInCells.x, relativeToUniverseCenterInCells.y)
+      universe = universe.paste(pasteContent, 0, 0);
 
     });
 
@@ -367,6 +384,9 @@
       else if (event.which === 52) {
         insert('NoahsArk');
       }
+      else if (event.which === 53) {
+        insert('Rabbits');
+      }
     }
 
     function onDragStart (event) {
@@ -433,6 +453,12 @@
     	}
     	return x1 + x2;
     }
+    
+    // DEBUG STUFF
+    
+    root.universe = universe;
+    
+    root.GOTO = goto;
 
   });
 
