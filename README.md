@@ -1,6 +1,6 @@
-# Infinite HashLife in Canvas and JavaScript
+# Vital JavaScript
 
-This is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. It is the subject of the [Vital JavaScript][vital] screencasts (The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013). 
+*Vital JavaScript* is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. It is the subject of the [Vital JavaScript][vital] screencasts (The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013). 
 
 You can try it online [here][try].
 
