@@ -112,23 +112,27 @@
 
     function startIterating () {
       
-      var ff = triggersRedraw( function () {
-        universe = universe
-                          .trimmed()
-                          .double()
-                          .double();
-        currentGeneration = currentGeneration + universe.maximumGenerations();
-        universe = universe
-                          .future()
-                          .trimmed();
-        iterationState.timerID = setTimeout(ff, 0);
-      });
+      if (iterationState.timerID == null) {
       
-      iterationState = {
-        timerID: setTimeout(ff, 0),
-        beforeState: universe,
-        beforeGeneration: currentGeneration
-      };
+        var ff = triggersRedraw( function () {
+          universe = universe
+                            .trimmed()
+                            .double()
+                            .double();
+          currentGeneration = currentGeneration + universe.maximumGenerations();
+          universe = universe
+                            .future()
+                            .trimmed();
+          iterationState.timerID = setTimeout(ff, 0);
+        });
+      
+        iterationState = {
+          timerID: setTimeout(ff, 0),
+          beforeState: universe,
+          beforeGeneration: currentGeneration
+        };
+      
+      }
       
     };
     
@@ -153,6 +157,9 @@
         });
         
         UNDOSTACK.push(undoAction);
+        
+        iterationState.timerID = null;
+        
       }
     }
     
