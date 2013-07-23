@@ -9,8 +9,33 @@
       };
     };
   };
+  
+  var HELPCONTENT = {
+		// (string | mandatory) the heading of the notification
+		title: 'Help',
+		// (string | mandatory) the text inside the notification
+		text: '<ul>' +
+		      '<li>Click on a square to toggle between alive and dead.</li>' +
+		      '<li>Drag the background to pan around the universe</li>' +
+		      '<li>Press ENTER to advance one generation. Press TAB toggle between' +
+		      '   being pasued and fast-forwarding continuously.</li>' +
+		      '<li>Press the numbers 1-5 to paste a shape into the center of the' +
+		      '   screen.</li>' +
+		      '<li>Press CTRL-R to rotate, CTRL-SHIFT-R to rotate in the opposite direction.</li>' +
+		      '<li>Press CTRL-Z to undo, CTRL-SHIFT-Z to redo.</li>' +
+		      '</ul>',
+		// (string | optional) the image to display on the left
+		// image: 'http://a0.twimg.com/profile_images/59268975/jquery_avatar_bigger.png',
+  };
 
   $(document).ready(function () {
+    
+  	$.gritter.add($o.extend({}, HELPCONTENT, {
+			// (bool | optional) if you want it to fade out on its own or just sit there
+			sticky: false,
+			// (int | optional) the time you want it to be alive for before fading out
+			time: 10000
+		}));
     
     var WE_ARE_MOBILE = !!$('html.touch').length,
         DURATION_THRESHOLD = 1000,
