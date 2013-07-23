@@ -30,7 +30,7 @@
 
   $(document).ready(function () {
     
-  	$.gritter.add($o.extend({}, HELPCONTENT, {
+  	$.gritter.add($.extend({}, HELPCONTENT, {
 			// (bool | optional) if you want it to fade out on its own or just sit there
 			sticky: false,
 			// (int | optional) the time you want it to be alive for before fading out
@@ -412,10 +412,14 @@
     $('#doFastForward')
       .on('click', fastForward);
       
-    $('#help, #discuss')
+    $('#background')
       .on('click', link);
 
-
+	$('#help')
+	  .on('click', function (event) {
+		$.gritter.add($.extend({}, HELPCONTENT, { sticky: true }));
+	  });
+	
     $(window)
       .resize(draw)
       .trigger("resize");
