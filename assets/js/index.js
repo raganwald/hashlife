@@ -11,21 +11,18 @@
   };
   
   var HELPCONTENT = {
+		image: './assets/images/help.png',
 		// (string | mandatory) the heading of the notification
 		title: 'Help',
 		// (string | mandatory) the text inside the notification
-		text: '<ul>' +
-		      '<li>Click on a square to toggle between alive and dead.</li>' +
-		      '<li>Drag the background to pan around the universe</li>' +
-		      '<li>Press ENTER to advance one generation. Press TAB toggle between' +
-		      '   being pasued and fast-forwarding continuously.</li>' +
-		      '<li>Press the numbers 1-5 to paste a shape into the center of the' +
-		      '   screen.</li>' +
-		      '<li>Press CTRL-R to rotate, CTRL-SHIFT-R to rotate in the opposite direction.</li>' +
-		      '<li>Press CTRL-Z to undo, CTRL-SHIFT-Z to redo.</li>' +
-		      '</ul>',
-		// (string | optional) the image to display on the left
-		// image: 'http://a0.twimg.com/profile_images/59268975/jquery_avatar_bigger.png',
+		text: 'Click on a square to toggle between alive and dead.<br/><br/>' +
+		      'Drag the background to pan around the universe.<br/><br/>' +
+		      'Press ENTER to advance one generation, TAB to toggle between' +
+		      '   being paused and fast-forwarding continuously.<br/><br/>' +
+		      'Press the numbers 1-5 to paste a shape into the center of the' +
+		      '   screen.<br/><br/>' +
+		      'Press CTRL-R to rotate, CTRL-SHIFT-R to rotate in the opposite direction, ' +
+		      'CTRL-Z to undo, and CTRL-SHIFT-Z to redo.'
   };
 
   $(document).ready(function () {
