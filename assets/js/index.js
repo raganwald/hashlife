@@ -11,10 +11,8 @@
   };
   
   var HELPCONTENT = {
-		image: './assets/images/help.png',
-		// (string | mandatory) the heading of the notification
+		image: './assets/images/help.jpg',
 		title: 'Help',
-		// (string | mandatory) the text inside the notification
 		text: 'Click on a square to toggle between alive and dead.<br/><br/>' +
 		      'Drag the background to pan around the universe.<br/><br/>' +
 		      'Press ENTER to advance one generation, TAB to toggle between' +
@@ -28,9 +26,7 @@
   $(document).ready(function () {
     
   	$.gritter.add($.extend({}, HELPCONTENT, {
-			// (bool | optional) if you want it to fade out on its own or just sit there
 			sticky: false,
-			// (int | optional) the time you want it to be alive for before fading out
 			time: 10000
 		}));
     
@@ -464,10 +460,6 @@
         panDown();
       }
       
-      else if (event.which === 18) {
-        rotateUniverse();
-      }
-      
       else if (event.which === 49) {
         insert('Glider');
       }
@@ -484,6 +476,12 @@
         insert('Rabbits');
       }
       
+      else if (event.which === 82 && event.ctrlKey) {
+        if (event.shiftKey) {
+          rotateUniverseCounterClockwise();
+        }
+        else rotateUniverse();
+      }
       else if (event.which === 90 && event.ctrlKey) {
         if (event.shiftKey) {
           redo();
