@@ -209,6 +209,7 @@
     
     drawInto: function (drawParams) {
       var cellSize = drawParams.cellSize,
+          color = drawParams.color,
           viewportCanvas = drawParams.canvas,
           viewportContext = drawParams.context,
           offset = drawParams.offset,
@@ -221,7 +222,7 @@
             }
           },
           bufferInfo = this.getBuffer(bufferParams) || (function () { throw "Viewport does not fit into receiver"; })(),
-          bufferCanvas = bufferInfo.buffer.canvas(cellSize),
+          bufferCanvas = bufferInfo.buffer.canvas(color),
           relativeScroll = bufferInfo.offset;
           
       viewportContext.drawImage(bufferCanvas, relativeScroll.x, relativeScroll.y, viewportCanvas.width, viewportCanvas.height, 0, 0, viewportCanvas.width, viewportCanvas.height);

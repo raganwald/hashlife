@@ -1,4 +1,6 @@
 (function (root) {
+
+	var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
   
   function after (decoration) {
     return function(base) {
@@ -27,7 +29,7 @@
     
   	$.gritter.add($.extend({}, HELPCONTENT, {
 			sticky: false,
-			time: 10000
+			time: 5000
 		}));
     
     var WE_ARE_MOBILE = !!$('html.touch').length,
@@ -44,12 +46,14 @@
     var universe = new QuadTree();
     var currentGeneration = 0;
 
-    var draw = _.throttle( function () {
+    var draw = _.throttle( function (color) {
+	
+			color || (color = COLORS.LIFE);
 
       //synchronize window and canvas dimensions
       viewPortCanvas.width = $(window).width();
       viewPortCanvas.height = $(window).height();
-      
+     
       while (universe.doesNotEnclose({
         cellSize: Cell.size(),
         viewPort: {
@@ -61,6 +65,7 @@
 
       universe.drawInto({
         cellSize: Cell.size(),
+				color: color,
         canvas: viewPortCanvas,
         context: viewportContext,
         offset: viewportOffset
@@ -78,6 +83,27 @@
     }, THROTTLE_MILLIS);
     
     var triggersRedraw = after(draw);
+
+		function mightTakeSomeTime (decoratedFn) {
+			return function () {
+				var timeout = setTimeout(function () { console.log('show display'); }, 500);
+				return A.tap(decoratedFn.apply(this, arguments), function () {
+					clearTimeout(timeout);
+					console.log('hide display');
+				});
+			}
+		}
+
+		function greys (fn) {
+			return function () {
+				var args = [].slice.call(arguments, 0),
+				    that = this;
+				draw(COLORS.HALFLIFE);
+				setTimeout(function () {
+					fn.apply(that, args);
+				}, 0);
+			}
+		}
     
     // offline hack
     if (window.location.protocol === "file:")

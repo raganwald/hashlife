@@ -2,10 +2,11 @@
   
   var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
 	
-	var COLORS = {
+	var COLORS = root.COLORS = {
 		BACKGROUND: '#B1AC9E',
 		GRID: '#3B3B49',
-		LIFE: '#356AA0'
+		LIFE: '#356AA0',
+		HALFLIFE: '#828B9F'
 	}
   
   A.extendClass(QuadTree, {
@@ -14,11 +15,13 @@
       return this.size() * Cell.size();
     },
     
-    canvas: function () {
+    canvas: function (color) {
       var CELLSIZE = Cell.size();
+			if (color == null) color = COLORS.HALFLIFE;
       
       this._canvases || (this._canvases = {});
-      if (this._canvases[CELLSIZE]) return this._canvases[CELLSIZE];
+			this._canvases[color] || (this._canvases[color] = {});
+      if (this._canvases[color][CELLSIZE]) return this._canvases[color][CELLSIZE];
       
       var LINEWIDTH = 0.2;
       var GRID_LINE_WIDTH = 1;
@@ -36,8 +39,8 @@
         GRID_LINE_WIDTH = GRID_LINE_WIDTH / 8;
       }
       
-      var childCanvases = A.map(this.children, '.canvas()');
-      var canvas = this._canvases[CELLSIZE] = document.createElement('canvas');
+      var childCanvases = A.map(this.children, function (child) { return child.canvas(color); });
+      var canvas = this._canvases[color][CELLSIZE] = document.createElement('canvas');
       var SIZE = canvas.width = canvas.height = this.canvasSize();
     	var SQUARE_OFFSET = ((SIZE - GRID_LINE_WIDTH) / 2);
     	var SQUARE_WIDTH = SQUARE_OFFSET - 2 * GRID_LINE_WIDTH;
@@ -50,7 +53,7 @@
 		
       // paint children
       function copyChild (child, x, y) {
-        var source = child.canvas();
+        var source = child.canvas(color);
         context.drawImage(source, 0, 0, source.width, source.height, x * source.width, y * source.height, source.width, source.height);
       }
       copyChild(this.nw(), 0, 0);
@@ -97,15 +100,18 @@
       return Cell.size();
     },
     
-    canvas: function () {
-        this._canvases || (this._canvases = {});
-        if (this._canvases[Cell.size()]) return this._canvases[Cell.size()];
-      
-  	  else return this._canvases[Cell.size()] = A.tap(document.createElement('canvas'), function (canvas) {
+    canvas: function (color) {
+			if (color == null) color = COLORS.LIFE;
+			this._canvases || (this._canvases = {});
+			this._canvases[color] || (this._canvases[color] = {});
+       
+			if (this._canvases[color][Cell.size()])
+				return this._canvases[color][Cell.size()];
+      else return this._canvases[color][Cell.size()] = A.tap(document.createElement('canvas'), function (canvas) {
   	    canvas.width = canvas.height = this.canvasSize();
         var context = canvas.getContext('2d');
     		context.clearRect(0, 0, Cell.size(), Cell.size());
-    		context.fillStyle = (this.id === 0 ? COLORS.BACKGROUND : COLORS.LIFE);
+    		context.fillStyle = (this.id === 0 ? COLORS.BACKGROUND : color);
     		context.fillRect(0, 0, Cell.size(), Cell.size());
       }.bind(this));
   	}
