@@ -1,13 +1,12 @@
 # Vital JavaScript
 
-*Vital JavaScript* is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. It is the subject of the [Vital JavaScript][vital] screencasts (The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013). 
+*Vital JavaScript* is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013).
 
 You can try it online [here][try].
 
 [gol]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
 [HashLife]: https://en.wikipedia.org/wiki/Hashlife
 [lhs]: http://www.haikudeck.com/p/x2kAbNDLL9/la-hermosa-vida
-[vital]: https://www.slideshare.net/raganwald/vital-js
 
 ### infinity
 
@@ -32,7 +31,7 @@ For example, you can pan in any direction as far as you like and then place some
 * You can zoom in or out using the pinch gesture.
 * You can drag the universe within the window using two fingers.
 * You can fast forward many generations into the future by swiping to the left or right (it doesn't matter which way you swipe).
-* You can insert a [glider gun][ggg] by tapping and holding. 
+* You can insert a [glider gun][ggg] by tapping and holding.
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
 [try]: http://vitaljs.com
