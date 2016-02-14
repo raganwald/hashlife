@@ -1,6 +1,6 @@
-# Vital JavaScript
+# Hashlife
 
-*Vital JavaScript* is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013).
+This is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013.
 
 You can try it online [here][try].
 
@@ -34,7 +34,7 @@ For example, you can pan in any direction as far as you like and then place some
 * You can insert a [glider gun][ggg] by tapping and holding.
 
 [ggg]: http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun
-[try]: http://vitaljs.com
+[try]: http://raganwald.com/hashlife
 
 On a first-generation iPad Mini, the current implementation is somewhat unreliable. I suspect that Mobile Safari's JavaScript engine is not as robust as OS X Safari when managing large object graphs.
 
