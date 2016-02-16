@@ -1,6 +1,6 @@
-# Hashlife
+# HashLife
 
-This is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. The original version was written to accompany the [La Hermosa Vida][lhs] talk at SpainJS, 2013.
+This is an implementation of [Conway's Game of Life][gol] in the browser, using Bill Gosper's [HashLife] algorithm. The original version was written to accompany my [La Hermosa Vida][lhs] talk at SpainJS, 2013.
 
 You can try it online [here][try].
 
