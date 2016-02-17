@@ -1,7 +1,7 @@
 (function (root) {
 
-	var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
-  
+  var A = (root.allong && root.allong.es) || require('../vendor/allong.es.browser').allong.es;
+
   function after (decoration) {
     return function(base) {
       return function() {
@@ -11,27 +11,27 @@
       };
     };
   };
-  
+
   var HELPCONTENT = {
-		image: './assets/images/help.jpg',
-		title: 'Help',
-		text: 'Click on a square to toggle between alive and dead.<br/><br/>' +
-		      'Drag the background to pan around the universe.<br/><br/>' +
-		      'Press ENTER to advance one generation, TAB to toggle between' +
-		      '   being paused and fast-forwarding continuously.<br/><br/>' +
-		      'Press the numbers 1-5 to paste a shape into the center of the' +
-		      '   screen.<br/><br/>' +
-		      'Press CTRL-R to rotate, CTRL-SHIFT-R to rotate in the opposite direction, ' +
-		      'CTRL-Z to undo, and CTRL-SHIFT-Z to redo.'
+    image: './assets/images/help.jpg',
+    title: 'Help',
+    text: 'Click on a square to toggle between alive and dead.<br/><br/>' +
+          'Drag the background to pan around the universe.<br/><br/>' +
+          'Press ENTER to advance one generation, TAB to toggle between' +
+          '   being paused and fast-forwarding continuously.<br/><br/>' +
+          'Press the numbers 1-5 to paste a shape into the center of the' +
+          '   screen.<br/><br/>' +
+          'Press CTRL-R to rotate, CTRL-SHIFT-R to rotate in the opposite direction, ' +
+          'CTRL-Z to undo, and CTRL-SHIFT-Z to redo.'
   };
 
   $(document).ready(function () {
-    
-  	$.gritter.add($.extend({}, HELPCONTENT, {
-			sticky: false,
-			time: 5000
-		}));
-    
+
+    $.gritter.add($.extend({}, HELPCONTENT, {
+      sticky: false,
+      time: 5000
+    }));
+
     var WE_ARE_MOBILE = !!$('html.touch').length,
         DURATION_THRESHOLD = 1000,
         MIN_SWIPE_LENGTH = 75,
@@ -47,13 +47,13 @@
     var currentGeneration = 0;
 
     var draw = _.throttle( function (color) {
-	
-			color || (color = COLORS.LIFE);
+
+      color || (color = COLORS.LIFE);
 
       //synchronize window and canvas dimensions
       viewPortCanvas.width = $(window).width();
       viewPortCanvas.height = $(window).height();
-     
+
       while (universe.doesNotEnclose({
         cellSize: Cell.size(),
         viewPort: {
@@ -65,46 +65,46 @@
 
       universe.drawInto({
         cellSize: Cell.size(),
-				color: color,
+        color: color,
         canvas: viewPortCanvas,
         context: viewportContext,
         offset: viewportOffset
       });
-      
+
       $('#generation').text(addCommas(currentGeneration));
       $('#population').text(addCommas(universe.population));
-      
+
       var fastForwardGenerations = addCommas(Math.ceil(universe.trimmed().maximumGenerations()));
-      
+
       $('p#doFastForward').attr('title', 'Fast-forward ' + fastForwardGenerations + ' generations');
-      
+
       $('p#livecells').attr('title', '' + addCommas(QuadTree.nodes()) + ' nodes in the cache');
-      
+
     }, THROTTLE_MILLIS);
-    
+
     var triggersRedraw = after(draw);
 
-		function mightTakeSomeTime (decoratedFn) {
-			return function () {
-				var timeout = setTimeout(function () { console.log('show display'); }, 500);
-				return A.tap(decoratedFn.apply(this, arguments), function () {
-					clearTimeout(timeout);
-					console.log('hide display');
-				});
-			}
-		}
+    function mightTakeSomeTime (decoratedFn) {
+      return function () {
+        var timeout = setTimeout(function () { console.log('show display'); }, 500);
+        return A.tap(decoratedFn.apply(this, arguments), function () {
+          clearTimeout(timeout);
+          console.log('hide display');
+        });
+      }
+    }
 
-		function greys (fn) {
-			return function () {
-				var args = [].slice.call(arguments, 0),
-				    that = this;
-				draw(COLORS.HALFLIFE);
-				setTimeout(function () {
-					fn.apply(that, args);
-				}, 0);
-			}
-		}
-    
+    function greys (fn) {
+      return function () {
+        var args = [].slice.call(arguments, 0),
+            that = this;
+        draw(COLORS.HALFLIFE);
+        setTimeout(function () {
+          fn.apply(that, args);
+        }, 0);
+      }
+    }
+
     // offline hack
     if (window.location.protocol === "file:")
       $('#ribbon').hide();
@@ -118,36 +118,36 @@
 
     viewPortCanvas.height = window.innerHeight;
     viewPortCanvas.width = window.innerWidth;
-    
+
     ///////////////////////////////////////////////////////////////////
-    
+
     var panLeft = triggersRedraw( function () {
       viewportOffset.x -= viewPortCanvas.width;
     });
-    
+
     var panRight = triggersRedraw( function () {
       viewportOffset.x += viewPortCanvas.width;
     });
-    
+
     var panUp = triggersRedraw( function () {
       viewportOffset.y -= viewPortCanvas.height;
     });
-    
+
     var panDown = triggersRedraw( function () {
       viewportOffset.y += viewPortCanvas.height;
     });
-    
+
     var rotateUniverse = undoable( triggersRedraw( function () {
       universe = universe.rotate();
     }));
-    
+
     var rotateUniverseCounterClockwise = undoable( triggersRedraw( function () {
       universe = universe.rotate().rotate().rotate();
     }));
-    
+
     ////////////////////////////////////////////////
     // Iterating
-    
+
     var iterationState = {
       timerID: null,
       beforeState: universe,
@@ -155,9 +155,9 @@
     };
 
     function startIterating () {
-      
+
       if (iterationState.timerID == null) {
-      
+
         var ff = triggersRedraw( function () {
           universe = universe
                             .trimmed()
@@ -169,17 +169,17 @@
                             .trimmed();
           iterationState.timerID = setTimeout(ff, 0);
         });
-      
+
         iterationState = {
           timerID: setTimeout(ff, 0),
           beforeState: universe,
           beforeGeneration: currentGeneration
         };
-      
+
       }
-      
+
     };
-    
+
     function stopIterating () {
       if (iterationState.timerID) {
         clearTimeout(iterationState.timerID);
@@ -187,38 +187,38 @@
             beforeGeneration = iterationState.beforeGeneration;
         var afterState = universe,
             afterGeneration = currentGeneration;
-        
+
         var undoAction = triggersRedraw(function () {
           universe = beforeState;
           currentGeneration = beforeGeneration;
           REDOSTACK.push(doAction);
         });
-        
+
         var doAction = triggersRedraw(function () {
           universe = afterState;
           currentGeneration = afterGeneration;
           UNDOSTACK.push(undoAction);
         });
-        
+
         UNDOSTACK.push(undoAction);
-        
+
         iterationState.timerID = null;
-        
+
       }
     }
-    
+
     function toggleIterating () {
       if (iterationState.timerID)
         stopIterating();
       else startIterating();
     }
-    
+
     ////////////////////////////////////////////////
 
     function goto (destination, strict) {
-      
+
       if (strict == null) strict = true;
-      
+
       var ff = triggersRedraw( function () {
         universe = universe
                           .trimmed()
@@ -236,14 +236,14 @@
         }
         else stopIterating();
       });
-      
+
       timerID = setTimeout(ff, 0);
-      
+
     };
 
     var fastForward = undoable( triggersRedraw( function (event, sizeOfIteration) {
       sizeOfIteration || (sizeOfIteration = universe.trimmed().maximumGenerations());
-      
+
       universe = universe
                         .trimmed()
                         .double()
@@ -255,8 +255,8 @@
       currentGeneration = currentGeneration + sizeOfIteration;
     }));
 
-    function step (event) { 
-      return fastForward(event, 1); 
+    function step (event) {
+      return fastForward(event, 1);
     }
 
     var zoomIn = triggersRedraw( function () {
@@ -292,29 +292,29 @@
       };
 
       universe = universe.flip(relativeToUniverseCenterInCells);
-      
+
     }));
-      
+
     ///////////////////////////////////////////////////////////////////
-      
+
     if (WE_ARE_MOBILE) {
 
       $(document)
         .on("touchmove", function (e) { event.preventDefault(); })
         .on('gesturestart', gestureStart);
         // .on("touchstart", touchStart)
-        
+
       canvasProxy
         .on("swipe", fastForward)
         .on("taphold", function () { insert('GosperGliderGun'); });
-      
+
       Cell.size(32);
-    
+
     }
     else Cell.size(16);
-    
+
     function touchStart (event) {
-      
+
       var startCoord = {
             left: event.originalEvent.pageX,
             top: event.originalEvent.pageY
@@ -324,13 +324,13 @@
             top: event.originalEvent.pageY
           },
           touchTime = new Date().getTime();
-        
+
       function touchEnd (event) {
-        
+
         $(document)
           .unbind('touchmove', touchMove)
           .unbind('touchend', touchEnd);
-          
+
         if (new Date().getTime() - touchTime < DURATION_THRESHOLD) {
          if (
            Math.abs( startCoord.left - lastCoord.left ) > MIN_SWIPE_LENGTH &&
@@ -350,35 +350,35 @@
           }
         }
       }
-      
+
       function touchMove (event) {
         lastCoord.left = event.originalEvent.pageX;
         lastCoord.top = event.originalEvent.pageY;
       }
-      
+
       $(document)
         .on('touchmove', event.data, touchMove)
         .on('touchend', event.data, touchEnd);
-      
+
       event.preventDefault();
-      
+
     }
-    
+
     function gestureStart (event) {
-      
+
       var lastCoord = {
             left: event.originalEvent.pageX,
             top: event.originalEvent.pageY
           },
           lastScale = 1.0,
           lastRotation = 0;
-        
+
       function gestureEnd (event) {
         $(document)
           .unbind('gesturechange', gestureChange)
           .unbind('gestureend', gestureEnd);
       }
-      
+
       var updateDrag = triggersRedraw( function (x, y) {
         viewportOffset.x = viewportOffset.x - (x - lastCoord.left);
         viewportOffset.y = viewportOffset.y - (y - lastCoord.top);
@@ -386,13 +386,13 @@
         lastCoord.left = x;
         lastCoord.top = y;
       });
-      
+
       function gestureChange (event) {
         var currentScale = event.originalEvent.scale,
             relativeScale = currentScale / lastScale,
             currentRotation = event.originalEvent.rotation % 360,
             relativeRotation = currentRotation - lastRotation;
-        
+
         if (relativeRotation > 90) {
           lastRotation = currentRotation;
           rotateUniverse();
@@ -411,13 +411,13 @@
         }
         else updateDrag(event.originalEvent.pageX, event.originalEvent.pageY);
       }
-      
+
       $(document)
         .on('gesturechange', event.data, gestureChange)
         .on('gestureend', event.data, gestureEnd);
-        
+
     }
-    
+
     ///////////////////////////////////////////////////////////////////
 
     canvasProxy
@@ -427,24 +427,24 @@
     $(document)
       .keypress(onKeypress)
       .keyup(onKeyup);
-      
+
     $('#doFastForward')
       .on('click', fastForward);
-      
+
     $('#background')
       .on('click', link);
 
-	$('#help')
-	  .on('click', function (event) {
-		$.gritter.add($.extend({}, HELPCONTENT, { sticky: true }));
-	  });
-	
+  $('#help')
+    .on('click', function (event) {
+    $.gritter.add($.extend({}, HELPCONTENT, { sticky: true }));
+    });
+
     $(window)
       .resize(draw)
       .trigger("resize");
 
     ///////////////////////////////////////////////////////////////////
-    
+
     function link (event) {
       window.location = $(event.currentTarget).attr('href');
     }
@@ -457,7 +457,7 @@
         zoomOut();
       }
     }
-    
+
     function trackLastMousePosition (event) {
       lastMousePosition = {
         x: event.pageX,
@@ -472,7 +472,7 @@
       else if (event.which === 32) {
         toggleIterating();
       }
-      
+
       else if (event.which === 37) {
         panLeft();
       }
@@ -485,7 +485,7 @@
       else if (event.which === 40) {
         panDown();
       }
-      
+
       else if (event.which === 49) {
         insert('Glider');
       }
@@ -501,7 +501,7 @@
       else if (event.which === 53) {
         insert('Rabbits');
       }
-      
+
       else if (event.which === 82 && event.ctrlKey) {
         if (event.shiftKey) {
           rotateUniverseCounterClockwise();
@@ -520,7 +520,7 @@
 
       var MAXCLICKDRAGDISTANCE = 1,
           MAXIMUMCLICKMILLISECONDS = 250;
-        
+
       var lastCoord = {
             left: event.clientX,
             top: event.clientY
@@ -548,7 +548,7 @@
         if ((delta.left + delta.top) > MAXCLICKDRAGDISTANCE ) {
           mouseDownTime = null;
         }
-      
+
         draw();
       }
 
@@ -567,74 +567,74 @@
         document.body.style.cursor = 'pointer';
       }
     }
-    
+
     // see http://www.mredkj.com/javascript/nfbasic.html
     function addCommas (nStr) {
-    	nStr += '';
-    	x = nStr.split('.');
-    	x1 = x[0];
-    	x2 = x.length > 1 ? '.' + x[1] : '';
-    	var rgx = /(\d+)(\d{3})/;
-    	while (rgx.test(x1)) {
-    		x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    	}
-    	return x1 + x2;
+      nStr += '';
+      x = nStr.split('.');
+      x1 = x[0];
+      x2 = x.length > 1 ? '.' + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      }
+      return x1 + x2;
     }
-  
+
     //////////////////////////////////////////////////////
-  
+
     // Undo/Redo
-  
+
     var UNDOSTACK = [],
         REDOSTACK = [];
-      
+
     function undoable (action) {
-    
+
       return function () {
         var beforeState = universe,
             beforeGeneration = currentGeneration;
         action.apply(this, arguments);
         var afterState = universe,
             afterGeneration = currentGeneration;
-        
+
         var undoAction = triggersRedraw(function () {
           universe = beforeState;
           currentGeneration = beforeGeneration;
           REDOSTACK.push(doAction);
         });
-        
+
         var doAction = triggersRedraw(function () {
           universe = afterState;
           currentGeneration = afterGeneration;
           UNDOSTACK.push(undoAction);
         });
-        
+
         UNDOSTACK.push(undoAction);
-        
+
       };
-    
+
     }
-    
+
     function undo () {
       var action = UNDOSTACK.pop();
       if (action != null)
         action();
     }
-    
+
     function redo () {
       var action = REDOSTACK.pop();
       if (action != null)
         action();
     }
-  
+
     //////////////////////////////////////////////////////
-    
+
     // DEBUG STUFF
-    
+
     root.universe = universe;
-    
+
     root.GOTO = goto;
-    
+
     root.UNDOSTACK = UNDOSTACK;
     root.REDOSTACK = REDOSTACK;
 
