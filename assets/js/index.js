@@ -17,7 +17,7 @@
     title: 'Help',
     text: 'Click on a square to toggle between alive and dead.<br/><br/>' +
           'Drag the background to pan around the universe.<br/><br/>' +
-          'Press ENTER to advance one generation, TAB to toggle between' +
+          'Press ENTER to advance one generation, SPACE to toggle between' +
           '   being paused and fast-forwarding continuously.<br/><br/>' +
           'Press the numbers 1-5 to paste a shape into the center of the' +
           '   screen.<br/><br/>' +
