@@ -64,7 +64,7 @@ Each QuadTree generates canvases on demand by recursively asking their children 
 [A command-line HashTree implementation written in Literate CoffeeScript][ru].
 
 [SpainJS]: http://spainjs.org
-[ru]: http://recursiveuniver.se
+[ru]: http://raganwald.com/hashlife
 
 ### license
 
